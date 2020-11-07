@@ -7,7 +7,7 @@ public class Player2Movement : MonoBehaviour
     public CharacterControllerPlayer1 controller;
     //public Animator animator;
 
-    private float runSpeed = 40f;
+    [SerializeField] private float runSpeed = 60f;
     private float HorizontalMove = 0f;
     private bool jump = false;
     private bool crouch = false;

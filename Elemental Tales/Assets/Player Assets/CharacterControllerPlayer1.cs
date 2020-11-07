@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -33,6 +34,7 @@ public class CharacterControllerPlayer1 : MonoBehaviour
     private const float mGroundedRadius = 0.1f;
     private const float mCeilingRadius = 0.2f;
     private Vector3 mVelocity = Vector3.zero;
+    private Boolean HasDoubleJump = true;
 
     [Header("Events")]
     [Space]
@@ -70,6 +72,7 @@ public class CharacterControllerPlayer1 : MonoBehaviour
             if (colliders[i].gameObject != gameObject)
             {
                 mGrounded = true;
+                HasDoubleJump = true;
                 if (!wasTouchingGround)
                     OnLandEvent.Invoke();
             }
@@ -112,6 +115,11 @@ public class CharacterControllerPlayer1 : MonoBehaviour
         else if (move < 0 && mFacingRight)
             Flip();
 
+        if(!mGrounded && jump && HasDoubleJump)
+        {
+            mRigidBody2D.AddForce(new Vector2(0f, mJumpForce));
+            HasDoubleJump = false;
+        }
         if (mGrounded && jump)
         {
             mGrounded = false;
