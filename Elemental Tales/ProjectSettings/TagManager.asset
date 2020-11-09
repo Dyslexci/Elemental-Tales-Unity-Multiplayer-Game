@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Ground
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Player
+  - Boundary
+  - Diff Layer
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Background
+    uniqueID: 4062432015
+    locked: 0
+  - name: ParralexBackground
+    uniqueID: 3699308355
+    locked: 0
+  - name: BackgroundDecoration
+    uniqueID: 4260539243
+    locked: 0
+  - name: LevelDecoration
+    uniqueID: 3990873661
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: NPCs
+    uniqueID: 3114019769
+    locked: 0
+  - name: Collectibles
+    uniqueID: 640193687
+    locked: 0
+  - name: Player
+    uniqueID: 244847381
+    locked: 0
+  - name: Foreground
+    uniqueID: 2207996375
+    locked: 0
+  - name: ParralexForeground
+    uniqueID: 793344891
+    locked: 0
