@@ -4,6 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.0.0
+ *    @version 0.1.0
+ *    
+ *    Controls the players mana and health visual representations on the HUD. Set up for player 1.
+ */
+
 [System.Serializable]
 public class Health : MonoBehaviour
 {

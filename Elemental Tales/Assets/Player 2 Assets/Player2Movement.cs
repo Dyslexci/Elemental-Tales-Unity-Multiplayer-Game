@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.0.0
+ *    @version 0.1.0
+ *    
+ *    This script provides raw inputs for relay to the character controller, as well as controls animations based off of inputs. Specifically for player 2.
+ */
+
 public class Player2Movement : MonoBehaviour
 {
     public CharacterControllerPlayer1 controller;

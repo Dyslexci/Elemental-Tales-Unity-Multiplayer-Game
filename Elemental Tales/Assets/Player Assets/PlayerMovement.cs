@@ -8,7 +8,7 @@ using UnityEngine;
  *    @since 0.0.0
  *    @version 0.1.0
  *    
- *    This script provides raw inputs for relay to the character controller, as well as controls animations based off of inputs.
+ *    This script provides raw inputs for relay to the character controller, as well as controls animations based off of inputs. Specifically for player 1.
  */
 
 public class PlayerMovement : MonoBehaviour

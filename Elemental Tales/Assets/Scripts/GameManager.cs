@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.SceneMangement;
+
+/** 
+ *    @author Himesh
+ *    @since 0.0.0
+ *    @version 0.1.0
+ *    
+ *    For Himesh to fill out.
+ */
+
 public class Level : MonoBehaviour
 {
-    // Start is called before the first frame update
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -14,10 +21,5 @@ public class Level : MonoBehaviour
     public void LoadNextLevel(int x)
     {
         SceneManager.LoadScene(x);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.0.0
+ *    @version 0.1.0
+ *    
+ *    This script sets the player 2 element, changes the hud accordingly, and changes the player controller element variable.
+ */
+
 public class Player2ElementControl : MonoBehaviour
 {
     private string currentElement;
     //[SerializeField] private ElementOrb elementOrb;
     [SerializeField] private CharacterControllerPlayer1 controller;
-    // Start is called before the first frame update
+
     void Start()
     {
         currentElement = "Air";
