@@ -23,7 +23,7 @@ public class CharacterControllerPlayer1 : MonoBehaviour
     [SerializeField] private Transform mGroundCheck;
     [SerializeField] private Transform mCeilingCheck;
     [SerializeField] private Collider2D mCrouchColliderToggle;
-    [SerializeField] private float m_JumpForce = 5f;
+    [SerializeField] private float m_JumpForce = 650f;
     [Range(0, 1)] [SerializeField] private float mCrouchSpeed = 0.4f;
     [Range(0, 1)] [SerializeField] private float mMovementSmoothing = 0.05f;
     [SerializeField] private LayerMask mGroundIdentifier;
@@ -143,7 +143,7 @@ public class CharacterControllerPlayer1 : MonoBehaviour
         if(!mGrounded && jump && HasDoubleJump && currentElement.Equals("Air"))
         {
             mRigidBody2D.velocity = new Vector2(mRigidBody2D.velocity.x, 0);
-            mRigidBody2D.AddRelativeForce(new Vector2(0f, m_JumpForce));
+            mRigidBody2D.AddRelativeForce(new Vector2(0f, 400));
             HasDoubleJump = false;
         }
         if (mGrounded && jump)
