@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 /** 
  *    @author Matthew Ahearn
@@ -14,20 +16,19 @@ using UnityEngine.Events;
 
 public class CharacterControllerPlayer1 : MonoBehaviour
 {
+    [SerializeField] private ElementOrb elementOrb;
+    [SerializeField] private Health health;
     [SerializeField] private int maxHealth = 3;
     [SerializeField] private int maxMana = 3;
     [SerializeField] private Transform mGroundCheck;
     [SerializeField] private Transform mCeilingCheck;
     [SerializeField] private Collider2D mCrouchColliderToggle;
-    [SerializeField] private float mJumpForce = 500f;
+    [SerializeField] private float m_JumpForce = 5f;
     [Range(0, 1)] [SerializeField] private float mCrouchSpeed = 0.4f;
     [Range(0, 1)] [SerializeField] private float mMovementSmoothing = 0.05f;
     [SerializeField] private LayerMask mGroundIdentifier;
 
     private Rigidbody2D mRigidBody2D;
-    private int currentHealth;
-    private int currentMana;
-    private string currentElement;
     private int currentCollectibles1;
     private bool mFacingRight = true;
     private bool mGrounded;
@@ -35,6 +36,14 @@ public class CharacterControllerPlayer1 : MonoBehaviour
     private const float mCeilingRadius = 0.2f;
     private Vector3 mVelocity = Vector3.zero;
     private Boolean HasDoubleJump = true;
+    private float JumpForce;
+
+    public int currentHealth;
+    public int currentMana;
+    private string currentElement;
+    public int numOfHealthContainers;
+    public int numOfManaContainers;
+    public UnityEngine.UI.Image[] heartContainers;
 
     [Header("Events")]
     [Space]
@@ -50,7 +59,7 @@ public class CharacterControllerPlayer1 : MonoBehaviour
         currentHealth = maxHealth;
         currentMana = maxMana;
         currentCollectibles1 = 0;
-        currentElement = "earth";
+        changeElement("Air");
     }
 
     private void Awake()
@@ -77,6 +86,22 @@ public class CharacterControllerPlayer1 : MonoBehaviour
                     OnLandEvent.Invoke();
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if (!mGrounded && mRigidBody2D.velocity.y < 0)
+        {
+            mRigidBody2D.gravityScale = (float)2.5;
+        } else
+        {
+            mRigidBody2D.gravityScale = 3;
+        }
+    }
+
+    private void DamageHealth(int damage)
+    {
+        health.takeDamage(damage);
     }
 
     public void Move(float move, bool crouch, bool jump)
@@ -115,16 +140,19 @@ public class CharacterControllerPlayer1 : MonoBehaviour
         else if (move < 0 && mFacingRight)
             Flip();
 
-        if(!mGrounded && jump && HasDoubleJump)
+        if(!mGrounded && jump && HasDoubleJump && currentElement.Equals("Air"))
         {
-            mRigidBody2D.AddForce(new Vector2(0f, mJumpForce));
+            mRigidBody2D.velocity = new Vector2(mRigidBody2D.velocity.x, 0);
+            mRigidBody2D.AddRelativeForce(new Vector2(0f, m_JumpForce));
             HasDoubleJump = false;
         }
         if (mGrounded && jump)
         {
             mGrounded = false;
-            mRigidBody2D.AddForce(new Vector2(0f, mJumpForce));
+            mRigidBody2D.AddForce(new Vector2(0f, m_JumpForce));
         }
+        
+
     }
 
     private void Flip()
@@ -150,6 +178,7 @@ public class CharacterControllerPlayer1 : MonoBehaviour
     public void changeElement(string newElement)
     {
         currentElement = newElement;
+        //elementOrb.setElement(newElement);
     }
 
     public string getElement()
