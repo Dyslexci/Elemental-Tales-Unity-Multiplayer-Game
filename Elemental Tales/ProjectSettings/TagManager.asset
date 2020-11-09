@@ -57,6 +57,9 @@ TagManager:
   - name: NPCs
     uniqueID: 3114019769
     locked: 0
+  - name: Collectibles
+    uniqueID: 640193687
+    locked: 0
   - name: Player
     uniqueID: 244847381
     locked: 0

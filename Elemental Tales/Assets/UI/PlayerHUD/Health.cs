@@ -73,6 +73,7 @@ public class Health : MonoBehaviour
 
     public void takeDamage(int damage)
     {
+        print("Damage Taken");
         currentHealth += damage;
     }
 

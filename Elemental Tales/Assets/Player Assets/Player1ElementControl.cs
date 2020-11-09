@@ -16,12 +16,12 @@ public class Player1ElementControl : MonoBehaviour
     [SerializeField] private ElementOrb elementOrb;
     [SerializeField] private CharacterControllerPlayer1 controller;
 
-    void Start()
+    private void Start()
     {
         currentElement = "Air";
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
@@ -47,5 +47,10 @@ public class Player1ElementControl : MonoBehaviour
             controller.changeElement("Fire");
             elementOrb.setElement("Fire");
         }
+    }
+
+    private string getElement()
+    {
+        return currentElement;
     }
 }

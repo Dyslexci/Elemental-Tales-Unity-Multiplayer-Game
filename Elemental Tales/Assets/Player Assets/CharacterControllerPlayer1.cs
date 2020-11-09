@@ -99,8 +99,9 @@ public class CharacterControllerPlayer1 : MonoBehaviour
         }
     }
 
-    private void DamageHealth(int damage)
+    public void DamageHealth(int damage)
     {
+        print("Taken damage");
         health.takeDamage(damage);
     }
 
