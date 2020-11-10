@@ -12,7 +12,7 @@ using UnityEngine;
 
 public class Player2ElementControl : MonoBehaviour
 {
-    /**private string currentElement;
+    private string currentElement;
     //[SerializeField] private ElementOrb elementOrb;
     [SerializeField] private CharacterControllerPlayer1 controller;
 
@@ -51,5 +51,5 @@ public class Player2ElementControl : MonoBehaviour
             controller.changeElement("Fire");
             //elementOrb.setElement("Fire");
         }
-    }**/
+    }
 }
