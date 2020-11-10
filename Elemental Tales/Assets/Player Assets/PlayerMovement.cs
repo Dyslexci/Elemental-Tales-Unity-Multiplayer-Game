@@ -14,23 +14,34 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterControllerPlayer1 controller;
-    //public Animator animator;
+    public Animator animator;
 
     [SerializeField] private float runSpeed = 60f;
     private float HorizontalMove = 0f;
     private Boolean jump = false;
     private Boolean crouch = false;
+    private Rigidbody2D m_RigidBody2D;
+
+    private void Start()
+    {
+        m_RigidBody2D = GetComponent<Rigidbody2D>();
+    }
 
     private void Update()
     {
         HorizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
-        //animator.SetFloat("Speed", Mathf.Abs(HorizontalMove));
+        animator.SetFloat("Speed", Mathf.Abs(HorizontalMove));
 
         if (Input.GetButtonDown("Jump"))
         {
             jump = true;
-            //animator.SetBool("isJumping", true);
+            animator.SetBool("isJumping", true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.S) && !controller.checkIsGrounded())
+        {
+            controller.stompAttack();
         }
 
         if (Input.GetButtonDown("Crouch"))
@@ -45,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void onLanding()
     {
-        //animator.SetBool("isJumping", false);
+        animator.SetBool("isJumping", false);
     }
 
     public void onCrouching(bool isCrouching)

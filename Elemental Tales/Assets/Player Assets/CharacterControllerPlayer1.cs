@@ -32,11 +32,12 @@ public class CharacterControllerPlayer1 : MonoBehaviour
     private int currentCollectibles1;
     private bool mFacingRight = true;
     private bool mGrounded;
-    private const float mGroundedRadius = 0.1f;
+    private const float mGroundedRadius = 0.05f;
     private const float mCeilingRadius = 0.2f;
     private Vector3 mVelocity = Vector3.zero;
     private Boolean HasDoubleJump = true;
     private float JumpForce;
+    private bool isStomp = false;
 
     public int currentHealth;
     public int currentMana;
@@ -49,8 +50,10 @@ public class CharacterControllerPlayer1 : MonoBehaviour
     [Space]
 
     public UnityEvent OnLandEvent;
+
     [System.Serializable]
     public class BoolEvent : UnityEvent<bool> { }
+
     public BoolEvent OnCrouchEvent;
     private bool mWasCrouching = false;
 
@@ -73,8 +76,8 @@ public class CharacterControllerPlayer1 : MonoBehaviour
 
     private void Update()
     {
-        mGrounded = false;
         bool wasTouchingGround = mGrounded;
+        mGrounded = false;
         Collider2D[] colliders = Physics2D.OverlapCircleAll(mGroundCheck.position, mGroundedRadius, mGroundIdentifier);
         for (int i = 0; i < colliders.Length; i++)
         {
@@ -82,18 +85,17 @@ public class CharacterControllerPlayer1 : MonoBehaviour
             {
                 mGrounded = true;
                 HasDoubleJump = true;
+                isStomp = false;
                 if (!wasTouchingGround)
                     OnLandEvent.Invoke();
             }
         }
-    }
 
-    private void FixedUpdate()
-    {
         if (!mGrounded && mRigidBody2D.velocity.y < 0)
         {
-            mRigidBody2D.gravityScale = (float)2.5;
-        } else
+            mRigidBody2D.gravityScale = (float)2;
+        }
+        else
         {
             mRigidBody2D.gravityScale = 3;
         }
@@ -103,6 +105,22 @@ public class CharacterControllerPlayer1 : MonoBehaviour
     {
         print("Taken damage");
         health.takeDamage(damage);
+    }
+
+    public void stompAttack()
+    {
+        if(currentElement.Equals("Earth"))
+        {
+            print("Stomping");
+            mRigidBody2D.velocity = new Vector2(mRigidBody2D.velocity.x, 0);
+            mRigidBody2D.AddRelativeForce(new Vector2(0f, -900));
+            isStomp = true;
+        }
+    }
+
+    public bool isStomping()
+    {
+        return isStomp;
     }
 
     public void Move(float move, bool crouch, bool jump)
@@ -154,6 +172,11 @@ public class CharacterControllerPlayer1 : MonoBehaviour
         }
         
 
+    }
+
+    public bool checkIsGrounded()
+    {
+        return mGrounded;
     }
 
     private void Flip()
