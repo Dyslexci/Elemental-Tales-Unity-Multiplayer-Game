@@ -4,70 +4,30 @@ using System.Configuration;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using static UnityEditor.PlayerSettings;
-
-/** 
- *    @author David Chizea, @author Matthew Ahearn
- *    @since 0.0.0
- *    @version 0.1.1
- *    
- *    Script allows levers to be toggled.
+/*
+ * @author Afoke Chizea
+ * the script changes the animation of the
  */
-
 public class Switch : MonoBehaviour
 {
-   [SerializeField] private GameObject crankDown;
-   [SerializeField] private GameObject crankUp;
-    private bool isOn;
-    private bool playerInArea;
-    private bool alreadyPressed;
+    // Start is called before the first frame update
+   [SerializeField] GameObject crankDown;
+   [SerializeField] GameObject crankUp;
+   public bool isOn = false;
+void Start()
+{
+    gameObject.GetComponent<SpriteRenderer>().sprite = crankDown.GetComponent<SpriteRenderer>().sprite;
+}
 
-    void Start()
-    {
-        gameObject.GetComponent<SpriteRenderer>().sprite = crankDown.GetComponent<SpriteRenderer>().sprite;
-        isOn = false;
-        playerInArea = false;
-        alreadyPressed = false;
-    }
-
-    private void Update()
-    {
-        if (alreadyPressed)
-        {
-            gameObject.GetComponent<SpriteRenderer>().sprite = crankUp.GetComponent<SpriteRenderer>().sprite;
-            return;
-        }
-            
-        if (playerInArea && Input.GetButton("Interact"))
-        {
+// Update is called once per frame
+void OnTriggerEnter2D(Collider2D col)
+{
+       
             gameObject.GetComponent<SpriteRenderer>().sprite = crankUp.GetComponent<SpriteRenderer>().sprite;
             isOn = true;
-        }
-        else
-        {
-            gameObject.GetComponent<SpriteRenderer>().sprite = crankDown.GetComponent<SpriteRenderer>().sprite;
-            isOn = false;
-        }
-            
-    }
+        
+    
+}
+   
 
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        playerInArea = true;
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-
-        playerInArea = false;
-    }
-
-    public bool getLeverState()
-    {
-        return isOn;
-    }
-
-    public void setPressedSuccessfully()
-    {
-        alreadyPressed = true;
-    }
 }

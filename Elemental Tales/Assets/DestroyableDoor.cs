@@ -28,6 +28,8 @@ public class DestroyableDoor : MonoBehaviour
             destroyDoor();
         }
     }
+
+    
     private void destroyDoor()
     {
         gameObject.SetActive(false);
