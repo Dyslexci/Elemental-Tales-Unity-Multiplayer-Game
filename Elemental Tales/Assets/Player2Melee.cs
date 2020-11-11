@@ -2,15 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.0.0
+ *    @version 0.1.0
+ *    
+ *    Controls melee attack for player 2.
+ */
+
 public class Player2Melee : MonoBehaviour
 {
-    public Animator animator;
+    [SerializeField] private Animator animator;
 
-    public Transform attackPoint;
-    public float attackRange = 0.5f;
-    public LayerMask enemyLayers;
+    [SerializeField] private Transform attackPoint;
+    [SerializeField] private float attackRange = 0.5f;
+    [SerializeField] private LayerMask enemyLayers;
 
-    public float attackRate = 2f;
+    [SerializeField] private float attackRate = 2f;
     private float nextAttackTime = 0f;
 
     private void Update()

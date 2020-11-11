@@ -17,6 +17,7 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text nameText;
     public TMP_Text dialogueText;
     [SerializeField] public GameObject canvasObect;
+    private Quest newQuest;
 
     public Animator animator;
 
@@ -26,8 +27,10 @@ public class DialogueManager : MonoBehaviour
         sentences = new Queue<string>();
     }
 
-    public void StartDialogue(Dialogue dialogue)
+    public void StartDialogue(Dialogue dialogue, Quest quest = null)
     {
+        if(!(quest == null))
+            newQuest = quest;
         canvasObect.SetActive(true);
         animator.SetBool("isOpen", true);
         nameText.text = dialogue.name;
@@ -63,7 +66,20 @@ public class DialogueManager : MonoBehaviour
 
     private void EndDialogue()
     {
+        if(newQuest.getQuestable())
+        {
+            Debug.Log("Quest added");
+            acceptQuest();
+        }
         animator.SetBool("isOpen", false);
         canvasObect.SetActive(false);
+    }
+
+    private void acceptQuest()
+    {
+        if (newQuest == null)
+            return;
+        FindObjectOfType<QuestManager>().addQuest(newQuest);
+        newQuest.setActive();
     }
 }

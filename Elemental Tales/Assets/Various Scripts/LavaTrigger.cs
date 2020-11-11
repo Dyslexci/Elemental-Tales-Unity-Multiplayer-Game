@@ -5,14 +5,9 @@ using UnityEngine;
 public class LavaTrigger : MonoBehaviour
 {
     [SerializeField] private CharacterControllerPlayer1 player1;
-    [SerializeField] private Health player2;
+    [SerializeField] private CharacterControllerPlayer1 player2;
     private float hitLast = 0;
     private float hitDelay = 2;
-
-    /**private void OnTriggerEnter2D(Collider2D collision)
-    {
-        damagePlayer(collision.name);
-    }**/
 
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -31,21 +26,10 @@ public class LavaTrigger : MonoBehaviour
             else
             {
                 print("Player 2 has entered lava");
-                //player2.takeDamage(-2);
+                player2.DamageHealth(-2);
             }
             print("Taken damage");
             hitLast = Time.time;
         }
     }
-
-    /**private void damagePlayer(string name)
-    {
-        if(name.Equals("Player"))
-        {
-            player1.DamageHealth(2);
-        } else
-        {
-            player2.DamageHealth(2);
-        }
-    }**/
 }

@@ -2,9 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.0.0
+ *    @version 0.1.0
+ *    
+ *    Allows assigned doors to be destroyed.
+ */
+
 public class DestroyableDoor : MonoBehaviour
 {
-    private int maxHealth = 100;
+    [SerializeField] private int maxHealth = 100;
     private int currentHealth;
 
     private void Start()

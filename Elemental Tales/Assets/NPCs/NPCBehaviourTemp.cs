@@ -14,6 +14,8 @@ using UnityEngine;
 
 public class NPCBehaviourTemp : MonoBehaviour
 {
+    [SerializeField] private Quest quest;
+
     [SerializeField] private DialogueTrigger dialogueTrigger;
     [SerializeField] private DialogueTrigger dialogueTriggerHasTalked;
 
