@@ -4,7 +4,10 @@ using System.Configuration;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using static UnityEditor.PlayerSettings;
-
+/*
+ * @author Afoke Chizea
+ * the script changes the animation of the
+ */
 public class Switch : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -19,8 +22,11 @@ void Start()
 // Update is called once per frame
 void OnTriggerEnter2D(Collider2D col)
 {
-    gameObject.GetComponent<SpriteRenderer>().sprite = crankUp.GetComponent<SpriteRenderer>().sprite;
-    isOn = true;
+       
+            gameObject.GetComponent<SpriteRenderer>().sprite = crankUp.GetComponent<SpriteRenderer>().sprite;
+            isOn = true;
+        
+    
 }
    
 
