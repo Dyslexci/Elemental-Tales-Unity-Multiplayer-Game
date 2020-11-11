@@ -14,7 +14,7 @@ using UnityEngine.UIElements;
  *    This script will provide controls for the character of player 1. It will smooth movement, allow jumping and crouching, abilities, and store health etc.
  */
 
-public class CharacterControllerPlayer1 : MonoBehaviour
+public class CharacterControllerPlayer2 : MonoBehaviour
 {
     [SerializeField] private ElementOrb elementOrb;
     [SerializeField] private Health health;
@@ -49,12 +49,12 @@ public class CharacterControllerPlayer1 : MonoBehaviour
     [Header("Events")]
     [Space]
 
-    public UnityEvent OnLandEvent;
+    public UnityEvent OnLandEvent2;
 
     [System.Serializable]
     public class BoolEvent : UnityEvent<bool> { }
 
-    public BoolEvent OnCrouchEvent;
+    public BoolEvent OnCrouchEvent2;
     private bool mWasCrouching = false;
 
     private void Start()
@@ -68,10 +68,10 @@ public class CharacterControllerPlayer1 : MonoBehaviour
     private void Awake()
     {
         mRigidBody2D = GetComponent<Rigidbody2D>();
-        if (OnLandEvent == null)
-            OnLandEvent = new UnityEvent();
-        if (OnCrouchEvent == null)
-            OnCrouchEvent = new BoolEvent();
+        if (OnLandEvent2 == null)
+            OnLandEvent2 = new UnityEvent();
+        if (OnCrouchEvent2 == null)
+            OnCrouchEvent2 = new BoolEvent();
     }
 
     private void Update()
@@ -87,7 +87,7 @@ public class CharacterControllerPlayer1 : MonoBehaviour
                 HasDoubleJump = true;
                 isStomp = false;
                 if (!wasTouchingGround)
-                    OnLandEvent.Invoke();
+                    OnLandEvent2.Invoke();
             }
         }
 
@@ -136,19 +136,19 @@ public class CharacterControllerPlayer1 : MonoBehaviour
             if (!mWasCrouching)
             {
                 mWasCrouching = true;
-                OnCrouchEvent.Invoke(true);
+                OnCrouchEvent2.Invoke(true);
             }
             move *= mCrouchSpeed;
             if (mCrouchColliderToggle != null)
                 mCrouchColliderToggle.enabled = false;
         } else
         {
+            if (mCrouchColliderToggle != null)
+                mCrouchColliderToggle.enabled = true;
             if (mWasCrouching)
             {
-                if (mCrouchColliderToggle != null)
-                    mCrouchColliderToggle.enabled = true;
                 mWasCrouching = false;
-                OnCrouchEvent.Invoke(false);
+                OnCrouchEvent2.Invoke(false);
             }
             
         }

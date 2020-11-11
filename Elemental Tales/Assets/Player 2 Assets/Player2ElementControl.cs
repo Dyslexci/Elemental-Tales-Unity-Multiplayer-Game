@@ -14,7 +14,7 @@ public class Player2ElementControl : MonoBehaviour
 {
     private string currentElement;
     //[SerializeField] private ElementOrb elementOrb;
-    [SerializeField] private CharacterControllerPlayer1 controller;
+    [SerializeField] private CharacterControllerPlayer2 controller;
 
     void Start()
     {
