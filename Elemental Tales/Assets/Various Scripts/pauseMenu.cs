@@ -52,4 +52,9 @@ public class pauseMenu : MonoBehaviour
         Debug.Log("Quitting Game....");
         Application.Quit();
     }
+
+    public void restartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }
