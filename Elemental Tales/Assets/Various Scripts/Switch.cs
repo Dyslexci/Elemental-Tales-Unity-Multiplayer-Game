@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
+
 /*
  * @author Afoke Chizea
  * the script changes the animation of the
