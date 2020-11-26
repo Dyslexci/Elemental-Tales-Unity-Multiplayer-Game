@@ -339,6 +339,7 @@ GameObject:
   - component: {fileID: 158601946}
   - component: {fileID: 158601945}
   - component: {fileID: 158601944}
+  - component: {fileID: 158601947}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -411,6 +412,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &158601947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158601943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &229908313
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,7 +842,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &583564933
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1233,7 +1265,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000030518, y: 3}
+  m_AnchoredPosition: {x: -0.000030517578, y: 3}
   m_SizeDelta: {x: -0.000061035156, y: -6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &819688939
@@ -2138,21 +2170,23 @@ MonoBehaviour:
   showDebugMessages: 0
   serverTickRate: 30
   offlineScene: 
-  onlineScene: 
+  onlineScene: Assets/Lobby/Scene_Lobby.unity
   transport: {fileID: 1758844370}
   networkAddress: localhost
   maxConnections: 4
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 0}
+  playerPrefab: {fileID: 4044786461905419036, guid: 4cf308909f462714f866975a84f298e5,
+    type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs: []
   minPlayers: 2
-  menuScene: 
+  menuScene: Assets/Lobby/Scene_Lobby.unity
   numberOfRounds: 1
-  roomPlayerPrefab: {fileID: 0}
+  roomPlayerPrefab: {fileID: 7573283190169704624, guid: c3f8b540604828f4e82531068ebcc679,
+    type: 3}
   playerSpawnSystem: {fileID: 0}
   roundSystem: {fileID: 0}
 --- !u!4 &1758844372
@@ -2824,3 +2858,77 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkManager: {fileID: 1758844371}
   landingPagePanel: {fileID: 2099527401}
+--- !u!1001 &7573283189374987404
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7573283190169704625, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: sceneId
+      value: 37055952
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704626, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 431.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704626, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 111.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704626, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704626, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704626, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704626, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704626, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704626, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704626, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704626, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704626, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573283190169704631, guid: c3f8b540604828f4e82531068ebcc679,
+        type: 3}
+      propertyPath: m_Name
+      value: NetworkRoomPlayer
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c3f8b540604828f4e82531068ebcc679, type: 3}
