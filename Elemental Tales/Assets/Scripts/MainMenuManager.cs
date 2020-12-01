@@ -10,7 +10,10 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private GameObject optionsScreen;
     [SerializeField] private GameObject exitScreen;
     [SerializeField] private GameObject menuScreen;
-    [SerializeField] private PanelFader fader;
+    [SerializeField] private PanelFader faderStart;
+    [SerializeField] private PanelFader faderOptions;
+    [SerializeField] private PanelFader faderExit;
+    [SerializeField] private PanelFader faderMenu;
 
     private void Start()
     {
@@ -22,8 +25,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void quitGame()
     {
-        menuScreen.SetActive(false);
         exitScreen.SetActive(true);
+        menuScreen.SetActive(false);
     }
 
     public void quitCancel()
