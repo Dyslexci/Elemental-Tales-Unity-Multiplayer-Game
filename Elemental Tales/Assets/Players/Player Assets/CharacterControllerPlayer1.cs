@@ -302,8 +302,6 @@ public class CharacterControllerPlayer1 : MonoBehaviour
             }
         }
 
-
-
         if (!mGrounded && jump && HasDoubleJump && currentElement.Equals("Air") && !wallSliding && !wallJumping)
         {
             mRigidBody2D.velocity = new Vector2(mRigidBody2D.velocity.x, 0);
@@ -316,8 +314,6 @@ public class CharacterControllerPlayer1 : MonoBehaviour
             mRigidBody2D.velocity = new Vector2(mRigidBody2D.velocity.x, 0);
             mRigidBody2D.AddForce(new Vector2(0f, m_JumpForce));
         }
-
-
     }
 
     public bool checkIsGrounded()

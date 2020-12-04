@@ -42,18 +42,13 @@ public class MainMenuManager : MonoBehaviour
 
     public void startGame()
     {
-        //Load up lobby manager
+        menuScreen.SetActive(false);
+        startGameScreen.SetActive(true);
     }
 
     public void optionsMenu()
     {
         menuScreen.SetActive(false);
         optionsScreen.SetActive(true);
-    }
-
-    public void optionsCancel()
-    {
-        optionsScreen.SetActive(false);
-        menuScreen.SetActive(true);
     }
 }
