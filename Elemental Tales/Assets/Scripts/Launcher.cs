@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using UnityEngine.UI;
 
 namespace Com.Team12.ElementalTales
 {
@@ -42,6 +43,23 @@ namespace Com.Team12.ElementalTales
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN: OnJoinedRoom() called by PUN. Now this client is in a room.");
+            progressPanel.SetActive(false);
+            lobbyPanel.SetActive(true);
+            controlPanel.SetActive(false);
+        }
+
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+        {
+            Debug.Log("Player has entered the room: " + newPlayer.NickName);
+            lobbyPlayer2Text.text = newPlayer.NickName;
+            if (PhotonNetwork.PlayerList.Length == 2)
+                StartGameButton.SetActive(true);
+        }
+
+        public override void OnCreatedRoom()
+        {
+            lobbyPlayer1Text.text = PhotonNetwork.NickName;
+            lobbyTitleText.text = "Private lobby: " + PhotonNetwork.InLobby;
         }
 
         #endregion
@@ -63,15 +81,21 @@ namespace Com.Team12.ElementalTales
         /// </summary>
         string gameVersion = "1";
         string roomCode;
+        
 
         [Tooltip("The UI panel to let the user enter name, connect and join")]
         [SerializeField] private GameObject controlPanel;
         [Tooltip("The UI panel to inform the user that the connection is in progress")]
         [SerializeField] private GameObject progressPanel;
+        [Tooltip("The UI panel to display lobby information")]
+        [SerializeField] private GameObject lobbyPanel;
         [SerializeField] private TMP_Text codeText;
         [SerializeField] private TMP_Text roomCodeText;
         [SerializeField] private TMP_Text connectedStatusText;
-
+        [SerializeField] private TMP_Text lobbyTitleText;
+        [SerializeField] private TMP_Text lobbyPlayer1Text;
+        [SerializeField] private TMP_Text lobbyPlayer2Text;
+        [SerializeField] private GameObject StartGameButton;
 
         #endregion
 
@@ -106,6 +130,8 @@ namespace Com.Team12.ElementalTales
         {
             progressPanel.SetActive(false);
             controlPanel.SetActive(true);
+            lobbyPanel.SetActive(false);
+            StartGameButton.SetActive(false);
         }
 
 
@@ -122,7 +148,7 @@ namespace Com.Team12.ElementalTales
         /// </summary>
         public void Connect()
         {
-            for(int i = 0; i<8; i++)
+            for(int i = 0; i<5; i++)
             {
                 connectCode += chars[Random.Range(0, chars.Length)];
             }
@@ -130,33 +156,21 @@ namespace Com.Team12.ElementalTales
             progressPanel.SetActive(true);
             controlPanel.SetActive(false);
             Debug.Log("PUN: Connect() has been called, and a room will be created with code " + connectCode);
-            // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
-            //if (PhotonNetwork.IsConnected)
-            //{
             RoomOptions roomOptions = new RoomOptions();
-                roomOptions.IsVisible = false;
-                PhotonNetwork.JoinOrCreateRoom(connectCode, roomOptions, null);
-                
-            //}
-            //else
-            //{
-            //    // #Critical, we must first and foremost connect to Photon Online Server.
-            //    PhotonNetwork.ConnectUsingSettings();
-            //    PhotonNetwork.GameVersion = gameVersion;
-            //    Debug.Log("PUN: Connect() has been called but the client is not connected. Connecting now.");
-            //}
+            roomOptions.IsVisible = false;
+            PhotonNetwork.JoinOrCreateRoom(connectCode, roomOptions, null);
         }
 
-        public void joinRoom(string roomCode)
+        public void joinRoom()
         {
-            if(roomCode !=  null)
-            {
+            //if(roomCode !=  )
+            //{
                 RoomOptions roomOptions = new RoomOptions();
                 roomOptions.IsVisible = false;
                 PhotonNetwork.JoinOrCreateRoom(roomCode, roomOptions, null);
                 Debug.Log("PUN: joinRoom() has been called, and the client will join room ID " + roomCode);
-            }
-            Debug.Log("PUN: joinRoom() has been called but there is no input code.");
+            //}
+            //Debug.Log("PUN: joinRoom() has been called but there is no input code: " + roomCode);
         }
 
         public void SetRoomCode(string value)
