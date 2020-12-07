@@ -38,14 +38,26 @@ namespace Com.Team12.ElementalTales
         public override void OnJoinRoomFailed(short returnCode, string message)
         {
             Debug.LogErrorFormat("Room creation failed with error code {0} and error message {1}", returnCode, message);
+            invalidCodeText.SetActive(true);
         }
 
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN: OnJoinedRoom() called by PUN. Now this client is in a room.");
+            invalidCodeText.SetActive(false);
             progressPanel.SetActive(false);
             lobbyPanel.SetActive(true);
             controlPanel.SetActive(false);
+            lobbyTitleText.text = PhotonNetwork.PlayerList[0].NickName + "'s Lobby";
+            codeText.text = "" + PhotonNetwork.CurrentRoom.Name;
+            if (PhotonNetwork.PlayerList.Length == 1)
+            {
+                lobbyPlayer1Text.text = PhotonNetwork.NickName;
+            } else
+            {
+                lobbyPlayer1Text.text = PhotonNetwork.PlayerList[0].NickName;
+                lobbyPlayer2Text.text = PhotonNetwork.NickName;
+            }
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -59,7 +71,23 @@ namespace Com.Team12.ElementalTales
         public override void OnCreatedRoom()
         {
             lobbyPlayer1Text.text = PhotonNetwork.NickName;
-            lobbyTitleText.text = "Private lobby: " + PhotonNetwork.InLobby;
+            
+        }
+
+        public override void OnLeftRoom()
+        {
+            Debug.Log("PUNL OnLeftRoom() called by PUN. This client has left the room.");
+            lobbyPlayer1Text.text = "Empty";
+            lobbyPlayer2Text.text = "Empty";
+            lobbyPanel.SetActive(false);
+            controlPanel.SetActive(true);
+        }
+
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            Debug.Log("Player has left the room: " + otherPlayer.NickName);
+            lobbyPlayer1Text.text = PhotonNetwork.NickName;
+            lobbyPlayer2Text.text = "Empty";
         }
 
         #endregion
@@ -90,11 +118,11 @@ namespace Com.Team12.ElementalTales
         [Tooltip("The UI panel to display lobby information")]
         [SerializeField] private GameObject lobbyPanel;
         [SerializeField] private TMP_Text codeText;
-        [SerializeField] private TMP_Text roomCodeText;
         [SerializeField] private TMP_Text connectedStatusText;
         [SerializeField] private TMP_Text lobbyTitleText;
         [SerializeField] private TMP_Text lobbyPlayer1Text;
         [SerializeField] private TMP_Text lobbyPlayer2Text;
+        [SerializeField] private GameObject invalidCodeText;
         [SerializeField] private GameObject StartGameButton;
 
         #endregion
@@ -132,6 +160,7 @@ namespace Com.Team12.ElementalTales
             controlPanel.SetActive(true);
             lobbyPanel.SetActive(false);
             StartGameButton.SetActive(false);
+            invalidCodeText.SetActive(false);
         }
 
 
@@ -152,7 +181,6 @@ namespace Com.Team12.ElementalTales
             {
                 connectCode += chars[Random.Range(0, chars.Length)];
             }
-            codeText.text = connectCode;
             progressPanel.SetActive(true);
             controlPanel.SetActive(false);
             Debug.Log("PUN: Connect() has been called, and a room will be created with code " + connectCode);
@@ -163,14 +191,8 @@ namespace Com.Team12.ElementalTales
 
         public void joinRoom()
         {
-            //if(roomCode !=  )
-            //{
-                RoomOptions roomOptions = new RoomOptions();
-                roomOptions.IsVisible = false;
-                PhotonNetwork.JoinOrCreateRoom(roomCode, roomOptions, null);
-                Debug.Log("PUN: joinRoom() has been called, and the client will join room ID " + roomCode);
-            //}
-            //Debug.Log("PUN: joinRoom() has been called but there is no input code: " + roomCode);
+            PhotonNetwork.JoinRoom(roomCode);
+            Debug.Log("PUN: joinRoom() has been called, and the client will join room ID " + roomCode);
         }
 
         public void SetRoomCode(string value)
@@ -182,7 +204,11 @@ namespace Com.Team12.ElementalTales
                 return;
             }
             roomCode = value;
-            roomCodeText.text = roomCode;
+        }
+
+        public void leaveLobby()
+        {
+            PhotonNetwork.LeaveRoom();
         }
 
 

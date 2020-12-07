@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [SerializeField] private string version;
+    [SerializeField] private TMP_Text versionText;
     [SerializeField] private GameObject startGameScreen;
     [SerializeField] private GameObject optionsScreen;
     [SerializeField] private GameObject exitScreen;
@@ -21,6 +23,7 @@ public class MainMenuManager : MonoBehaviour
         optionsScreen.SetActive(false);
         exitScreen.SetActive(false);
         menuScreen.SetActive(true);
+        versionText.text = "v"+version;
     }
 
     public void quitGame()
@@ -44,6 +47,12 @@ public class MainMenuManager : MonoBehaviour
     {
         menuScreen.SetActive(false);
         startGameScreen.SetActive(true);
+    }
+
+    public void quitStartGame()
+    {
+        startGameScreen.SetActive(false);
+        menuScreen.SetActive(true);
     }
 
     public void optionsMenu()
