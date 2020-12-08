@@ -6,6 +6,14 @@ using Photon.Realtime;
 using TMPro;
 using UnityEngine.UI;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.0.0
+ *    @version 0.1.0
+ *    
+ *    Implements the lobby system and launcer for the PUN2 networking package.
+ */
+
 namespace Com.Team12.ElementalTales
 {
     public class Launcher : MonoBehaviourPunCallbacks
@@ -35,15 +43,24 @@ namespace Com.Team12.ElementalTales
             Debug.LogWarningFormat("PUN: OnDisconnected() was called by PUN with reason {0}", cause);
         }
 
+        /// <summary>
+        /// Method called when the client fails to join a room.
+        /// </summary>
+        /// <param name="returnCode"></param>
+        /// <param name="message"></param>
         public override void OnJoinRoomFailed(short returnCode, string message)
         {
             Debug.LogErrorFormat("Room creation failed with error code {0} and error message {1}", returnCode, message);
             invalidCodeText.SetActive(true);
         }
 
+        /// <summary>
+        /// Method called when the client successfully joins a room.
+        /// </summary>
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN: OnJoinedRoom() called by PUN. Now this client is in a room.");
+            Debug.Log("In lobby: " + PhotonNetwork.InLobby);
             invalidCodeText.SetActive(false);
             progressPanel.SetActive(false);
             lobbyPanel.SetActive(true);
@@ -60,6 +77,10 @@ namespace Com.Team12.ElementalTales
             }
         }
 
+        /// <summary>
+        /// Method called when a player joins the room the client is connected to.
+        /// </summary>
+        /// <param name="newPlayer"></param>
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             Debug.Log("Player has entered the room: " + newPlayer.NickName);
@@ -68,12 +89,18 @@ namespace Com.Team12.ElementalTales
                 StartGameButton.SetActive(true);
         }
 
+        /// <summary>
+        /// Method called when the client creates a room.
+        /// </summary>
         public override void OnCreatedRoom()
         {
             lobbyPlayer1Text.text = PhotonNetwork.NickName;
             
         }
 
+        /// <summary>
+        /// Method called when the client leaves a room.
+        /// </summary>
         public override void OnLeftRoom()
         {
             Debug.Log("PUNL OnLeftRoom() called by PUN. This client has left the room.");
@@ -83,6 +110,10 @@ namespace Com.Team12.ElementalTales
             controlPanel.SetActive(true);
         }
 
+        /// <summary>
+        /// Method called when a player leaves the room the client is connected to.
+        /// </summary>
+        /// <param name="otherPlayer"></param>
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
             Debug.Log("Player has left the room: " + otherPlayer.NickName);
@@ -90,12 +121,13 @@ namespace Com.Team12.ElementalTales
             lobbyPlayer2Text.text = "Empty";
         }
 
+
         #endregion
 
         #region Private Serializable Fields
 
         [SerializeField] private byte maxPlayersPerRoom = 2;
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const string chars = "ABCDEFGHJKLMNOPQRSTUVWXYZ023456789";
         private string connectCode;
 
         #endregion
@@ -124,6 +156,7 @@ namespace Com.Team12.ElementalTales
         [SerializeField] private TMP_Text lobbyPlayer2Text;
         [SerializeField] private GameObject invalidCodeText;
         [SerializeField] private GameObject StartGameButton;
+        [SerializeField] private TMP_InputField codeInputField;
 
         #endregion
 
@@ -161,6 +194,8 @@ namespace Com.Team12.ElementalTales
             lobbyPanel.SetActive(false);
             StartGameButton.SetActive(false);
             invalidCodeText.SetActive(false);
+            codeInputField.characterLimit = 5;
+            codeInputField.onValidateInput += delegate (string s, int i, char c) { return char.ToUpper(c); };
         }
 
 
@@ -189,12 +224,19 @@ namespace Com.Team12.ElementalTales
             PhotonNetwork.JoinOrCreateRoom(connectCode, roomOptions, null);
         }
 
+        /// <summary>
+        /// Joins the room with the input room code.
+        /// </summary>
         public void joinRoom()
         {
             PhotonNetwork.JoinRoom(roomCode);
             Debug.Log("PUN: joinRoom() has been called, and the client will join room ID " + roomCode);
         }
 
+        /// <summary>
+        /// Sets the room code to equal the current input in the input field.
+        /// </summary>
+        /// <param name="value"></param>
         public void SetRoomCode(string value)
         {
             // #Important
@@ -206,9 +248,13 @@ namespace Com.Team12.ElementalTales
             roomCode = value;
         }
 
+        /// <summary>
+        /// Leaves the lobby.
+        /// </summary>
         public void leaveLobby()
         {
             PhotonNetwork.LeaveRoom();
+            connectCode = "";
         }
 
 
