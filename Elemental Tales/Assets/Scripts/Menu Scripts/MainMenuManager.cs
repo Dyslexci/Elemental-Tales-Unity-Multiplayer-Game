@@ -16,6 +16,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private PanelFader faderOptions;
     [SerializeField] private PanelFader faderExit;
     [SerializeField] private PanelFader faderMenu;
+    [SerializeField] private GameObject menuCanvas;
 
     private void Start()
     {
