@@ -4,7 +4,13 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 
-
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.0.0
+ *    @version 0.1.0
+ *    
+ *    Allows the player to input a name, limited to 12 characters.
+ */
 namespace Com.MyCompany.MyGame
 {
     /// <summary>
@@ -18,6 +24,7 @@ namespace Com.MyCompany.MyGame
 
         // Store the PlayerPref Key to avoid typos
         const string playerNamePrefKey = "PlayerName";
+        [SerializeField] InputField playerNameInputField;
 
 
         #endregion
@@ -31,7 +38,7 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         void Start()
         {
-
+            playerNameInputField.characterLimit = 12;
 
             string defaultName = string.Empty;
             InputField _inputField = this.GetComponent<InputField>();
