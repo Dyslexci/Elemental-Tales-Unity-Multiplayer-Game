@@ -4,57 +4,94 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
-public class pauseMenu : MonoBehaviour
+using Photon.Pun;
+using Photon.Realtime;
+
+namespace Com.Team12.ElementalTales
 {
-    public static bool pausedGame = false;
-
-    public GameObject pauseMenuUI;
-
-    // Update is called once per frame
-    void Update()
+    public class pauseMenu : MonoBehaviourPunCallbacks
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        #region Photon Callbacks
+
+        /// <summary>
+        /// Called when the local player left the room. Needed to load the launcher scene.
+        /// </summary>
+        public override void OnLeftRoom()
         {
-            if (pausedGame)
-            {
-                Resume();
-            }
-            else
-            {
-                Pause();
-            }
+            SceneManager.LoadScene(0);
         }
-        
-    }
 
-    public void Resume()
-    {
-        pauseMenuUI.SetActive(false);
-        Time.timeScale = 1f;
-        pausedGame = false;
-    }
+        #endregion
 
-     void Pause( )
-    {
-        pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
-        pausedGame = true;
-    }
 
-    public void loadingMenu()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("Menu");
-    }
+        #region Private Serialisable Fields
 
-    public void quittingMenu()
-    {
-        Debug.Log("Quitting Game....");
-        Application.Quit();
-    }
+        [SerializeField] private static bool pausedGame = false;
 
-    public void restartLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        [SerializeField] private GameObject pauseMenuUI;
+
+        #endregion
+
+
+        #region Private Methods
+
+        private void Start()
+        {
+            pauseMenuUI.SetActive(false);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (pausedGame)
+                {
+                    Resume();
+                }
+                else
+                {
+                    Pause();
+                }
+            }
+
+        }
+
+        private void Pause()
+        {
+            pauseMenuUI.SetActive(true);
+            Time.timeScale = 0f;
+            pausedGame = true;
+        }
+
+        #endregion
+
+
+        #region Public Methods
+
+        public void Resume()
+        {
+            pauseMenuUI.SetActive(false);
+            Time.timeScale = 1f;
+            pausedGame = false;
+        }
+
+        public void loadingMenu()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene("Menu");
+        }
+
+        public void leaveRoom()
+        {
+            Debug.Log("Returning to main menu");
+            PhotonNetwork.LeaveRoom();
+        }
+
+        public void restartLevel()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        #endregion
     }
 }

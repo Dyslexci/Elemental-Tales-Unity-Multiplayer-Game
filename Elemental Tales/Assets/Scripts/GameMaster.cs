@@ -22,11 +22,24 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     private static bool pausedGame = false;
     [SerializeField] private GameObject pauseMenuUI;
+    [Tooltip("The prefab to use for representing the player")]
+    public GameObject playerPrefab;
+    [SerializeField] private Transform spawnPoint;
 
     // Start is called before the first frame update
     void Start()
     {
         collectible1 = 0;
+
+        if(playerPrefab == null)
+        {
+            Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
+        } else
+        {
+            Debug.LogFormat("We are Instantiating LocalPlayer");
+            PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(spawnPoint.position.x, spawnPoint.position.y, 0f), Quaternion.identity, 0);
+
+        }
     }
 
     // Update is called once per frame

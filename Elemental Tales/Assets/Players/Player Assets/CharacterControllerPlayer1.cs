@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.Events;
+
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+
+using Photon.Pun;
 
 /** 
  *    @author Matthew Ahearn
@@ -14,7 +18,7 @@ using UnityEngine.UIElements;
  *    This script will provide controls for the character of player 1. It will smooth movement, allow jumping and crouching, abilities, and store health etc.
  */
 
-public class CharacterControllerPlayer1 : MonoBehaviour
+public class CharacterControllerPlayer1 : MonoBehaviourPunCallbacks
 {
     [SerializeField] private ElementOrb elementOrb;
     [SerializeField] private Health health;
@@ -77,6 +81,20 @@ public class CharacterControllerPlayer1 : MonoBehaviour
         currentMana = maxMana;
         currentCollectibles1 = 0;
         changeElement("Air");
+
+        CameraWork _cameraWork = this.gameObject.GetComponent<CameraWork>();
+
+        if(_cameraWork != null)
+        {
+            if (photonView.IsMine)
+            {
+                Debug.Log("Following player now");
+                _cameraWork.OnStartFollowing();
+            }
+        } else
+        {
+            Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
+        }
     }
 
     private void Awake()

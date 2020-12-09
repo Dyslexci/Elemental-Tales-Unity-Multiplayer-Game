@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
@@ -11,7 +13,7 @@ using UnityEngine;
  *    This script provides raw inputs for relay to the character controller, as well as controls animations based off of inputs. Specifically for player 1.
  */
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviourPun
 {
     public CharacterControllerPlayer1 controller;
     public Animator animator;
@@ -29,6 +31,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
+            return;
+
         HorizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
         animator.SetFloat("Speed", Mathf.Abs(HorizontalMove));
