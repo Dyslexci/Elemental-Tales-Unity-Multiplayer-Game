@@ -20,17 +20,6 @@ namespace Com.Team12.ElementalTales
     {
         #region MonoBehaviourPunCallbacks Callbacks
 
-        /// <summary>
-        /// Method called when the client connects to the master servers (successful connection to online server host)
-        /// </summary>
-        //public override void OnConnectedToMaster()
-        //{
-        //    Debug.Log("PUN: OnConnectedToMaster() was called by PUN");
-        //    RoomOptions roomOptions = new RoomOptions();
-        //    roomOptions.IsVisible = false;
-        //    PhotonNetwork.JoinOrCreateRoom(connectCode, roomOptions, null);
-        //    Debug.Log("PUN: A room will be created with code " + connectCode);
-        //}
 
         /// <summary>
         /// Method called when the client disconnects from the online host server
@@ -192,7 +181,7 @@ namespace Com.Team12.ElementalTales
             progressPanel.SetActive(false);
             controlPanel.SetActive(true);
             lobbyPanel.SetActive(false);
-            StartGameButton.SetActive(false);
+            StartGameButton.SetActive(true);
             invalidCodeText.SetActive(false);
             codeInputField.characterLimit = 5;
             codeInputField.onValidateInput += delegate (string s, int i, char c) { return char.ToUpper(c); };
@@ -255,6 +244,12 @@ namespace Com.Team12.ElementalTales
         {
             PhotonNetwork.LeaveRoom();
             connectCode = "";
+        }
+
+        public void startGame()
+        {
+            Debug.Log("Starting game.");
+            PhotonNetwork.LoadLevel(1);
         }
 
 

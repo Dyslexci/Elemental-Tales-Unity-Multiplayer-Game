@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.Events;
+
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+
+using Photon.Pun;
 
 /** 
  *    @author Matthew Ahearn
@@ -14,7 +18,7 @@ using UnityEngine.UIElements;
  *    This script will provide controls for the character of player 1. It will smooth movement, allow jumping and crouching, abilities, and store health etc.
  */
 
-public class CharacterControllerPlayer1 : MonoBehaviour
+public class CharacterControllerPlayer1 : MonoBehaviourPunCallbacks
 {
     [SerializeField] private ElementOrb elementOrb;
     [SerializeField] private Health health;
@@ -36,7 +40,8 @@ public class CharacterControllerPlayer1 : MonoBehaviour
 
     private bool mFacingRight = true;
     private bool mGrounded;
-    private const float mGroundedRadius = 0.05f;
+    [SerializeField] private float mGroundedRadius = 0.375f;
+    private const float m_FrontCheckRadius = 0.1f;
     private const float mCeilingRadius = 0.2f;
     private Vector3 mVelocity = Vector3.zero;
     private Boolean HasDoubleJump = true;
@@ -77,6 +82,20 @@ public class CharacterControllerPlayer1 : MonoBehaviour
         currentMana = maxMana;
         currentCollectibles1 = 0;
         changeElement("Air");
+
+        CameraWork _cameraWork = this.gameObject.GetComponent<CameraWork>();
+
+        if(_cameraWork != null)
+        {
+            if (photonView.IsMine)
+            {
+                Debug.Log("Following player now");
+                _cameraWork.OnStartFollowing();
+            }
+        } else
+        {
+            Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
+        }
     }
 
     private void Awake()
@@ -116,7 +135,7 @@ public class CharacterControllerPlayer1 : MonoBehaviour
             mRigidBody2D.gravityScale = 3;
         }
 
-        Collider2D[] frontColliders = Physics2D.OverlapCircleAll(frontCheck.position, mGroundedRadius, mGroundIdentifier);
+        Collider2D[] frontColliders = Physics2D.OverlapCircleAll(frontCheck.position, m_FrontCheckRadius, mGroundIdentifier);
         for (int i = 0; i < frontColliders.Length; i++)
         {
             if (frontColliders[i].gameObject.CompareTag("Ground"))
@@ -150,7 +169,7 @@ public class CharacterControllerPlayer1 : MonoBehaviour
     {
         if (frontCheck == null)
             return;
-        Gizmos.DrawWireSphere(frontCheck.position, mGroundedRadius);
+        Gizmos.DrawWireSphere(frontCheck.position, m_FrontCheckRadius);
         Gizmos.DrawWireSphere(mGroundCheck.position, mGroundedRadius);
     }
 
