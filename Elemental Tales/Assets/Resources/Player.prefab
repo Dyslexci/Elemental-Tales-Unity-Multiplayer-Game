@@ -188,6 +188,7 @@ MonoBehaviour:
     m_Bits: 55
   frontCheck: {fileID: 7143670992182385073}
   mRigidBody2D: {fileID: 9212466101556849468}
+  mGroundedRadius: 0.375
   wallSlideSpeed: 0
   currentHealth: 3
   currentMana: 3
@@ -428,7 +429,7 @@ MonoBehaviour:
   - {x: -0.055650882, y: -0.121260196, z: 0}
   m_ShapePathHash: 325048971
   m_Mesh: {fileID: 0}
-  m_InstanceId: -13128
+  m_InstanceId: 110456
 --- !u!95 &9212466101556849457
 Animator:
   serializedVersion: 3
@@ -560,7 +561,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9212466102334854691}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.1574, z: 0}
+  m_LocalPosition: {x: 0, y: -0.0878, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9212466101556849465}

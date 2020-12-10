@@ -40,7 +40,8 @@ public class CharacterControllerPlayer1 : MonoBehaviourPunCallbacks
 
     private bool mFacingRight = true;
     private bool mGrounded;
-    private const float mGroundedRadius = 0.05f;
+    [SerializeField] private float mGroundedRadius = 0.375f;
+    private const float m_FrontCheckRadius = 0.1f;
     private const float mCeilingRadius = 0.2f;
     private Vector3 mVelocity = Vector3.zero;
     private Boolean HasDoubleJump = true;
@@ -134,7 +135,7 @@ public class CharacterControllerPlayer1 : MonoBehaviourPunCallbacks
             mRigidBody2D.gravityScale = 3;
         }
 
-        Collider2D[] frontColliders = Physics2D.OverlapCircleAll(frontCheck.position, mGroundedRadius, mGroundIdentifier);
+        Collider2D[] frontColliders = Physics2D.OverlapCircleAll(frontCheck.position, m_FrontCheckRadius, mGroundIdentifier);
         for (int i = 0; i < frontColliders.Length; i++)
         {
             if (frontColliders[i].gameObject.CompareTag("Ground"))
@@ -168,7 +169,7 @@ public class CharacterControllerPlayer1 : MonoBehaviourPunCallbacks
     {
         if (frontCheck == null)
             return;
-        Gizmos.DrawWireSphere(frontCheck.position, mGroundedRadius);
+        Gizmos.DrawWireSphere(frontCheck.position, m_FrontCheckRadius);
         Gizmos.DrawWireSphere(mGroundCheck.position, mGroundedRadius);
     }
 
