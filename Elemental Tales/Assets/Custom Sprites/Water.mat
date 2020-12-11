@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Water
+  m_Shader: {fileID: -6465566751694194690, guid: 7af640f7734a09f49a85dd3e3616f40c,
+    type: 3}
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_3E1F863D:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_6690C4BB:
+        m_Texture: {fileID: 2800000, guid: 621f866649eaeed488626a8d81fd6fe8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_C5FBD383:
+        m_Texture: {fileID: 2800000, guid: abecc99ca3efec2488dbded80afaf916, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_EDA64CA5:
+        m_Texture: {fileID: 2800000, guid: 8dddc2788e7e5fc4284d3c320219cc98, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_208FCD8F: 1.26
+    - Vector1_8A166770: 1.34
+    - Vector1_C0FDCA40: 1
+    - Vector1_D3B5D3E4: 0.59
+    - _EnableExternalAlpha: 0
+    m_Colors:
+    - Color_5058B35C: {r: 0, g: 0.03578186, b: 1, a: 1}
+    - Color_9C676B70: {r: 0.23113209, g: 0.43815833, b: 1, a: 0}
+    - Vector3_25112B54: {r: 0, g: 0.05, b: 0, a: 0}
+    - Vector3_3945D2B6: {r: -0.05, g: 0, b: 0, a: 0}
+    - Vector3_801E0DF0: {r: -0.01, g: 0.025, b: 0, a: 0}
+    - Vector3_A6063615: {r: -0.02, g: 0, b: 0, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
