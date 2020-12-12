@@ -38,7 +38,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
         {
             Debug.LogFormat("We are Instantiating LocalPlayer");
             PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(spawnPoint.position.x, spawnPoint.position.y, 0f), Quaternion.identity, 0);
-
         }
     }
 
