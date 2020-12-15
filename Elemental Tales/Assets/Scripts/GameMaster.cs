@@ -18,26 +18,45 @@ using Photon.Realtime;
 
 public class GameMaster : MonoBehaviourPunCallbacks
 {
+
+    //public void onPhotonInstantiate(PhotonMessageInfo info)
+    //{
+    //    playerObject = (GameObject)info.Sender.TagObject;
+    //}
+
     private int collectible1;
+    private GameObject playerObject;
 
     private static bool pausedGame = false;
     [SerializeField] private GameObject pauseMenuUI;
     [Tooltip("The prefab to use for representing the player")]
     public GameObject playerPrefab;
-    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private Transform spawnPoint1;
+    [SerializeField] private Transform spawnPoint2;
+
+    private Transform lastCheckpoint;
 
     // Start is called before the first frame update
     void Start()
     {
         collectible1 = 0;
+        //Debug.Log(playerObject.name + " has been correctly stored in the local gamemaster");
 
         if(playerPrefab == null)
         {
             Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
         } else
         {
+            if(PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(spawnPoint1.position.x, spawnPoint1.position.y, 0f), Quaternion.identity, 0);
+                lastCheckpoint = spawnPoint1;
+            } else
+            {
+                PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(spawnPoint2.position.x, spawnPoint2.position.y, 0f), Quaternion.identity, 0);
+                lastCheckpoint = spawnPoint2;
+            }
             Debug.LogFormat("We are Instantiating LocalPlayer");
-            PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(spawnPoint.position.x, spawnPoint.position.y, 0f), Quaternion.identity, 0);
         }
     }
 
@@ -55,6 +74,35 @@ public class GameMaster : MonoBehaviourPunCallbacks
                 Pause();
             }
         }
+    }
+
+    public void setPlayer(GameObject player)
+    {
+        playerObject = player;
+        Debug.Log("Player has been successfully assigned to the game master - " + playerObject.name);
+    }
+
+    public GameObject getPlayer()
+    {
+        return playerObject;
+    }
+
+    public void setCheckpoint(Transform newCheckpoint)
+    {
+        lastCheckpoint = newCheckpoint;
+    }
+
+    public void respawn()
+    {
+        Debug.Log("GameMaster: respawn() has been called.");
+        StartCoroutine(Respawn());
+    }
+
+    IEnumerator Respawn()
+    {
+            yield return new WaitForSeconds(2.0f);
+            playerObject.transform.SetPositionAndRotation(new Vector3(lastCheckpoint.position.x, lastCheckpoint.position.y, 0f), Quaternion.identity);
+            playerObject.GetComponent<Health>().resetPlayerAfterDeath();
     }
 
     public void addCollectible1()

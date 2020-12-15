@@ -89,6 +89,7 @@ public class CharacterControllerPlayer1 : MonoBehaviourPunCallbacks
         {
             if (photonView.IsMine)
             {
+                GameObject.Find("Game Manager").GetComponent<GameMaster>().setPlayer(this.gameObject);
                 Debug.Log("Following player now");
                 _cameraWork.OnStartFollowing();
             }
@@ -217,8 +218,7 @@ public class CharacterControllerPlayer1 : MonoBehaviourPunCallbacks
 
     public void DamageHealth(int damage)
     {
-        print("Taken damage");
-        health.takeDamage(damage);
+        this.gameObject.GetComponent<Health>().takeDamage(damage);
     }
 
     public void stompAttack()

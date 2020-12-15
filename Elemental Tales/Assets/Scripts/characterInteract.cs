@@ -23,8 +23,6 @@ public class characterInteract : MonoBehaviour
             return;
         }
 
-        if(collisionCollider.name == "Player")
-        {
             if(inContact && Input.GetButton("PushPull1"))
             {
                 GetComponent<RelativeJoint2D>().connectedBody = collisionCollider.GetComponent<Rigidbody2D>();
@@ -32,16 +30,6 @@ public class characterInteract : MonoBehaviour
             {
                 GetComponent<RelativeJoint2D>().connectedBody = GetComponent<Rigidbody2D>();
             }
-        } else if(collisionCollider.name.Equals("Player 2"))
-        {
-            if (inContact && Input.GetButton("PushPull12"))
-            {
-                GetComponent<RelativeJoint2D>().connectedBody = collisionCollider.GetComponent<Rigidbody2D>();
-            } else
-            {
-                GetComponent<RelativeJoint2D>().connectedBody = GetComponent<Rigidbody2D>();
-            }
-        }
 
     }
 

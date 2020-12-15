@@ -18,6 +18,7 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text dialogueText;
     [SerializeField] public GameObject canvasObect;
     private Quest newQuest;
+    private bool inDialogue = false;
 
     public Animator animator;
 
@@ -27,8 +28,18 @@ public class DialogueManager : MonoBehaviour
         sentences = new Queue<string>();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F) && inDialogue == true)
+        {
+            DisplayNextSentence();
+        }
+
+    }
+
     public void StartDialogue(Dialogue dialogue, Quest quest = null)
     {
+        inDialogue = true;
         if(!(quest == null))
             newQuest = quest;
         canvasObect.SetActive(true);
@@ -44,6 +55,7 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplayNextSentence()
     {
+        Debug.Log("Next sentence");
         if(sentences.Count == 0)
         {
             EndDialogue();
@@ -66,6 +78,7 @@ public class DialogueManager : MonoBehaviour
 
     private void EndDialogue()
     {
+        inDialogue = false;
         if(newQuest.getQuestable())
         {
             Debug.Log("Quest added");

@@ -59,7 +59,6 @@ namespace Com.Team12.ElementalTales
         private void Pause()
         {
             pauseMenuUI.SetActive(true);
-            Time.timeScale = 0f;
             pausedGame = true;
         }
 
@@ -71,7 +70,6 @@ namespace Com.Team12.ElementalTales
         public void Resume()
         {
             pauseMenuUI.SetActive(false);
-            Time.timeScale = 1f;
             pausedGame = false;
         }
 

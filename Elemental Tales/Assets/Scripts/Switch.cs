@@ -4,14 +4,18 @@ using System.Configuration;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
+using Photon.Pun;
+
 /*
  * @author Afoke Chizea
  * the script changes the animation of the
  */
-public class Switch : MonoBehaviour
+public class Switch : MonoBehaviourPun
 {
-    [SerializeField] GameObject crankDown;
-    [SerializeField] GameObject crankUp;
+    [SerializeField] Sprite crankDown;
+    [SerializeField] Sprite crankUp;
+    [SerializeField] Transform pos;
+    [SerializeField] float radius = 1.5f;
     private bool isOn = false;
     private bool pressedSuccessfully = false;
     private bool playerPresent = false;
@@ -20,36 +24,57 @@ public class Switch : MonoBehaviour
 
     void Start()
     { 
-        gameObject.GetComponent<SpriteRenderer>().sprite = crankDown.GetComponent<SpriteRenderer>().sprite;
+        gameObject.GetComponent<SpriteRenderer>().sprite = crankDown;
     }
 
     private void Update()
     {
         if(pressedSuccessfully)
         {
-            gameObject.GetComponent<SpriteRenderer>().sprite = crankUp.GetComponent<SpriteRenderer>().sprite;
+            gameObject.GetComponent<SpriteRenderer>().sprite = crankUp;
             return;
         }
 
-        if(playerPresent && Input.GetButton("Interact"))
+        checkPresent();
+
+        if (playerPresent && Input.GetButton("Interact"))
         {
-            gameObject.GetComponent<SpriteRenderer>().sprite = crankUp.GetComponent<SpriteRenderer>().sprite;
-            isOn = true;
-        } else
+            if (isOn == true)
+                return;
+            photonView.RPC("setLeverOn", RpcTarget.AllBuffered);
+        } else if(playerPresent)
         {
-            gameObject.GetComponent<SpriteRenderer>().sprite = crankDown.GetComponent<SpriteRenderer>().sprite;
-            isOn = false;
+            if (isOn == false)
+                return;
+            photonView.RPC("setLeverOff", RpcTarget.AllBuffered);
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
+    private void checkPresent()
     {
-        playerPresent = true;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(pos.position, radius);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].gameObject.tag == "Player")
+            {
+                if (playerPresent == true)
+                    return;
+                Debug.Log("Player has entered the region");
+                playerPresent = true;
+            }
+            else
+            {
+                if (playerPresent == false)
+                    return;
+                Debug.Log("Player has left the region");
+                playerPresent = false;
+            }
+        }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnDrawGizmosSelected()
     {
-        playerPresent = false;
+        Gizmos.DrawWireSphere(pos.position, radius);
     }
 
     public bool getLeverState()
@@ -60,5 +85,19 @@ public class Switch : MonoBehaviour
     public void setPressedSuccessfully()
     {
         pressedSuccessfully = true;
+    }
+
+    [PunRPC] private void setLeverOn()
+    {
+        Debug.Log("PUN: setLeverOn() has been called.");
+        gameObject.GetComponent<SpriteRenderer>().sprite = crankUp;
+        isOn = true;
+    }
+
+    [PunRPC] private void setLeverOff()
+    {
+        Debug.Log("PUN: setLeverOff() has been called.");
+        gameObject.GetComponent<SpriteRenderer>().sprite = crankDown;
+        isOn = false;
     }
 }
