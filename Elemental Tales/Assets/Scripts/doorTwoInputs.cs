@@ -17,11 +17,9 @@ public class doorTwoInputs : MonoBehaviour
 
     void Update()
     {
-        //if (switch1.getLeverState() && switch2.getLeverState())
-        //{
-        //    //switch1.setPressedSuccessfully();
-        //    //switch2.setPressedSuccessfully();
-        //    this.gameObject.SetActive(false);
-        //}
+        if (switch1.getLeverState() && switch2.getLeverState())
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }

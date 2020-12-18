@@ -16,9 +16,9 @@ using Photon.Pun;
 
 public class Collectible1Counter : MonoBehaviour
 {
-    private Image collectible1Image;
+    [SerializeField] private GameObject collectible1Image;
     private int noCollectibles1;
-    private TMP_Text collectible1Number;
+    [SerializeField] private TMP_Text collectible1Number;
 
     private void Start()
     {
@@ -32,11 +32,11 @@ public class Collectible1Counter : MonoBehaviour
         noCollectibles1 = FindObjectOfType<GameMaster>().getCollectible1();
         if (noCollectibles1 == 0)
         {
-            collectible1Image.enabled = false;
+            collectible1Image.SetActive(false);;
             collectible1Number.enabled = false;
         } else
         {
-            collectible1Image.enabled = true;
+            collectible1Image.SetActive(true);
             collectible1Number.enabled = true;
             collectible1Number.text = noCollectibles1.ToString();
         }

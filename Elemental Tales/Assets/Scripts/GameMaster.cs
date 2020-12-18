@@ -4,6 +4,7 @@ using UnityEngine;
 
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using TMPro;
 
 using Photon.Pun;
 using Photon.Realtime;
@@ -19,6 +20,11 @@ using Photon.Realtime;
 public class GameMaster : MonoBehaviourPunCallbacks
 {
 
+    public override void OnLeftRoom()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     //public void onPhotonInstantiate(PhotonMessageInfo info)
     //{
     //    playerObject = (GameObject)info.Sender.TagObject;
@@ -33,12 +39,18 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public GameObject playerPrefab;
     [SerializeField] private Transform spawnPoint1;
     [SerializeField] private Transform spawnPoint2;
+    [SerializeField] private GameObject optionsMenuUI;
+
 
     private Transform lastCheckpoint;
 
     // Start is called before the first frame update
     void Start()
     {
+        
+        pauseMenuUI.SetActive(false);
+        optionsMenuUI.SetActive(false);
+
         collectible1 = 0;
         //Debug.Log(playerObject.name + " has been correctly stored in the local gamemaster");
 
@@ -63,13 +75,12 @@ public class GameMaster : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetButtonDown("Pause"))
         {
-            if (pausedGame)
+            if(pausedGame)
             {
-                Resume();
-            }
-            else
+                resumeGame();
+            } else
             {
                 Pause();
             }
@@ -116,34 +127,37 @@ public class GameMaster : MonoBehaviourPunCallbacks
         return collectible1;
     }
 
-    public void Resume()
+    public void resumeGame()
     {
-        pauseMenuUI.SetActive(false);
-        Time.timeScale = 1f;
+        //optionsMenuUI.SetActive(false);
+        Debug.Log("Resume pressed");
+        
         pausedGame = false;
+        pauseMenuUI.SetActive(false);
     }
 
     void Pause()
     {
         pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
         pausedGame = true;
     }
 
-    public void loadingMenu()
+    public void optionsMenu()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("Menu");
+        Debug.Log("Options pressed");
+        //optionsMenuUI.SetActive(true);
+        //pauseMenuUI.SetActive(false);
     }
 
-    public void quittingMenu()
+    public void leaveGame()
     {
         Debug.Log("Quitting Game....");
-        Application.Quit();
+        PhotonNetwork.LeaveRoom();
     }
 
     public void restartLevel()
     {
+        Debug.Log("Restart pressed");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -100,6 +100,9 @@ MonoBehaviour:
   crankUp: {fileID: 21300000, guid: 441a2d89600064d4d9ced045b19d0ae6, type: 3}
   pos: {fileID: 4650368744109835808}
   radius: 1.1
+  layer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!114 &4337181533450486841
 MonoBehaviour:
   m_ObjectHideFlags: 0

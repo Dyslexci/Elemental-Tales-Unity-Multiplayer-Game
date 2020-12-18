@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4278567573904628026}
   - component: {fileID: 4278567573904628028}
-  - component: {fileID: 4278567573904628029}
   - component: {fileID: 3300244205862771611}
   m_Layer: 0
   m_Name: Game Manager
@@ -51,20 +50,6 @@ MonoBehaviour:
     type: 3}
   spawnPoint1: {fileID: 0}
   spawnPoint2: {fileID: 0}
---- !u!114 &4278567573904628029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4278567573904628030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69ccd548fa1e7d549b35fe501783caaf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pauseMenuUI: {fileID: 8409625482603793866, guid: 7e747641fe6077d48836224b4248e7dd,
-    type: 3}
 --- !u!114 &3300244205862771611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,5 +62,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae6614ced5f59e42a6e9c25ac29e93d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectible1Image: {fileID: 0}
-  collectible1Number: {fileID: 0}

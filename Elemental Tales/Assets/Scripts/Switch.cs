@@ -16,6 +16,7 @@ public class Switch : MonoBehaviourPun
     [SerializeField] Sprite crankUp;
     [SerializeField] Transform pos;
     [SerializeField] float radius = 1.5f;
+    [SerializeField] private LayerMask layer;
     private bool isOn = false;
     private bool pressedSuccessfully = false;
     private bool playerPresent = false;
@@ -52,7 +53,7 @@ public class Switch : MonoBehaviourPun
 
     private void checkPresent()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(pos.position, radius);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(pos.position, radius, layer);
         for (int i = 0; i < colliders.Length; i++)
         {
             if (colliders[i].gameObject.tag == "Player")

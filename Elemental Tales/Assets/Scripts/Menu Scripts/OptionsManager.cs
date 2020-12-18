@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class OptionsManager : MonoBehaviour
 {
@@ -12,26 +13,44 @@ public class OptionsManager : MonoBehaviour
     [SerializeField] private TMP_Dropdown resDropdown;
     [SerializeField] private AudioMixer audioMixer;
 
+    private const string resolutionWidthPlayerPrefKey = "ResolutionWidth";
+    private const string resolutionHeightPlayerPrefKey = "ResolutionHeight";
+    private const string resolutionRefreshRatePlayerPrefKey = "RefreshRate";
+    private const string fullScreenPlayerPrefKey = "FullScreen";
+
     private bool fullscreenOn = true;
+    private List<Resolution> resolutionsTemp;
     private Resolution[] resolutions;
+    private Resolution selectedResolution;
     private float currentVolume;
     private bool vsync = false;
+
 
     private void Start()
     {
         Screen.fullScreen = true;
         fullscreenToggleText.text = "On";
+        resolutionsTemp = new List<Resolution>();
 
-        resolutions = Screen.resolutions;
+        //resolutions = Screen.resolutions;
+        foreach(Resolution res in Screen.resolutions)
+        {
+            if (res.refreshRate >= 59.0f && res.refreshRate <= 60.0f)
+                resolutionsTemp.Add(res);
+            if (res.refreshRate >= 143.0f && res.refreshRate <= 144.0f)
+                resolutionsTemp.Add(res);
+        }
+        resolutions = resolutionsTemp.ToArray();
+
         resDropdown.ClearOptions();
         List<string> resOptions = new List<string>();
 
         int currentResolutionIndex = 0;
-        for(int i=resolutions.Length-1; i >0;i--)
+        for (int i = resolutions.Length - 1; i > 0; i--)
         {
             string option = resolutions[i].width + "x" + resolutions[i].height + " [" + resolutions[i].refreshRate + "Hz]";
             resOptions.Add(option);
-            if (resolutions[i].width == Screen.width && resolutions[i].height == Screen.height)
+            if (resolutions[i].width == 1080 && resolutions[i].height == 1920)
             {
                 currentResolutionIndex = i;
             }
@@ -52,10 +71,11 @@ public class OptionsManager : MonoBehaviour
     public void toggleFullscreen()
     {
         Screen.fullScreen = !Screen.fullScreen;
-        if(Screen.fullScreen)
+        if (Screen.fullScreen)
         {
             fullscreenToggleText.text = "Off";
-        } else
+        }
+        else
         {
             fullscreenToggleText.text = "On";
         }
