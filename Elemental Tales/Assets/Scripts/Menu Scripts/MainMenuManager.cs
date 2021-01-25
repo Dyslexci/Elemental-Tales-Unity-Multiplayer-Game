@@ -17,6 +17,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private PanelFader faderExit;
     [SerializeField] private PanelFader faderMenu;
     [SerializeField] private GameObject menuCanvas;
+    [SerializeField] private GameObject notesMenu;
 
     private void Start()
     {
@@ -24,6 +25,8 @@ public class MainMenuManager : MonoBehaviour
         optionsScreen.SetActive(false);
         exitScreen.SetActive(false);
         menuScreen.SetActive(true);
+        notesMenu.SetActive(false);
+
         versionText.text = "v"+version;
     }
 
@@ -53,6 +56,18 @@ public class MainMenuManager : MonoBehaviour
     public void quitStartGame()
     {
         startGameScreen.SetActive(false);
+        menuScreen.SetActive(true);
+    }
+
+    public void openNotes()
+    {
+        menuScreen.SetActive(false);
+        notesMenu.SetActive(true);
+    }
+
+    public void closeNotes()
+    {
+        notesMenu.SetActive(false);
         menuScreen.SetActive(true);
     }
 

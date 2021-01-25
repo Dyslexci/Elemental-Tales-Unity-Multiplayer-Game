@@ -181,7 +181,7 @@ namespace Com.Team12.ElementalTales
             progressPanel.SetActive(false);
             controlPanel.SetActive(true);
             lobbyPanel.SetActive(false);
-            StartGameButton.SetActive(true);
+            StartGameButton.SetActive(false);
             invalidCodeText.SetActive(false);
             codeInputField.characterLimit = 5;
             codeInputField.onValidateInput += delegate (string s, int i, char c) { return char.ToUpper(c); };
