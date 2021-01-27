@@ -49,9 +49,7 @@ public class PlayerInputs : MonoBehaviour
 	Vector2 directionalInput;
 	bool wallSliding;
 	int wallDirX;
-	bool isHoldingObject;
 
-	//
 	// Initialises the player components and physical parameters
 	void Start()
 	{
@@ -66,10 +64,10 @@ public class PlayerInputs : MonoBehaviour
     // Calculates and sends off the current desired/expected velocity, taking into account obstacles, gravity and player input
     void Update()
     {
-		if (controller.collisions.below)
+        if (controller.collisions.below)
             currentNumberOfJumps = numberOfJumps;
 
-		CalculateVelocity();
+        CalculateVelocity();
         HandleWallSliding();
 
         if (controller.collisions.below && directionalInput.y == -1)
@@ -100,9 +98,6 @@ public class PlayerInputs : MonoBehaviour
 
 	// Logic for the player pushing the jump button
 	public void OnJumpInputDown() {
-		if (isHoldingObject)
-			return;
-
 		currentNumberOfJumps -= 1;
 
 		if (wallSliding) {
@@ -141,27 +136,12 @@ public class PlayerInputs : MonoBehaviour
 		}
 	}
 
-	public void OnPullingDown()
-    {
-		if(controller.collisions.isHoldingObject)
-        {
-			controller.collisions.isPulling = true;
-			isHoldingObject = true;
-        }
-    }
-
-	public void OnPullingUp()
-    {
-		controller.collisions.isPulling = false;
-		isHoldingObject = false;
-	}
-
 	// Logic for determining the velocity while the player is wall-sliding
 	void HandleWallSliding()
 	{
 		wallDirX = (controller.collisions.left) ? -1 : 1;
 		wallSliding = false;
-		if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0 && !controller.collisions.isHoldingObject) {
+		if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0) {
 			wallSliding = true;
 
 			if (velocity.y < -wallSlideSpeedMax) {

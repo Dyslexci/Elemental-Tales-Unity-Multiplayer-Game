@@ -13,7 +13,6 @@ using System.Collections;
 public class PlayerInput : MonoBehaviour
 {
 	PlayerInputs player;
-	bool isPulling;
 
 	// Initialises the player inputs script
 	void Start()
@@ -34,13 +33,6 @@ public class PlayerInput : MonoBehaviour
 		if (Input.GetKeyUp(KeyCode.Space))
 		{
 			player.OnJumpInputUp();
-		}
-		if(Input.GetAxisRaw("PushPull") == 1)
-        {
-			player.OnPullingDown();
-        } else
-        {
-			player.OnPullingUp();
 		}
 	}
 }

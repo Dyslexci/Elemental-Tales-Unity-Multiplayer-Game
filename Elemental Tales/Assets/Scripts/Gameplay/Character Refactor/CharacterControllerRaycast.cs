@@ -21,6 +21,7 @@ public class CharacterControllerRaycast : RaycastController
 	{
 		base.Start();
 		collisions.faceDir = 1;
+
 	}
 
 	public Vector2 Move(Vector2 moveAmount, bool standingOnPlatform)
@@ -75,82 +76,55 @@ public class CharacterControllerRaycast : RaycastController
 		for (int i = 0; i < horizontalRayCount; i++)
 		{
 			Vector2 rayOrigin = (directionX == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
-			Vector2 rayOriginOpposite = (directionX == -1) ? raycastOrigins.bottomRight : raycastOrigins.bottomLeft;
 			rayOrigin += Vector2.up * (horizontalRaySpacing * i);
 			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
-			RaycastHit2D hitOpposite = Physics2D.Raycast(rayOriginOpposite, Vector2.zero, 0, collisionMask);
-
-			if (collisions.isPulling)
-			{
-				hitOpposite = Physics2D.Raycast(rayOriginOpposite, Vector2.right * -directionX, 5, collisionMask);
-			}
 
 			Debug.DrawRay(rayOrigin, Vector2.right * directionX, Color.red);
 
-			if (hit || hitOpposite)
+			if (hit)
 			{
-				if(hitOpposite)
-                {
-					if (hitOpposite.collider.CompareTag("Pushable"))
-					{
-						collisions.isHoldingObject = true;
-						if (collisions.isPulling)
-						{
-							collisions.isHoldingObject = true;
-							hitOpposite.collider.GetComponent<PushableObject>().Push(moveAmount);
-						}
-					}
-				}
-				
-				if (hit)
+
+				if (hit.distance == 0)
 				{
-					if (hit.distance == 0)
+					continue;
+				}
+
+				if (hit.collider.CompareTag("Pushable"))
+				{
+					hit.collider.GetComponent<PushableObject>().Push(moveAmount);
+				}
+
+				float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+
+				if (i == 0 && slopeAngle <= maxSlopeAngle)
+				{
+					if (collisions.descendingSlope)
 					{
-						continue;
+						collisions.descendingSlope = false;
+						moveAmount = collisions.moveAmountOld;
+					}
+					float distanceToSlopeStart = 0;
+					if (slopeAngle != collisions.slopeAngleOld)
+					{
+						distanceToSlopeStart = hit.distance - skinWidth;
+						moveAmount.x -= distanceToSlopeStart * directionX;
+					}
+					ClimbSlope(ref moveAmount, slopeAngle, hit.normal);
+					moveAmount.x += distanceToSlopeStart * directionX;
+				}
+
+				if (!collisions.climbingSlope || slopeAngle > maxSlopeAngle)
+				{
+					moveAmount.x = (hit.distance - skinWidth) * directionX;
+					rayLength = hit.distance;
+
+					if (collisions.climbingSlope)
+					{
+						moveAmount.y = Mathf.Tan(collisions.slopeAngle * Mathf.Deg2Rad) * Mathf.Abs(moveAmount.x);
 					}
 
-					if (hit.collider.CompareTag("Pushable"))
-					{
-						collisions.isHoldingObject = true;
-						if (collisions.isPulling)
-						{
-							collisions.isHoldingObject = true;
-							hit.collider.GetComponent<PushableObject>().Push(moveAmount);
-						}
-					}
-
-					float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
-
-					if (i == 0 && slopeAngle <= maxSlopeAngle)
-					{
-						if (collisions.descendingSlope)
-						{
-							collisions.descendingSlope = false;
-							moveAmount = collisions.moveAmountOld;
-						}
-						float distanceToSlopeStart = 0;
-						if (slopeAngle != collisions.slopeAngleOld)
-						{
-							distanceToSlopeStart = hit.distance - skinWidth;
-							moveAmount.x -= distanceToSlopeStart * directionX;
-						}
-						ClimbSlope(ref moveAmount, slopeAngle, hit.normal);
-						moveAmount.x += distanceToSlopeStart * directionX;
-					}
-
-					if (!collisions.climbingSlope || slopeAngle > maxSlopeAngle)
-					{
-						moveAmount.x = (hit.distance - skinWidth) * directionX;
-						rayLength = hit.distance;
-
-						if (collisions.climbingSlope)
-						{
-							moveAmount.y = Mathf.Tan(collisions.slopeAngle * Mathf.Deg2Rad) * Mathf.Abs(moveAmount.x);
-						}
-
-						collisions.left = directionX == -1;
-						collisions.right = directionX == 1;
-					}
+					collisions.left = directionX == -1;
+					collisions.right = directionX == 1;
 				}
 			}
 		}
@@ -321,9 +295,6 @@ public class CharacterControllerRaycast : RaycastController
 		public bool fallingThroughPlatform;
 		public bool isOnPermeable;
 
-		public bool isPulling;
-		public bool isHoldingObject;
-
 		public void Reset()
 		{
 			above = below = false;
@@ -333,7 +304,6 @@ public class CharacterControllerRaycast : RaycastController
 			slidingDownMaxSlope = false;
 			slopeNormal = Vector2.zero;
 			isOnPermeable = false;
-			isHoldingObject = false;
 
 			slopeAngleOld = slopeAngle;
 			slopeAngle = 0;
