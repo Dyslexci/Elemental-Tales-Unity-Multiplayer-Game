@@ -353,7 +353,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0c64d6c03f2ca64aa5f6d194e854f23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elementOrb: {fileID: 0}
   EarthOrb: {fileID: 21300000, guid: 334382ddf63a10241a3130b74e6a802c, type: 3}
   WaterOrb: {fileID: 21300000, guid: d77bbc40b76d2f546bf2e1db3ab54866, type: 3}
   AirOrb: {fileID: 21300000, guid: e71244ff9f4312640a29601ae3265ab0, type: 3}
@@ -371,8 +370,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1f754567c480f842964c6050f3840b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elementOrb: {fileID: 9212466101556849470}
-  controller: {fileID: 9212466101556849447}
 --- !u!114 &9212466101556849456
 MonoBehaviour:
   m_ObjectHideFlags: 0

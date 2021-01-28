@@ -115,7 +115,7 @@ namespace Com.Team12.ElementalTales
 
         #region Private Serializable Fields
 
-        [SerializeField] private byte maxPlayersPerRoom = 2;
+        //[SerializeField] private byte maxPlayersPerRoom = 2;
         const string chars = "ABCDEFGHJKLMNOPQRSTUVWXYZ023456789";
         private string connectCode;
 

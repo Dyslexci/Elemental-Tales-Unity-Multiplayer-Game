@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using Photon.Pun;
+
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
@@ -9,6 +11,7 @@ using System.Collections;
  *    Controls all movement logic of the player. Takes commands from the PlayerInputs script, and translates the player based on the command and the players current location and activities.
  */
 
+[RequireComponent(typeof(CameraWork))]
 public class CharacterControllerRaycast : RaycastController
 {
 	public float maxSlopeAngle = 80;
@@ -16,10 +19,18 @@ public class CharacterControllerRaycast : RaycastController
 	public CollisionInfo collisions;
 	[HideInInspector]
 	public Vector2 playerInput;
+	public bool isPlayer;
+	public bool isPushable;
+	public bool debugEnabled = true;
+	
 
 	public override void Start()
 	{
 		base.Start();
+		if (isPlayer)
+		{
+			CameraWork();
+		}
 		collisions.faceDir = 1;
 	}
 
@@ -34,6 +45,7 @@ public class CharacterControllerRaycast : RaycastController
 
 		collisions.Reset();
 		collisions.moveAmountOld = moveAmount;
+		collisions.wasDisplayingHint = collisions.shouldDisplayHint;
 		playerInput = input;
 
 		if (moveAmount.y < 0)
@@ -66,6 +78,7 @@ public class CharacterControllerRaycast : RaycastController
 	{
 		float directionX = collisions.faceDir;
 		float rayLength = Mathf.Abs(moveAmount.x) + skinWidth;
+		int hintBoolCounter = 0;
 
 		if (Mathf.Abs(moveAmount.x) < skinWidth)
 		{
@@ -77,6 +90,7 @@ public class CharacterControllerRaycast : RaycastController
 			Vector2 rayOrigin = (directionX == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
 			Vector2 rayOriginOpposite = (directionX == -1) ? raycastOrigins.bottomRight : raycastOrigins.bottomLeft;
 			rayOrigin += Vector2.up * (horizontalRaySpacing * i);
+			rayOriginOpposite += Vector2.up * (horizontalRaySpacing * i);
 			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
 			RaycastHit2D hitOpposite = Physics2D.Raycast(rayOriginOpposite, Vector2.zero, 0, collisionMask);
 
@@ -85,7 +99,8 @@ public class CharacterControllerRaycast : RaycastController
 				hitOpposite = Physics2D.Raycast(rayOriginOpposite, Vector2.right * -directionX, 5, collisionMask);
 			}
 
-			Debug.DrawRay(rayOrigin, Vector2.right * directionX, Color.red);
+			if(debugEnabled)
+				Debug.DrawRay(rayOrigin, Vector2.right * directionX, Color.red);
 
 			if (hit || hitOpposite)
 			{
@@ -153,6 +168,34 @@ public class CharacterControllerRaycast : RaycastController
 					}
 				}
 			}
+
+			if (isPushable)
+			{
+				RaycastHit2D hintHit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, directionX * 2, collisionMask);
+				RaycastHit2D hintHitOpposite = Physics2D.Raycast(rayOriginOpposite, Vector2.right * -directionX, directionX * 2, collisionMask);
+				if (debugEnabled)
+				{
+					Debug.DrawRay(rayOrigin, Vector2.right * directionX * 2, Color.yellow);
+					Debug.DrawRay(rayOriginOpposite, Vector2.right * -directionX * 2, Color.yellow);
+				}
+
+				if (((hintHit && hintHit.collider.gameObject.GetPhotonView().IsMine) || !PhotonNetwork.IsConnected) || ((hintHitOpposite && hintHitOpposite.collider.gameObject.GetPhotonView().IsMine) || !PhotonNetwork.IsConnected))
+				{
+					hintBoolCounter += 1;
+				}
+			}
+		}
+
+		if(hintBoolCounter >= 1)
+        {
+			hintBoolCounter = 0;
+			if(!collisions.wasDisplayingHint)
+            {
+				collisions.shouldDisplayHint = true;
+			}
+        } else if(collisions.wasDisplayingHint)
+        {
+			collisions.shouldDisplayHint = false;
 		}
 	}
 
@@ -305,6 +348,28 @@ public class CharacterControllerRaycast : RaycastController
 		collisions.fallingThroughPlatform = false;
 	}
 
+	void CameraWork()
+	{
+		CameraWork _cameraWork = GetComponent<CameraWork>();
+
+		if (_cameraWork != null)
+		{
+			if (photonView.IsMine || !PhotonNetwork.IsConnected)
+			{
+				GameObject.Find("Game Manager").GetComponent<GameMaster>().setPlayer(this.gameObject);
+				//Debug.Log("Following player now");
+				_cameraWork.OnStartFollowing();
+			} else
+            {
+				print("Photonview is not mine");
+            }
+		}
+		else
+		{
+			Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
+		}
+	}
+
 	public struct CollisionInfo
 	{
 		public bool above, below;
@@ -324,6 +389,9 @@ public class CharacterControllerRaycast : RaycastController
 		public bool isPulling;
 		public bool isHoldingObject;
 
+		public bool shouldDisplayHint;
+		public bool wasDisplayingHint;
+
 		public void Reset()
 		{
 			above = below = false;
@@ -334,6 +402,8 @@ public class CharacterControllerRaycast : RaycastController
 			slopeNormal = Vector2.zero;
 			isOnPermeable = false;
 			isHoldingObject = false;
+
+			wasDisplayingHint = shouldDisplayHint;
 
 			slopeAngleOld = slopeAngle;
 			slopeAngle = 0;

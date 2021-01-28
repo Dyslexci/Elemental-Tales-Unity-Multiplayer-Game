@@ -10,6 +10,8 @@ using System.Collections;
  */
 
 [RequireComponent(typeof(CharacterControllerRaycast))]
+[RequireComponent(typeof(StatController))]
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerInputs : MonoBehaviour
 {
 	[Header("Jump Variables")]
@@ -64,7 +66,7 @@ public class PlayerInputs : MonoBehaviour
 	}
 
     // Calculates and sends off the current desired/expected velocity, taking into account obstacles, gravity and player input
-    void Update()
+    void FixedUpdate()
     {
 		if (controller.collisions.below)
             currentNumberOfJumps = numberOfJumps;
@@ -163,6 +165,7 @@ public class PlayerInputs : MonoBehaviour
 		wallSliding = false;
 		if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0 && !controller.collisions.isHoldingObject) {
 			wallSliding = true;
+			currentNumberOfJumps = numberOfJumps + 1;
 
 			if (velocity.y < -wallSlideSpeedMax) {
 				velocity.y = -wallSlideSpeedMax;

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
@@ -11,7 +13,7 @@ using UnityEngine;
  */
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class RaycastController : MonoBehaviour
+public class RaycastController : MonoBehaviourPunCallbacks
 {
 	[Header("Layer Masks")]
 	public LayerMask collisionMask;
@@ -26,20 +28,26 @@ public class RaycastController : MonoBehaviour
 	[HideInInspector]
 	public float verticalRaySpacing;
 	[HideInInspector]
-	public BoxCollider2D collider;
+	public BoxCollider2D boxCollider;
 	[HideInInspector]
 	public RaycastOrigins raycastOrigins;
 
-	// Initialises with the collider and starts the raycasting
-	public virtual void Start()
+    private void Awake()
+    {
+		boxCollider = GetComponent<BoxCollider2D>();
+		CalculateRaySpacing();
+	}
+
+    // Initialises with the collider and starts the raycasting
+    public virtual void Start()
 	{
-		collider = GetComponent<BoxCollider2D>();
+		boxCollider = GetComponent<BoxCollider2D>();
 		CalculateRaySpacing();
 	}
 
 	// Updates the raycasting locations
 	public void UpdateRaycastOrigins() { 
-		Bounds bounds = collider.bounds;
+		Bounds bounds = boxCollider.bounds;
 		bounds.Expand(skinWidth * -2);
 
 		raycastOrigins.bottomLeft = new Vector2(bounds.min.x, bounds.min.y);
@@ -51,7 +59,7 @@ public class RaycastController : MonoBehaviour
 	// Calculates the needed spacing between raycasts based off the number of rays and the size of the object
 	public void CalculateRaySpacing()
 	{
-		Bounds bounds = collider.bounds;
+		Bounds bounds = boxCollider.bounds;
 		bounds.Expand(skinWidth * -2);
 
 		horizontalRayCount = Mathf.Clamp(horizontalRayCount, 2, int.MaxValue);

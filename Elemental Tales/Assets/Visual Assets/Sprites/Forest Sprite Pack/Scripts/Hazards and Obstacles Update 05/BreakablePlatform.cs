@@ -16,12 +16,12 @@ public class BreakablePlatform : MonoBehaviour {
     public float cracksTimer;
     WaitForSeconds waitCracksTimer;
 
-    Collider2D collider;
+    Collider2D platformCollider;
 
     private void Start()
     {
         waitCracksTimer = new WaitForSeconds(cracksTimer);
-        collider = GetComponent<Collider2D>();
+        platformCollider = GetComponent<Collider2D>();
     }
 
     void Update()
@@ -41,8 +41,8 @@ public class BreakablePlatform : MonoBehaviour {
         yield return waitCracksTimer;
 
         cracks.SetActive(false);
-        if (collider != null)
-            collider.enabled = false;
+        if (platformCollider != null)
+            platformCollider.enabled = false;
 
         platform.SetActive(false);
 

@@ -11,34 +11,52 @@ public class getHUDComponents : MonoBehaviour
     [SerializeField] private Image[] manas;
     [SerializeField] private GameObject collectible1Image;
     [SerializeField] private TMP_Text collectible1Text;
+    [SerializeField] private TMP_Text hintText;
+    [SerializeField] private Image hintContainer;
+    [SerializeField] private GameObject HintHolder;
+
+    private void Start()
+    {
+        HintHolder.SetActive(false);
+    }
 
     public Image getElementOrb()
     {
-        Debug.Log("detched element orb");
         return elementOrb;
     }
 
     public Image[] getHearts()
     {
-        Debug.Log("Hearts got");
         return hearts;
     }
 
     public Image[] getManas()
     {
-        Debug.Log("Mana got");
         return manas;
     }
 
     public GameObject getCollectible1Image()
     {
-        Debug.Log("Added collectible 1 image");
         return collectible1Image;
     }
 
     public TMP_Text getCollectible1Text()
     {
-        Debug.Log("Added collectible 1 text");
         return collectible1Text;
+    }
+
+    public TMP_Text getHintText()
+    {
+        return hintText;
+    }
+
+    public Image getHintContainer()
+    {
+        return hintContainer;
+    }
+
+    public GameObject GetHintHolder()
+    {
+        return HintHolder;
     }
 }

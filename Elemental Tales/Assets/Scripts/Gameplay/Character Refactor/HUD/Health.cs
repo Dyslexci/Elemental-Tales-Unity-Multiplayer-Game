@@ -14,6 +14,7 @@ using Photon.Pun;
  *    Controls the players mana and health visual representations on the HUD. Set up for player 1.
  */
 
+[RequireComponent(typeof(ElementController))]
 [System.Serializable]
 public class Health : MonoBehaviourPun
 {
@@ -53,8 +54,13 @@ public class Health : MonoBehaviourPun
             currentHealth = 2;
             isRespawning = true;
         }
+        DrawHealthMana();
 
-        if(!isRespawning)
+    }
+
+    void DrawHealthMana()
+    {
+        if (!isRespawning)
         {
             for (int i = 0; i < hearts.Length; i++)
             {
@@ -79,18 +85,20 @@ public class Health : MonoBehaviourPun
         }
         for (int i = 0; i < manas.Length; i++)
         {
-            if(i < currentMana)
+            if (i < currentMana)
             {
                 manas[i].sprite = fullMana;
-            } else
+            }
+            else
             {
                 manas[i].sprite = emptyMana;
             }
 
-            if(i < numOfManas)
+            if (i < numOfManas)
             {
                 manas[i].enabled = true;
-            } else
+            }
+            else
             {
                 manas[i].enabled = false;
             }

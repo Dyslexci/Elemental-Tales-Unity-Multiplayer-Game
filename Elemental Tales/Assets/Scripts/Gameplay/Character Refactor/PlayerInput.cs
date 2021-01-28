@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using Photon.Pun;
+
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
@@ -10,37 +12,49 @@ using System.Collections;
  */
 
 [RequireComponent(typeof(PlayerInputs))]
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : MonoBehaviourPun
 {
 	PlayerInputs player;
-	bool isPulling;
+	public bool hasControl;
 
 	// Initialises the player inputs script
 	void Start()
 	{
 		player = GetComponent<PlayerInputs>();
+		hasControl = true;
 	}
 
 	// Accepts player input and sorts jump logic
 	void Update()
 	{
-		Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-		player.SetDirectionalInput(directionalInput);
+		if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
+			return;
 
-		if (Input.GetKeyDown(KeyCode.Space) && !(directionalInput.y == -1 && player.controller.collisions.isOnPermeable))
+		if (hasControl)
 		{
-			player.OnJumpInputDown();
-		}
-		if (Input.GetKeyUp(KeyCode.Space))
-		{
-			player.OnJumpInputUp();
-		}
-		if(Input.GetAxisRaw("PushPull") == 1)
+			Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+			player.SetDirectionalInput(directionalInput);
+
+			if (Input.GetKeyDown(KeyCode.Space) && !(directionalInput.y == -1 && player.controller.collisions.isOnPermeable))
+			{
+				player.OnJumpInputDown();
+			}
+			if (Input.GetKeyUp(KeyCode.Space))
+			{
+				player.OnJumpInputUp();
+			}
+			if (Input.GetAxisRaw("PushPull") == 1)
+			{
+				player.OnPullingDown();
+			}
+			else
+			{
+				player.OnPullingUp();
+			}
+		} else
         {
-			player.OnPullingDown();
-        } else
-        {
-			player.OnPullingUp();
+			Vector2 directionalInput = new Vector2(0, 0);
+			player.SetDirectionalInput(directionalInput);
 		}
 	}
 }

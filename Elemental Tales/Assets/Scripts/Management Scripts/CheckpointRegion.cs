@@ -9,6 +9,7 @@ public class CheckpointRegion : MonoBehaviourPun
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        print("Entered checkpoint");
         if (collision.gameObject.tag == "Player")
         {
             if (collision.gameObject.GetPhotonView().IsMine == false && PhotonNetwork.IsConnected == true)

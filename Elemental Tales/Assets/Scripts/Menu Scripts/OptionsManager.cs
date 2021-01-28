@@ -12,13 +12,14 @@ public class OptionsManager : MonoBehaviour
     [SerializeField] private TMP_Text fullscreenToggleText;
     [SerializeField] private TMP_Dropdown resDropdown;
     [SerializeField] private AudioMixer audioMixer;
+    [SerializeField] private GameObject settingsTab;
+    [SerializeField] private GameObject controlsTab;
 
     private const string resolutionWidthPlayerPrefKey = "ResolutionWidth";
     private const string resolutionHeightPlayerPrefKey = "ResolutionHeight";
     private const string resolutionRefreshRatePlayerPrefKey = "RefreshRate";
     private const string fullScreenPlayerPrefKey = "FullScreen";
 
-    private bool fullscreenOn = true;
     private List<Resolution> resolutionsTemp;
     private Resolution[] resolutions;
     private Resolution selectedResolution;
@@ -58,6 +59,8 @@ public class OptionsManager : MonoBehaviour
         resDropdown.AddOptions(resOptions);
         resDropdown.value = currentResolutionIndex;
         resDropdown.RefreshShownValue();
+
+        openSettingsTab();
     }
 
     public void setResolution()
@@ -83,7 +86,10 @@ public class OptionsManager : MonoBehaviour
 
     public void toggleVSync()
     {
+        if(vsync)
+        {
 
+        }
     }
 
     public void setMusicVolume(float volume)
@@ -99,13 +105,27 @@ public class OptionsManager : MonoBehaviour
 
     public void optionsApply()
     {
+        openSettingsTab();
         optionsScreen.SetActive(false);
         menuScreen.SetActive(true);
     }
 
     public void optionsCancel()
     {
+        openSettingsTab();
         optionsScreen.SetActive(false);
         menuScreen.SetActive(true);
+    }
+
+    public void openSettingsTab()
+    {
+        settingsTab.SetActive(true);
+        controlsTab.SetActive(false);
+    }
+
+    public void openControlsTab()
+    {
+        settingsTab.SetActive(false);
+        controlsTab.SetActive(true);
     }
 }

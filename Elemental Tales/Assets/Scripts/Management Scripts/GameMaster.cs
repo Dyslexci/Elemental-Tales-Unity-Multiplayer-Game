@@ -19,19 +19,14 @@ using Photon.Realtime;
 
 public class GameMaster : MonoBehaviourPunCallbacks
 {
-
     public override void OnLeftRoom()
     {
         SceneManager.LoadScene(0);
     }
 
-    //public void onPhotonInstantiate(PhotonMessageInfo info)
-    //{
-    //    playerObject = (GameObject)info.Sender.TagObject;
-    //}
-
     private int collectible1;
     private GameObject playerObject;
+    
 
     private static bool pausedGame = false;
     [SerializeField] private GameObject pauseMenuUI;
@@ -44,7 +39,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     private Transform lastCheckpoint;
 
-    // Start is called before the first frame update
     void Start()
     {
         
@@ -72,7 +66,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetButtonDown("Pause"))
@@ -113,7 +106,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     {
             yield return new WaitForSeconds(2.0f);
             playerObject.transform.SetPositionAndRotation(new Vector3(lastCheckpoint.position.x, lastCheckpoint.position.y, 0f), Quaternion.identity);
-            playerObject.GetComponent<Health>().resetPlayerAfterDeath();
+            playerObject.GetComponent<StatController>().resetPlayerAfterDeath();
     }
 
     public void addCollectible1()
