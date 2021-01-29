@@ -21,6 +21,7 @@ public class TerrainDamage : MonoBehaviourPun
                 return;
             }
             playerController = collision.gameObject.GetComponent<StatController>();
+            print("Damaged player for " + damage);
             playerController.DamageHealth(damage);
             hitLast = Time.time;
         }

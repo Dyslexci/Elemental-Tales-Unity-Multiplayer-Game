@@ -36,12 +36,16 @@ public class GameMaster : MonoBehaviourPunCallbacks
     [SerializeField] private Transform spawnPoint2;
     [SerializeField] private GameObject optionsMenuUI;
 
+    public int localPlayerDeaths;
+    public int otherPlayerDeaths;
+
 
     private Transform lastCheckpoint;
 
     void Start()
     {
-        
+        PhotonNetwork.AutomaticallySyncScene = true;
+
         pauseMenuUI.SetActive(false);
         optionsMenuUI.SetActive(false);
 
@@ -99,6 +103,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public void respawn()
     {
         Debug.Log("GameMaster: respawn() has been called.");
+        localPlayerDeaths++;
+        //photonView.RPC("AddOppositePlayerDeath", RpcTarget.OthersBuffered);
         StartCoroutine(Respawn());
     }
 
@@ -152,5 +158,12 @@ public class GameMaster : MonoBehaviourPunCallbacks
     {
         Debug.Log("Restart pressed");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    [PunRPC]
+    private void AddOppositePlayerDeath()
+    {
+        Debug.Log("PUN: AddOppositePlayerDeath() has been called.");
+        otherPlayerDeaths++;
     }
 }

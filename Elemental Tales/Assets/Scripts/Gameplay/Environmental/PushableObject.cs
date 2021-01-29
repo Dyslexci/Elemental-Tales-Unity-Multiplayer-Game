@@ -47,7 +47,7 @@ public class PushableObject : MonoBehaviour
     {
 		hintHolder.SetActive(true);
 		StartCoroutine("JumpInHintHolder");
-		hintText.text = "<color=#ffffff>Hold SHIFT to <color=#e60000>grab and move <color=#ffffff>objects!";
+		hintText.text = "<color=#ffffff>Hold SHIFT to <color=#ffeb04> grab and move <color=#ffffff>objects!";
 		yield return new WaitForSeconds(2);
 		StartCoroutine("FadeHintHolder");
 	}

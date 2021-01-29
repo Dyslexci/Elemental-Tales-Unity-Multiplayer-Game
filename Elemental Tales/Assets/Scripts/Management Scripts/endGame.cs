@@ -19,7 +19,7 @@ public class endGame : MonoBehaviourPunCallbacks
             if (collision.gameObject.GetPhotonView().IsMine == false && PhotonNetwork.IsConnected == true)
                 return;
 
-            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LoadLevel("EndgameScene");
         }
     }
 }

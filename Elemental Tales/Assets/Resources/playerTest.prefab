@@ -160,7 +160,7 @@ MonoBehaviour:
   horizontalRaySpacing: 0
   verticalRaySpacing: 0
   boxCollider: {fileID: 0}
-  maxSlopeAngle: 50
+  maxSlopeAngle: 70
   playerInput: {x: 0, y: 0}
   isPlayer: 1
   isPushable: 0
