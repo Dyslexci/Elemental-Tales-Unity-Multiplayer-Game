@@ -22,6 +22,7 @@ public class Switch : MonoBehaviourPun
     private bool pressedSuccessfully = false;
     private bool playerPresent = false;
     private bool playerWasPresent;
+    GameObject playerCollider = null;
 
     TMP_Text hintText;
     GameObject hintHolder;
@@ -56,6 +57,10 @@ public class Switch : MonoBehaviourPun
 
         checkPresent();
 
+        if (playerCollider != null)
+            if(!playerCollider.GetPhotonView().IsMine)
+                return;
+
         if (playerPresent && Input.GetButton("Interact"))
         {
             if (isOn == true)
@@ -80,12 +85,14 @@ public class Switch : MonoBehaviourPun
                     return;
                 
                 playerPresent = true;
+                playerCollider = colliders[i].gameObject;
             }
             else
             {
                 if (playerPresent == false)
                     return;
                 playerPresent = false;
+                playerCollider = null;
             }
         }
     }

@@ -15,7 +15,7 @@ MonoBehaviour:
   enableTickEngine: 1
   sendWhenSolo: 1
   logLevel: 1
-  _frameCount: 60
+  _frameCount: 120
   _bufferCorrection: 0
   _targetBufferSize: 2
   _maxBufferSize: 3

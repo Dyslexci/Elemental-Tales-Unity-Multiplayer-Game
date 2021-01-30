@@ -24,9 +24,14 @@ public class GameMaster : MonoBehaviourPunCallbacks
         SceneManager.LoadScene(0);
     }
 
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        StartCoroutine(WaitHidePlayerLeft(otherPlayer));
+    }
+
     private int collectible1;
     private GameObject playerObject;
-    
 
     private static bool pausedGame = false;
     [SerializeField] private GameObject pauseMenuUI;
@@ -39,6 +44,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public int localPlayerDeaths;
     public int otherPlayerDeaths;
 
+    public GameObject playerLeftObject;
+    public TMP_Text playerLeftText;
+    public CanvasGroup panel;
 
     private Transform lastCheckpoint;
 
@@ -48,6 +56,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
         pauseMenuUI.SetActive(false);
         optionsMenuUI.SetActive(false);
+        playerLeftObject.SetActive(false);
 
         collectible1 = 0;
         //Debug.Log(playerObject.name + " has been correctly stored in the local gamemaster");
@@ -165,5 +174,25 @@ public class GameMaster : MonoBehaviourPunCallbacks
     {
         Debug.Log("PUN: AddOppositePlayerDeath() has been called.");
         otherPlayerDeaths++;
+    }
+
+    IEnumerator WaitHidePlayerLeft(Player otherPlayer)
+    {
+        playerLeftObject.SetActive(true);
+        playerLeftText.text = "<color=#ffeb04>" + otherPlayer.NickName + " <color=#ffffff>has left the game";
+        yield return new WaitForSeconds(4);
+        StartCoroutine(FadePanel());
+    }
+
+    IEnumerator FadePanel()
+    {
+        while (panel.alpha > 0)
+        {
+            yield return new WaitForFixedUpdate();
+            panel.alpha -= 0.05f;
+        }
+
+        playerLeftObject.SetActive(false);
+        panel.alpha = 1;
     }
 }
