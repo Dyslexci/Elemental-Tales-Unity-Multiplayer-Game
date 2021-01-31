@@ -9,9 +9,16 @@ public class getElement : MonoBehaviourPun
     [SerializeField] private string heldElement;
     ElementController elementController;
 
-    private void Start()
+    private void Update()
+    {
+        if(elementController == null)
+            InitialisePlayer();
+    }
+
+    void InitialisePlayer()
     {
         elementController = GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<ElementController>();
+        print("Initialising player element controller has succeeded");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

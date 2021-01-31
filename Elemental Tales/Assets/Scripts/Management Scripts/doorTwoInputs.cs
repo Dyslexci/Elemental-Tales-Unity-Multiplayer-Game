@@ -14,12 +14,14 @@ public class doorTwoInputs : MonoBehaviour
 {
     [SerializeField] private Switch switch1;
     [SerializeField] private Switch switch2;
+    private GameObject gameMaster;
 
     void Update()
     {
         if (switch1.getLeverState() && switch2.getLeverState())
         {
             this.gameObject.SetActive(false);
+            GameObject.Find("Game Master").GetComponent<GameMaster>().openDoorSound.Play();
         }
     }
 }

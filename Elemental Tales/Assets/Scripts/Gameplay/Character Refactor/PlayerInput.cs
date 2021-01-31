@@ -16,11 +16,13 @@ public class PlayerInput : MonoBehaviourPun
 {
 	PlayerInputs player;
 	public bool hasControl;
+	GameMaster gameMaster;
 
 	// Initialises the player inputs script
 	void Start()
 	{
 		player = GetComponent<PlayerInputs>();
+		gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
 		hasControl = true;
 	}
 
@@ -49,8 +51,15 @@ public class PlayerInput : MonoBehaviourPun
 			}
 			else
 			{
-				player.OnPullingUp();
+				if(player != null)
+                {
+					player.OnPullingUp();
+				}
 			}
+			if(Input.GetButtonDown("Pause"))
+            {
+				gameMaster.PauseGame();
+            }
 		} else
         {
 			Vector2 directionalInput = new Vector2(0, 0);

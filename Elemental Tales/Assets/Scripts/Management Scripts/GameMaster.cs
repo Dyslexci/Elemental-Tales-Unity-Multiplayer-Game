@@ -19,11 +19,13 @@ using Photon.Realtime;
 
 public class GameMaster : MonoBehaviourPunCallbacks
 {
+    // called when the player leaves their current room
     public override void OnLeftRoom()
     {
         SceneManager.LoadScene(0);
     }
 
+    // called with a player that is not the local player leaves the room
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
@@ -50,6 +52,13 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     private Transform lastCheckpoint;
 
+    public AudioSource openDoorSound;
+
+    float playedTime;
+
+    TimerController timer;
+
+    // initialises various game states
     void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -57,9 +66,10 @@ public class GameMaster : MonoBehaviourPunCallbacks
         pauseMenuUI.SetActive(false);
         optionsMenuUI.SetActive(false);
         playerLeftObject.SetActive(false);
+        timer = GetComponent<TimerController>();
+        timer.BeginTimer();
 
         collectible1 = 0;
-        //Debug.Log(playerObject.name + " has been correctly stored in the local gamemaster");
 
         if(playerPrefab == null)
         {
@@ -79,17 +89,15 @@ public class GameMaster : MonoBehaviourPunCallbacks
         }
     }
 
-    void Update()
+    public void PauseGame()
     {
-        if (Input.GetButtonDown("Pause"))
+        if (pausedGame)
         {
-            if(pausedGame)
-            {
-                resumeGame();
-            } else
-            {
-                Pause();
-            }
+            resumeGame();
+        }
+        else
+        {
+            Pause();
         }
     }
 
@@ -117,13 +125,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
         StartCoroutine(Respawn());
     }
 
-    IEnumerator Respawn()
-    {
-            yield return new WaitForSeconds(2.0f);
-            playerObject.transform.SetPositionAndRotation(new Vector3(lastCheckpoint.position.x, lastCheckpoint.position.y, 0f), Quaternion.identity);
-            playerObject.GetComponent<StatController>().resetPlayerAfterDeath();
-    }
-
     public void addCollectible1()
     {
         collectible1++;
@@ -137,9 +138,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     public void resumeGame()
     {
-        //optionsMenuUI.SetActive(false);
-        Debug.Log("Resume pressed");
-        
         pausedGame = false;
         pauseMenuUI.SetActive(false);
     }
@@ -157,10 +155,17 @@ public class GameMaster : MonoBehaviourPunCallbacks
         //pauseMenuUI.SetActive(false);
     }
 
+    // If statement will attempt to leave correctly if the player is joined in a room and ready to continue as normal, otherwise it will assume the network has crashed out and return to main
     public void leaveGame()
     {
-        Debug.Log("Quitting Game....");
-        PhotonNetwork.LeaveRoom();
+        if(PhotonNetwork.IsConnectedAndReady)
+        {
+            Debug.Log("Quitting Game....");
+            PhotonNetwork.LeaveRoom();
+        } else
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 
     public void restartLevel()
@@ -194,5 +199,12 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
         playerLeftObject.SetActive(false);
         panel.alpha = 1;
+    }
+
+    IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(2.0f);
+        playerObject.transform.SetPositionAndRotation(new Vector3(lastCheckpoint.position.x, lastCheckpoint.position.y, 0f), Quaternion.identity);
+        playerObject.GetComponent<StatController>().resetPlayerAfterDeath();
     }
 }

@@ -16,14 +16,14 @@ using Photon.Pun;
 
 public class Collectible1Counter : MonoBehaviour
 {
-    [SerializeField] private GameObject collectible1Image;
+    [SerializeField] private GameObject collectible1Holder;
     private int noCollectibles1;
     [SerializeField] private TMP_Text collectible1Number;
 
     private void Start()
     {
         Debug.Log(GameObject.Find("PlayerHUDObject").name);
-        collectible1Image = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getCollectible1Image();
+        collectible1Holder = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getCollectible1Holder();
         collectible1Number = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getCollectible1Text();
     }
 
@@ -32,12 +32,12 @@ public class Collectible1Counter : MonoBehaviour
         noCollectibles1 = FindObjectOfType<GameMaster>().getCollectible1();
         if (noCollectibles1 == 0)
         {
-            collectible1Image.SetActive(false);;
-            collectible1Number.enabled = false;
+            collectible1Holder.SetActive(false);;
+            //collectible1Number.enabled = false;
         } else
         {
-            collectible1Image.SetActive(true);
-            collectible1Number.enabled = true;
+            collectible1Holder.SetActive(true);
+            //collectible1Number.enabled = true;
             collectible1Number.text = noCollectibles1.ToString();
         }
     }

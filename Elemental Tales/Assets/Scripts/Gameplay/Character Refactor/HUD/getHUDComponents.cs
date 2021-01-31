@@ -9,7 +9,7 @@ public class getHUDComponents : MonoBehaviour
     [SerializeField] private Image elementOrb;
     [SerializeField] private Image[] hearts;
     [SerializeField] private Image[] manas;
-    [SerializeField] private GameObject collectible1Image;
+    [SerializeField] private GameObject collectible1Holder;
     [SerializeField] private TMP_Text collectible1Text;
     [SerializeField] private TMP_Text hintText;
     [SerializeField] private Image hintContainer;
@@ -35,9 +35,9 @@ public class getHUDComponents : MonoBehaviour
         return manas;
     }
 
-    public GameObject getCollectible1Image()
+    public GameObject getCollectible1Holder()
     {
-        return collectible1Image;
+        return collectible1Holder;
     }
 
     public TMP_Text getCollectible1Text()
