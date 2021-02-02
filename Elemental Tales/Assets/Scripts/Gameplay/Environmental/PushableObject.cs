@@ -45,6 +45,7 @@ public class PushableObject : MonoBehaviour
 
 	IEnumerator WaitHideHint()
     {
+		GameObject.Find("Game Manager").GetComponent<GameMaster>().hintSound.Play(0);
 		hintHolder.SetActive(true);
 		StartCoroutine("JumpInHintHolder");
 		hintText.text = "<color=#ffffff>Hold SHIFT to <color=#ffeb04> grab and move <color=#ffffff>objects!";

@@ -53,6 +53,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
     private Transform lastCheckpoint;
 
     public AudioSource openDoorSound;
+    public AudioSource collectGem1Sound;
+    public AudioSource hintSound;
 
     float playedTime;
 

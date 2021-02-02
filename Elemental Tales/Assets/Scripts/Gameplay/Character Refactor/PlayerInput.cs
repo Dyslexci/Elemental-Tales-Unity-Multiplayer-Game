@@ -18,6 +18,11 @@ public class PlayerInput : MonoBehaviourPun
 	public bool hasControl;
 	GameMaster gameMaster;
 
+	public bool jumpKeyDown;
+	public bool pushKeyDown;
+	public bool pauseKeyDown;
+	public bool interactKeyDown;
+
 	// Initialises the player inputs script
 	void Start()
 	{
@@ -40,14 +45,17 @@ public class PlayerInput : MonoBehaviourPun
 			if (Input.GetKeyDown(KeyCode.Space) && !(directionalInput.y == -1 && player.controller.collisions.isOnPermeable))
 			{
 				player.OnJumpInputDown();
+				jumpKeyDown = true;
 			}
 			if (Input.GetKeyUp(KeyCode.Space))
 			{
 				player.OnJumpInputUp();
+				jumpKeyDown = false;
 			}
 			if (Input.GetAxisRaw("PushPull") == 1)
 			{
 				player.OnPullingDown();
+				pushKeyDown = true;
 			}
 			else
 			{
@@ -55,10 +63,22 @@ public class PlayerInput : MonoBehaviourPun
                 {
 					player.OnPullingUp();
 				}
+				pushKeyDown = false;
 			}
 			if(Input.GetButtonDown("Pause"))
             {
 				gameMaster.PauseGame();
+				pauseKeyDown = true;
+            } else
+            {
+				pauseKeyDown = false;
+            }
+			if(Input.GetButtonDown("Interact"))
+            {
+				interactKeyDown = true;
+            } else
+            {
+				interactKeyDown = false;
             }
 		} else
         {

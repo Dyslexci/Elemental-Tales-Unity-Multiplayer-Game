@@ -178,6 +178,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasControl: 0
+  jumpKeyDown: 0
+  pushKeyDown: 0
+  pauseKeyDown: 0
+  interactKeyDown: 0
 --- !u!50 &4422737345570962278
 Rigidbody2D:
   serializedVersion: 4

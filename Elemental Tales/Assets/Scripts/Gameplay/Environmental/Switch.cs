@@ -60,14 +60,6 @@ public class Switch : MonoBehaviourPun
             print("Checked present, result is: " + playerPresent);
         }
 
-        //playerWasPresent = playerPresent;
-
-        //if (!playerWasPresent && playerPresent && !isDisplayingHint)
-        //{
-        //    isDisplayingHint = true;
-        //    StartCoroutine("WaitHideHint");
-        //}
-
         if (playerPresent && Input.GetButton("Interact"))
         {
             if (isOn == true)
@@ -145,6 +137,7 @@ public class Switch : MonoBehaviourPun
 
     IEnumerator WaitHideHint()
     {
+        GameObject.Find("Game Manager").GetComponent<GameMaster>().hintSound.Play(0);
         hintHolder.SetActive(true);
         StartCoroutine("JumpInHintHolder");
         hintText.text = "<color=#ffffff>Press E to <color=#ffeb04> grab and switch <color=#ffffff>levers!";
