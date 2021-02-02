@@ -18,6 +18,7 @@ public class GemCollector : MonoBehaviourPun
             if (Time.time - hitLast < hitDelay)
                 return;
 
+            print("Playing gem sound");
             GameObject.Find("Game Manager").GetComponent<GameMaster>().collectGem1Sound.Play(0);
             //print("Collected");
             photonView.RPC("deleteGem", RpcTarget.AllBuffered);
