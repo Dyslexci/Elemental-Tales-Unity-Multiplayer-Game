@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.3.0
+ *    @version 1.0.0
+ *    
+ *    Used to provide ability for player object to connect to a rigidbody and push/pull it around. Didn't work correctly, now deprecated.
+ */
 public class characterInteract : MonoBehaviour
 {
     private bool inContact = false;
     private Collider2D collisionCollider;
     private Joint2D myJoint;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (collisionCollider == null)

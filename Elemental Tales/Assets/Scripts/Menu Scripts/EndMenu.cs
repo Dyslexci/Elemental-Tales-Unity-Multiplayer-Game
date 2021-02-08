@@ -9,9 +9,11 @@ using UnityEngine;
  *    
  *    Exits the application to desktop - only for use in an exit to desktop button.
  */
-
 public class EndMenu : MonoBehaviour
 {
+    /// <summary>
+    /// Quits the application.
+    /// </summary>
     public void quitGame()
     {
         Debug.Log("Quit successful");

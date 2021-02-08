@@ -4,9 +4,20 @@ using UnityEngine;
 
 using Photon.Pun;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 1.0.0
+ *    @version 1.0.0
+ *    
+ *    Provides checkpoints for the player to reset to on death.
+ */
+
 public class CheckpointRegion : MonoBehaviourPun
 {
-
+    /// <summary>
+    /// When a player enters the checkpoint collider, update their latest checkpoint to this checkpoint.
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         print("Entered checkpoint");

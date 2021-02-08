@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 /** 
  *    @author Matthew Ahearn
- *    @since 0.0.0
- *    @version 0.1.0
+ *    @since 1.0.0
+ *    @version 1.0.0
  *    
  *    Provides logic for platforms the player can jump up through and drop down through, as well as platforms which can move between an indeterminate number of waypoints.
  *    Known issues: When moving horizontally, a player wallclimbing on the platform tends to bounce around uncontrollably. Possibly needs to be fixed by always extending raycasts
- *		on the horizontal axis.
+ *	  on the horizontal axis.
  */
 
 public class PlatformController : RaycastController
@@ -34,7 +34,9 @@ public class PlatformController : RaycastController
 	List<PassengerMovement> passengerMovement;
 	Dictionary<Transform, CharacterControllerRaycast> passengerDictionary = new Dictionary<Transform, CharacterControllerRaycast>();
 
-	// Initialises the platform waypoints and raycasting logic
+	/// <summary>
+	/// Initialises the platform waypoints and raycasting logic.
+	/// </summary>
 	public override void Start()
 	{
 		base.Start();
@@ -46,7 +48,9 @@ public class PlatformController : RaycastController
 		}
 	}
 
-	// Updates raycasting logic and sets velocity based off the current destination/location, as well as moving any passengers
+	/// <summary>
+	/// Updates raycasting logic and sets velocity based off the current destination/location, as well as moving any passengers
+	/// </summary>
 	void Update()
 	{
 		UpdateRaycastOrigins();
@@ -60,14 +64,21 @@ public class PlatformController : RaycastController
 		MovePassengers(false);
 	}
 
-	// Slows down the platform as it approaches its destination
+	/// <summary>
+	/// Slows down the platform as it approaches its destination, returning the new movement as a float.
+	/// </summary>
+	/// <param name="x"></param>
+	/// <returns></returns>
 	float Ease(float x)
 	{
 		float a = easeAmount + 1;
 		return Mathf.Pow(x, a) / (Mathf.Pow(x, a) + Mathf.Pow(1 - x, a));
 	}
 
-	// Calculates platform movement based off its current and next locations
+	/// <summary>
+	/// Calculates platform movement based off its current and next locations, returning the movement as a vector 3.
+	/// </summary>
+	/// <returns></returns>
 	Vector3 CalculatePlatformMovement()
 	{
 		if (Time.time < nextMoveTime)
@@ -103,7 +114,10 @@ public class PlatformController : RaycastController
 		return newPos - transform.position;
 	}
 
-	// Logic for moving passengers with the platform
+	/// <summary>
+	/// Logic for moving passengers with the platform
+	/// </summary>
+	/// <param name="beforeMovePlatform"></param>
 	void MovePassengers(bool beforeMovePlatform)
 	{
 		foreach (PassengerMovement passenger in passengerMovement)
@@ -120,7 +134,10 @@ public class PlatformController : RaycastController
 		}
 	}
 
-	// Logic for calculating how the passengers should move based off the movement of the platform
+	/// <summary>
+	/// Logic for calculating how the passengers should move based off the movement of the platform
+	/// </summary>
+	/// <param name="velocity"></param>
 	void CalculatePassengerMovement(Vector3 velocity)
 	{
 		HashSet<Transform> movedPassengers = new HashSet<Transform>();
@@ -204,6 +221,9 @@ public class PlatformController : RaycastController
 		}
 	}
 
+	/// <summary>
+	/// Contains variables for the movement of the passengers standing on the platform.
+	/// </summary>
 	struct PassengerMovement
 	{
 		public Transform transform;
@@ -220,6 +240,9 @@ public class PlatformController : RaycastController
 		}
 	}
 
+	/// <summary>
+	/// Draws the raycasts of the platform in the editor for debugging purposes.
+	/// </summary>
 	void OnDrawGizmos()
 	{
 		if (localWaypoints != null)

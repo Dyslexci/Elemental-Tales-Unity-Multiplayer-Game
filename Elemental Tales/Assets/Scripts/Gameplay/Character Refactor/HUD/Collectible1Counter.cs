@@ -20,6 +20,9 @@ public class Collectible1Counter : MonoBehaviour
     private int noCollectibles1;
     [SerializeField] private TMP_Text collectible1Number;
 
+    /// <summary>
+    /// Initialises the HUD objects this object needs to interact with.
+    /// </summary>
     private void Start()
     {
         Debug.Log(GameObject.Find("PlayerHUDObject").name);
@@ -27,17 +30,18 @@ public class Collectible1Counter : MonoBehaviour
         collectible1Number = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getCollectible1Text();
     }
 
+    /// <summary>
+    /// Updates the HUD objects with current data.
+    /// </summary>
     void Update()
     {
         noCollectibles1 = FindObjectOfType<GameMaster>().getCollectible1();
         if (noCollectibles1 == 0)
         {
             collectible1Holder.SetActive(false);;
-            //collectible1Number.enabled = false;
         } else
         {
             collectible1Holder.SetActive(true);
-            //collectible1Number.enabled = true;
             collectible1Number.text = noCollectibles1.ToString();
         }
     }

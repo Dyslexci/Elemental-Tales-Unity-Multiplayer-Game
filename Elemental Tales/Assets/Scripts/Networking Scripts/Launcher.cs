@@ -218,8 +218,14 @@ namespace Com.Team12.ElementalTales
         /// </summary>
         public void joinRoom()
         {
-            PhotonNetwork.JoinRoom(roomCode);
-            Debug.Log("PUN: joinRoom() has been called, and the client will join room ID " + roomCode);
+            if(roomCode != null && roomCode != "")
+            {
+                PhotonNetwork.JoinRoom(roomCode);
+                Debug.Log("PUN: joinRoom() has been called, and the client will join room ID " + roomCode);
+            } else
+            {
+                Debug.Log("PUN: joinRoom() has been called, but the roomCode value is either null or empty");
+            }
         }
 
         /// <summary>

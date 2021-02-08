@@ -23,11 +23,18 @@ public class ElementOrb : MonoBehaviour
     [SerializeField] private Sprite FireOrb;
     [SerializeField] private Sprite emptyOrb;
 
+    /// <summary>
+    /// Initialises the HUD object this object needs to interact with.
+    /// </summary>
     private void Start()
     {
         elementOrb = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getElementOrb();
     }
 
+    /// <summary>
+    /// Sets the current element and updates the HUD object respectively.
+    /// </summary>
+    /// <param name="element"></param>
     public void setElement(string element)
     {
         currentElement = element;

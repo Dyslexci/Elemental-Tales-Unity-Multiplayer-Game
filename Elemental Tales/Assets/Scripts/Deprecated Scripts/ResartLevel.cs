@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//Deprecated
+
 public class ResartLevel : MonoBehaviour
 {
-    // Start is called before the first frame update
+    /// <summary>
+    /// Reloads the active scene.
+    /// </summary>
     public void restartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-
-   
 }

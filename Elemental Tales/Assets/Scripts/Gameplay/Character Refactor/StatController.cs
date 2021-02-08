@@ -4,6 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 1.0.0
+ *    @version 1.0.0
+ *    
+ *    Controls the players mana and health visual representations on the HUD, as well as handling collectibles.
+ */
+
 [RequireComponent(typeof(ElementController))]
 public class StatController : MonoBehaviourPun
 {
@@ -30,6 +38,9 @@ public class StatController : MonoBehaviourPun
     int currentCollectibles1 = 0;
     public bool isRespawning;
 
+    /// <summary>
+    /// Initialises the statistics and HUD objects for this object.
+    /// </summary>
     void Start()
     {
         currentHealth = maxHealth;
@@ -40,21 +51,15 @@ public class StatController : MonoBehaviourPun
         inputs = GetComponent<PlayerInput>();
     }
 
+    /// <summary>
+    /// Updates the health/mana, the drawing of the health/mana objects on the HUD, and deals with respawning.
+    /// </summary>
     void Update()
     {
 
         // Health script code
         if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
             return;
-
-        if (Input.GetKeyUp(KeyCode.J))
-        {
-            DamageHealth(1);
-        }
-        if (Input.GetKeyUp(KeyCode.K))
-        {
-            DamageMana(1);
-        }
 
         checkStats();
 
@@ -70,12 +75,17 @@ public class StatController : MonoBehaviourPun
         DrawHealthMana();
     }
 
+    /// <summary>
+    /// Adds 1 to the collectible1 counter.
+    /// </summary>
     public void addCollectible1()
     {
         currentCollectibles1++;
     }
 
-    // Health script functions
+    /// <summary>
+    /// Draws the heart and mana objects on the HUD, based on current statistics.
+    /// </summary>
     void DrawHealthMana()
     {
         if (!isRespawning)
@@ -123,6 +133,9 @@ public class StatController : MonoBehaviourPun
         }
     }
 
+    /// <summary>
+    /// Resets the object to a base post-respawn state.
+    /// </summary>
     public void resetPlayerAfterDeath()
     {
         isRespawning = false;
@@ -131,6 +144,10 @@ public class StatController : MonoBehaviourPun
         inputs.hasControl = true;
     }
 
+    /// <summary>
+    /// Causes 1 damage to this object.
+    /// </summary>
+    /// <param name="damage"></param>
     public void DamageHealth(int damage)
     {
         if(currentHealth != 0)
@@ -140,6 +157,11 @@ public class StatController : MonoBehaviourPun
         }
     }
 
+    /// <summary>
+    /// Causes 1 damage of mana to this object.
+    /// </summary>
+    /// <param name="damage"></param>
+    /// <returns></returns>
     public bool DamageMana(int damage)
     {
         if(currentMana != 0)
@@ -150,21 +172,36 @@ public class StatController : MonoBehaviourPun
         return false;
     }
 
+    /// <summary>
+    /// Sets the health of this object to the parameter.
+    /// </summary>
+    /// <param name="health"></param>
     public void setHealth(int health)
     {
         currentHealth = health;
     }
 
+    /// <summary>
+    /// Sets the mana of this object to the parameter.
+    /// </summary>
+    /// <param name="mana"></param>
     public void setMana(int mana)
     {
         currentMana = mana;
     }
 
+    /// <summary>
+    /// Returns the current element of this object.
+    /// </summary>
+    /// <returns></returns>
     public string getElement()
     {
         return currentElement;
     }
 
+    /// <summary>
+    /// Ensures this objects health and mana can never exceed their maximum values.
+    /// </summary>
     private void checkStats()
     {
         if (currentHealth > maxHealth)

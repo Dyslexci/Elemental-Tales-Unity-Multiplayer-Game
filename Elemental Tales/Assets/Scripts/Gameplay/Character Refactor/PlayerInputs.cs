@@ -3,8 +3,8 @@ using System.Collections;
 
 /** 
  *    @author Matthew Ahearn
- *    @since 0.0.0
- *    @version 0.1.0
+ *    @since 1.0.0
+ *    @version 1.0.0
  *    
  *    Accepts player input and converts it to directions to be sent to the controller class. Sets up the physical simulation parameters of the object.
  */
@@ -53,8 +53,9 @@ public class PlayerInputs : MonoBehaviour
 	int wallDirX;
 	bool isHoldingObject;
 
-	//
-	// Initialises the player components and physical parameters
+	/// <summary>
+	/// Initialises the player components and physical parameters.
+	/// </summary>
 	void Start()
 	{
 		currentNumberOfJumps = numberOfJumps;
@@ -65,8 +66,10 @@ public class PlayerInputs : MonoBehaviour
 		minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
 	}
 
-    // Calculates and sends off the current desired/expected velocity, taking into account obstacles, gravity and player input
-    void FixedUpdate()
+	/// <summary>
+	/// Calculates and sends off the current desired/expected velocity, taking into account obstacles, gravity and player input.
+	/// </summary>
+	void FixedUpdate()
     {
 		if (controller.collisions.below)
             currentNumberOfJumps = numberOfJumps;
@@ -95,12 +98,17 @@ public class PlayerInputs : MonoBehaviour
         }
     }
 
-    // Sets the current player input
+	/// <summary>
+	/// Sets the current player input.
+	/// </summary>
+	/// <param name="input"></param>
     public void SetDirectionalInput(Vector2 input) {
 		directionalInput = input;
 	}
 
-	// Logic for the player pushing the jump button
+	/// <summary>
+	/// Logic for the player pushing the jump button.
+	/// </summary>
 	public void OnJumpInputDown() {
 		if (isHoldingObject)
 			return;
@@ -134,7 +142,9 @@ public class PlayerInputs : MonoBehaviour
 		}
 	}
 
-	// Interrupts current jump if the player lets go of the jump key before the jump reaches its maximum height
+	/// <summary>
+	/// Interrupts current jump if the player lets go of the jump key before the jump reaches its maximum height
+	/// </summary>
 	public void OnJumpInputUp()
 	{
 		if (velocity.y > minJumpVelocity)
@@ -158,7 +168,9 @@ public class PlayerInputs : MonoBehaviour
 		isHoldingObject = false;
 	}
 
-	// Logic for determining the velocity while the player is wall-sliding
+	/// <summary>
+	/// Logic for determining the velocity while the player is wall-sliding
+	/// </summary>
 	void HandleWallSliding()
 	{
 		wallDirX = (controller.collisions.left) ? -1 : 1;
@@ -188,7 +200,9 @@ public class PlayerInputs : MonoBehaviour
 		}
 	}
 
-	// Calculates the velocity of the player based off the player input
+	/// <summary>
+	/// Calculates the velocity of the player based off the player input
+	/// </summary>
 	void CalculateVelocity() {
 		float targetVelocityX = directionalInput.x * moveSpeed;
 		velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);

@@ -23,11 +23,18 @@ public class DialogueManager : MonoBehaviour
     public Animator animator;
 
     public Queue<string> sentences;
+
+    /// <summary>
+    /// Sets up a Queue for the sentences.
+    /// </summary>
     private void Start()
     {
         sentences = new Queue<string>();
     }
 
+    /// <summary>
+    /// Displays the next sentence while the F key is held down.
+    /// </summary>
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F) && inDialogue == true)
@@ -37,6 +44,11 @@ public class DialogueManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Starts the dialogue, displaying the correct canvas and writing on the initial line.
+    /// </summary>
+    /// <param name="dialogue"></param>
+    /// <param name="quest"></param>
     public void StartDialogue(Dialogue dialogue, Quest quest = null)
     {
         inDialogue = true;
@@ -53,6 +65,9 @@ public class DialogueManager : MonoBehaviour
         DisplayNextSentence();
     }
 
+    /// <summary>
+    /// Displays the next sentence in the queue of sentences.
+    /// </summary>
     public void DisplayNextSentence()
     {
         Debug.Log("Next sentence");
@@ -66,6 +81,11 @@ public class DialogueManager : MonoBehaviour
         StartCoroutine(TypeSentence(sentence));
     }
 
+    /// <summary>
+    /// Types out each letter of the sentence individually.
+    /// </summary>
+    /// <param name="sentence"></param>
+    /// <returns></returns>
     private IEnumerator TypeSentence (string sentence)
     {
         dialogueText.text = "";
@@ -76,6 +96,9 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Ends the dialogue and currently adds a quest to the player object.
+    /// </summary>
     private void EndDialogue()
     {
         inDialogue = false;
@@ -88,6 +111,9 @@ public class DialogueManager : MonoBehaviour
         canvasObect.SetActive(false);
     }
 
+    /// <summary>
+    /// Adds the quest to the player object QuestManager.
+    /// </summary>
     private void acceptQuest()
     {
         if (newQuest == null)

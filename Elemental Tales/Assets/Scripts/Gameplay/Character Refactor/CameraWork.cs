@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using Cinemachine;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 1.0.0
+ *    @version 1.0.0
+ *    
+ *    Controls who the camera follows.
+ */
 
-    /// <summary>
-    /// Camera work. Follow a target
-    /// </summary>
-    public class CameraWork : MonoBehaviour
+public class CameraWork : MonoBehaviour
     {
         #region Private Fields
 
@@ -67,7 +71,7 @@ using Cinemachine;
 
 
         /// <summary>
-        /// Follow the target smoothly
+        /// Follow the target smoothly.
         /// </summary>
         void Follow()
         {

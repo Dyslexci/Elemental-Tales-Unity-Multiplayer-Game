@@ -5,6 +5,13 @@ using TMPro;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.4.0
+ *    @version 1.2.1
+ *    
+ *    Manages the options menu, setting the various option states.
+ */
 public class OptionsManager : MonoBehaviour
 {
     [SerializeField] private GameObject menuScreen;
@@ -26,7 +33,9 @@ public class OptionsManager : MonoBehaviour
     private float currentVolume;
     private bool vsync = false;
 
-
+    /// <summary>
+    /// Sets the default options.
+    /// </summary>
     private void Start()
     {
         Screen.fullScreen = true;
@@ -63,6 +72,9 @@ public class OptionsManager : MonoBehaviour
         openSettingsTab();
     }
 
+    /// <summary>
+    /// Sets the application resolution.
+    /// </summary>
     public void setResolution()
     {
         int resolutionIndex = resolutions.Length - resDropdown.value - 1;
@@ -71,6 +83,9 @@ public class OptionsManager : MonoBehaviour
         Debug.Log("Resolution: " + resolution.width + "x" + resolution.height);
     }
 
+    /// <summary>
+    /// Toggles the application fullscreen mode.
+    /// </summary>
     public void toggleFullscreen()
     {
         Screen.fullScreen = !Screen.fullScreen;
@@ -84,6 +99,9 @@ public class OptionsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Toggles the application VSync.
+    /// </summary>
     public void toggleVSync()
     {
         if(vsync)
@@ -92,17 +110,28 @@ public class OptionsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets the local music volume.
+    /// </summary>
+    /// <param name="volume"></param>
     public void setMusicVolume(float volume)
     {
         audioMixer.SetFloat("musicVol", Mathf.Log(volume) * 20);
         currentVolume = volume;
     }
 
+    /// <summary>
+    /// Sets the local sounds volume.
+    /// </summary>
+    /// <param name="volume"></param>
     public void setSoundVolume(float volume)
     {
         audioMixer.SetFloat("soundVol", Mathf.Log(volume) * 20);
     }
 
+    /// <summary>
+    /// Applies the options.
+    /// </summary>
     public void optionsApply()
     {
         openSettingsTab();
@@ -110,6 +139,9 @@ public class OptionsManager : MonoBehaviour
         menuScreen.SetActive(true);
     }
 
+    /// <summary>
+    /// Cancels the options.
+    /// </summary>
     public void optionsCancel()
     {
         openSettingsTab();
@@ -117,12 +149,18 @@ public class OptionsManager : MonoBehaviour
         menuScreen.SetActive(true);
     }
 
+    /// <summary>
+    /// Opens the settings tab, closes the controls tab.
+    /// </summary>
     public void openSettingsTab()
     {
         settingsTab.SetActive(true);
         controlsTab.SetActive(false);
     }
 
+    /// <summary>
+    /// Opens the controls tab, closes the settings tab.
+    /// </summary>
     public void openControlsTab()
     {
         settingsTab.SetActive(false);

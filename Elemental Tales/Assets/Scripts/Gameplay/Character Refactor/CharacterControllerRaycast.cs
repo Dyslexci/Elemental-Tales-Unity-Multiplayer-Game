@@ -5,8 +5,8 @@ using Photon.Pun;
 
 /** 
  *    @author Matthew Ahearn
- *    @since 0.0.0
- *    @version 0.1.0
+ *    @since 1.0.0
+ *    @version 1.0.0
  *    
  *    Controls all movement logic of the player. Takes commands from the PlayerInputs script, and translates the player based on the command and the players current location and activities.
  */
@@ -23,7 +23,9 @@ public class CharacterControllerRaycast : RaycastController
 	public bool isPushable;
 	public bool debugEnabled = true;
 	
-
+	/// <summary>
+	/// Overrides the start method found in RaycastController and initialises CameraWork and direction.
+	/// </summary>
 	public override void Start()
 	{
 		base.Start();
@@ -34,11 +36,25 @@ public class CharacterControllerRaycast : RaycastController
 		collisions.faceDir = 1;
 	}
 
+	/// <summary>
+	/// Returns the result of the move method where there is no input.
+	/// </summary>
+	/// <param name="moveAmount"></param>
+	/// <param name="standingOnPlatform"></param>
+	/// <returns></returns>
 	public Vector2 Move(Vector2 moveAmount, bool standingOnPlatform)
 	{
 		return Move(moveAmount, Vector2.zero, standingOnPlatform);
 	}
 
+	/// <summary>
+	/// Performs the movement logic of the object, given an input and the "speed" of the object. Checks for horizontal and vertical collisions and returns the
+	/// resulting total movement vector.
+	/// </summary>
+	/// <param name="moveAmount"></param>
+	/// <param name="input"></param>
+	/// <param name="standingOnPlatform"></param>
+	/// <returns></returns>
 	public Vector2 Move(Vector2 moveAmount, Vector2 input, bool standingOnPlatform = false)
 	{
 		UpdateRaycastOrigins();
@@ -74,6 +90,10 @@ public class CharacterControllerRaycast : RaycastController
 		return moveAmount;
 	}
 
+	/// <summary>
+	/// Checks for collisions the player will encounter given the horizontal movement needed.
+	/// </summary>
+	/// <param name="moveAmount"></param>
 	void HorizontalCollisions(ref Vector2 moveAmount)
 	{
 		float directionX = collisions.faceDir;
@@ -199,6 +219,10 @@ public class CharacterControllerRaycast : RaycastController
 		}
 	}
 
+	/// <summary>
+	/// Checks for collisions which will occur given vertical movement.
+	/// </summary>
+	/// <param name="moveAmount"></param>
 	void VerticalCollisions(ref Vector2 moveAmount)
 	{
 		float directionY = Mathf.Sign(moveAmount.y);
@@ -267,6 +291,12 @@ public class CharacterControllerRaycast : RaycastController
 		}
 	}
 
+	/// <summary>
+	/// Checks whether the object is trying to climb a slope, and returns the modified movement vector to allow for full movement up an incline, given a minimum and maximum slope.
+	/// </summary>
+	/// <param name="moveAmount"></param>
+	/// <param name="slopeAngle"></param>
+	/// <param name="slopeNormal"></param>
 	void ClimbSlope(ref Vector2 moveAmount, float slopeAngle, Vector2 slopeNormal)
 	{
 		float moveDistance = Mathf.Abs(moveAmount.x);
@@ -283,6 +313,10 @@ public class CharacterControllerRaycast : RaycastController
 		}
 	}
 
+	/// <summary>
+	/// Checks whether the object is trying to descend a slope, and returns the modified movement vector to allow for full movement up an incline, given a minimum and maximum slope.
+	/// </summary>
+	/// <param name="moveAmount"></param>
 	void DescendSlope(ref Vector2 moveAmount)
 	{
 
@@ -325,6 +359,11 @@ public class CharacterControllerRaycast : RaycastController
 		}
 	}
 
+	/// <summary>
+	/// Modifies the movement vector to override player input and slide them down a slope if the incline is too steep.
+	/// </summary>
+	/// <param name="hit"></param>
+	/// <param name="moveAmount"></param>
 	void SlideDownMaxSlope(RaycastHit2D hit, ref Vector2 moveAmount)
 	{
 
@@ -343,11 +382,17 @@ public class CharacterControllerRaycast : RaycastController
 
 	}
 
+	/// <summary>
+	/// Resets the bool for the object falling through a platform.
+	/// </summary>
 	void ResetFallingThroughPlatform()
 	{
 		collisions.fallingThroughPlatform = false;
 	}
 
+	/// <summary>
+	/// Initialises the camera to this object if and only if this object belongs to the player.
+	/// </summary>
 	void CameraWork()
 	{
 		CameraWork _cameraWork = GetComponent<CameraWork>();
@@ -370,6 +415,9 @@ public class CharacterControllerRaycast : RaycastController
 		}
 	}
 
+	/// <summary>
+	/// Stores public information about the object, allowing other classes to directly access and modify object variables. Resets the variables every tick.
+	/// </summary>
 	public struct CollisionInfo
 	{
 		public bool above, below;

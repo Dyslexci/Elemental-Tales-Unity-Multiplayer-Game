@@ -12,20 +12,25 @@ using Photon.Realtime;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 0.1.0
+ *    @version 1.0.0
  *    
  *    Stores global variables, player checkpoints and location for loading and saving, player scores, and etc. Created for all static variables and functions.
  */
 
 public class GameMaster : MonoBehaviourPunCallbacks
 {
-    // called when the player leaves their current room
+    /// <summary>
+    /// Loads the main menu when the player has left the network room.
+    /// </summary>
     public override void OnLeftRoom()
     {
         SceneManager.LoadScene(0);
     }
 
-    // called with a player that is not the local player leaves the room
+    /// <summary>
+    /// Displays a message to the player when the other player has left the network room.
+    /// </summary>
+    /// <param name="otherPlayer"></param>
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
@@ -60,7 +65,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     TimerController timer;
 
-    // initialises various game states
+    /// <summary>
+    /// Initialises various game states and instantiates the player prefabs, allocating one to the local player and one to the other player.
+    /// </summary>
     void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -91,6 +98,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// Toggles the pause game state.
+    /// </summary>
     public void PauseGame()
     {
         if (pausedGame)
@@ -103,22 +113,37 @@ public class GameMaster : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// Called by the CharacterControllerRaycast to store the local player prefab in the game manager to allow integration between the player object and unrelated scripts.
+    /// </summary>
+    /// <param name="player"></param>
     public void setPlayer(GameObject player)
     {
         playerObject = player;
         Debug.Log("Player has been successfully assigned to the game master - " + playerObject.name);
     }
 
+    /// <summary>
+    /// Returns the local player object.
+    /// </summary>
+    /// <returns></returns>
     public GameObject getPlayer()
     {
         return playerObject;
     }
 
+    /// <summary>
+    /// Sets the checkpoint to the parameter.
+    /// </summary>
+    /// <param name="newCheckpoint"></param>
     public void setCheckpoint(Transform newCheckpoint)
     {
         lastCheckpoint = newCheckpoint;
     }
 
+    /// <summary>
+    /// Respawns the local player when called.
+    /// </summary>
     public void respawn()
     {
         Debug.Log("GameMaster: respawn() has been called.");
@@ -127,29 +152,44 @@ public class GameMaster : MonoBehaviourPunCallbacks
         StartCoroutine(Respawn());
     }
 
+    /// <summary>
+    /// Adds 1 to the collectible1 counter.
+    /// </summary>
     public void addCollectible1()
     {
         collectible1++;
-        print(collectible1);
     }
 
+    /// <summary>
+    /// Returns the total collectible1 count.
+    /// </summary>
+    /// <returns></returns>
     public int getCollectible1()
     {
         return collectible1;
     }
 
+    /// <summary>
+    /// Resumes the game.
+    /// </summary>
     public void resumeGame()
     {
         pausedGame = false;
         pauseMenuUI.SetActive(false);
     }
 
+    /// <summary>
+    /// Pauses the game.
+    /// </summary>
     void Pause()
     {
         pauseMenuUI.SetActive(true);
         pausedGame = true;
     }
 
+    /// <summary>
+    /// Opens the options menu.
+    /// </summary>
     public void optionsMenu()
     {
         Debug.Log("Options pressed");
@@ -157,7 +197,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
         //pauseMenuUI.SetActive(false);
     }
 
-    // If statement will attempt to leave correctly if the player is joined in a room and ready to continue as normal, otherwise it will assume the network has crashed out and return to main
+    /// <summary>
+    /// Will attempt to leave the room correctly is the player is in a room and ready to leave as normal, otherwise assuming the network has broken and will return to main scene.
+    /// </summary>
     public void leaveGame()
     {
         if(PhotonNetwork.IsConnectedAndReady)
@@ -170,12 +212,17 @@ public class GameMaster : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// Reloads the current scene.
+    /// </summary>
     public void restartLevel()
     {
-        Debug.Log("Restart pressed");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    /// <summary>
+    /// RPC to add 1 to the opposite player deaths.
+    /// </summary>
     [PunRPC]
     private void AddOppositePlayerDeath()
     {
@@ -183,6 +230,11 @@ public class GameMaster : MonoBehaviourPunCallbacks
         otherPlayerDeaths++;
     }
 
+    /// <summary>
+    /// Starts displaying the tooltip announcing the other player has left the room.
+    /// </summary>
+    /// <param name="otherPlayer"></param>
+    /// <returns></returns>
     IEnumerator WaitHidePlayerLeft(Player otherPlayer)
     {
         playerLeftObject.SetActive(true);
@@ -191,6 +243,10 @@ public class GameMaster : MonoBehaviourPunCallbacks
         StartCoroutine(FadePanel());
     }
 
+    /// <summary>
+    /// Fades out the leaving tooltip.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator FadePanel()
     {
         while (panel.alpha > 0)
@@ -203,6 +259,10 @@ public class GameMaster : MonoBehaviourPunCallbacks
         panel.alpha = 1;
     }
 
+    /// <summary>
+    /// Respawns the player after a certain amount of time.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator Respawn()
     {
         yield return new WaitForSeconds(2.0f);

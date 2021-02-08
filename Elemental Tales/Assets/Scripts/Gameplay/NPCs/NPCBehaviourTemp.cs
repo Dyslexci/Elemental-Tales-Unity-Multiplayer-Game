@@ -21,6 +21,10 @@ public class NPCBehaviourTemp : MonoBehaviour
 
     private Boolean playerInArea = false;
     private Boolean hasTalked = false;
+
+    /// <summary>
+    /// Triggers associated NPC dialogue when the player is interacting with the NPC.
+    /// </summary>
     private void Update()
     {
         if (Input.GetButtonDown("Interact") && playerInArea && !hasTalked)
@@ -34,6 +38,10 @@ public class NPCBehaviourTemp : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks for player presence next to the NPC.
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -42,6 +50,10 @@ public class NPCBehaviourTemp : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks for player leaving the NPC area.
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))

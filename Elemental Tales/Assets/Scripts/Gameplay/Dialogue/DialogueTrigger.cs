@@ -15,9 +15,11 @@ public class DialogueTrigger : MonoBehaviour
     public Dialogue dialogue;
     public Quest quest;
 
+    /// <summary>
+    /// Triggers the dialogue with the given dialogue and quest parameters.
+    /// </summary>
     public void TriggerDialogue()
     {
         FindObjectOfType<DialogueManager>().StartDialogue(dialogue, quest);
-        
     }
 }

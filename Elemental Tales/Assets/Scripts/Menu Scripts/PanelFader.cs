@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.0.0
+ *    @version 1.0.0
+ *    
+ *    Now deprecated, used to fade panel states but didn't work.
+ */
 public class PanelFader : MonoBehaviour
 {
     private bool mFaded;

@@ -17,6 +17,9 @@ public class doorLeverInput : MonoBehaviour
 
     public int switchNumber = 0;
 
+    /// <summary>
+    /// Initialises the door, determining the number of switches allocated.
+    /// </summary>
     private void Start()
     {
         if (switch1 != null)
@@ -25,6 +28,9 @@ public class doorLeverInput : MonoBehaviour
             switchNumber += 1;
     }
 
+    /// <summary>
+    /// Determines if enough switches are held down to trigger its end state, opening the door permanently if so.
+    /// </summary>
     void Update()
     {
         if (switchNumber == 0)

@@ -85,7 +85,7 @@ public class CharacterControllerPlayer1 : MonoBehaviourPunCallbacks
 
         CameraWork _cameraWork = this.gameObject.GetComponent<CameraWork>();
 
-        if(_cameraWork != null)
+        if (_cameraWork != null)
         {
             if (photonView.IsMine)
             {
@@ -93,7 +93,8 @@ public class CharacterControllerPlayer1 : MonoBehaviourPunCallbacks
                 Debug.Log("Following player now");
                 _cameraWork.OnStartFollowing();
             }
-        } else
+        }
+        else
         {
             Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
         }

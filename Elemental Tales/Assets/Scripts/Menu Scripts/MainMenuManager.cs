@@ -4,6 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.0.0
+ *    @version 1.2.0
+ *    
+ *    Manages the main menu - opening and closing panels and dealing with the actions of each button.
+ */
 public class MainMenuManager : MonoBehaviour
 {
     [Header("Versions")]
@@ -36,7 +43,9 @@ public class MainMenuManager : MonoBehaviour
     public GameObject notesBlurPanel;
     public CanvasGroup NotesFaderPanel;
     
-
+    /// <summary>
+    /// Sets the main menu to its default starting state.
+    /// </summary>
     private void Start()
     {
         startGameScreen.SetActive(false);
@@ -48,6 +57,9 @@ public class MainMenuManager : MonoBehaviour
         versionText.text = "v"+version;
     }
 
+    /// <summary>
+    /// Opens tthe exit screen questioning if the player wants to quit the game.
+    /// </summary>
     public void quitGame()
     {
         exitScreen.SetActive(true);
@@ -55,16 +67,25 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(FadeInPanel(exitFaderPanel, exitBlurPanel));
     }
 
+    /// <summary>
+    /// Cancels quitting the game.
+    /// </summary>
     public void quitCancel()
     {
         StartCoroutine(FadeOutPanel(exitFaderPanel, exitBlurPanel, exitScreen, menuScreen));
     }
 
+    /// <summary>
+    /// Confirms quitting the game.
+    /// </summary>
     public void quitConfirm()
     {
         Application.Quit();
     }
 
+    /// <summary>
+    /// Opens the start game panel.
+    /// </summary>
     public void startGame()
     {
         menuScreen.SetActive(false);
@@ -72,11 +93,17 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(FadeInPanel(startFaderPanel, startBlurPanel));
     }
 
+    /// <summary>
+    /// Exits the start game panel.
+    /// </summary>
     public void quitStartGame()
     {
         StartCoroutine(FadeOutPanel(startFaderPanel, startBlurPanel, startGameScreen, menuScreen));
     }
 
+    /// <summary>
+    /// Opens the notes panel.
+    /// </summary>
     public void openNotes()
     {
         menuScreen.SetActive(false);
@@ -84,11 +111,17 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(FadeInPanel(NotesFaderPanel, notesBlurPanel));
     }
 
+    /// <summary>
+    /// Closes the notes panel.
+    /// </summary>
     public void closeNotes()
     {
         StartCoroutine(FadeOutPanel(NotesFaderPanel, notesBlurPanel, notesMenu, menuScreen));
     }
 
+    /// <summary>
+    /// Opens the options menu.
+    /// </summary>
     public void optionsMenu()
     {
         menuScreen.SetActive(false);
@@ -96,6 +129,9 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(FadeInPanel(optionsFaderPanel, optionsBlurPanel));
     }
 
+    /// <summary>
+    /// Closes the options menu.
+    /// </summary>
     public void CloseOptionsMenu()
     {
         menuScreen.SetActive(false);
@@ -103,6 +139,12 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(FadeOutPanel(optionsFaderPanel, optionsBlurPanel, optionsScreen, menuScreen));
     }
 
+    /// <summary>
+    /// Fades in a panel and activates its blur panel when finished fading.
+    /// </summary>
+    /// <param name="panel"></param>
+    /// <param name="panelBlur"></param>
+    /// <returns></returns>
     IEnumerator FadeInPanel(CanvasGroup panel, GameObject panelBlur)
     {
         panelBlur.SetActive(false);
@@ -118,6 +160,14 @@ public class MainMenuManager : MonoBehaviour
         panelBlur.SetActive(true);
     }
 
+    /// <summary>
+    /// Fades out a panel, disabling its blur panel at the start.
+    /// </summary>
+    /// <param name="panel"></param>
+    /// <param name="panelBlur"></param>
+    /// <param name="fromPanel"></param>
+    /// <param name="toPanel"></param>
+    /// <returns></returns>
     IEnumerator FadeOutPanel(CanvasGroup panel, GameObject panelBlur, GameObject fromPanel, GameObject toPanel)
     {
         panelBlur.SetActive(false);

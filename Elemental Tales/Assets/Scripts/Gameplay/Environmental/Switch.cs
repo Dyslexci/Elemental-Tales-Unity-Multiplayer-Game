@@ -7,10 +7,14 @@ using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
 
-/*
- * @author Afoke Chizea
- * the script changes the animation of the
+/** 
+ *    @author Matthew Ahearn
+ *    @since 0.0.0
+ *    @version 1.0.0
+ *    
+ *    Manages players interacting with physical switch objects in the world.
  */
+
 public class Switch : MonoBehaviourPun
 {
     [SerializeField] Sprite crankDown;
@@ -33,6 +37,9 @@ public class Switch : MonoBehaviourPun
 
     public bool debug;
 
+    /// <summary>
+    /// Initialises switch values.
+    /// </summary>
     void Start()
     { 
         gameObject.GetComponent<SpriteRenderer>().sprite = crankDown;
@@ -43,6 +50,9 @@ public class Switch : MonoBehaviourPun
         panel = hintHolder.GetComponentInChildren<CanvasGroup>();
     }
 
+    /// <summary>
+    /// Checks for player presence and whether the player is pulling the switch. Triggers an RPC if the player is interacting with the switch.
+    /// </summary>
     private void FixedUpdate()
     {
         if(pressedSuccessfully)
@@ -73,6 +83,9 @@ public class Switch : MonoBehaviourPun
         }
     }
 
+    /// <summary>
+    /// Checks for the players presence based off Physics2D collider circles and displays the hint if the player has entered the switch collider.
+    /// </summary>
     private void checkPresent()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(pos.position, radius, layer);
@@ -102,26 +115,37 @@ public class Switch : MonoBehaviourPun
                 //playerPresent = false;
                 playerCollider = null;
             }
-
-            
         }
     }
 
+    /// <summary>
+    /// Draws a cisual representation of the switch collider in the editor.
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(pos.position, radius);
     }
 
+    /// <summary>
+    /// Returns the current state of the lever.
+    /// </summary>
+    /// <returns></returns>
     public bool getLeverState()
     {
         return isOn;
     }
 
+    /// <summary>
+    /// Sets the state of the lever to successfully pressed once the final condition of the interaction is filled; e.g. the door has opened.
+    /// </summary>
     public void setPressedSuccessfully()
     {
         pressedSuccessfully = true;
     }
 
+    /// <summary>
+    /// Sends an RPC to other player triggering the lever to its on state.
+    /// </summary>
     [PunRPC] private void setLeverOn()
     {
         Debug.Log("PUN: setLeverOn() has been called.");
@@ -129,6 +153,9 @@ public class Switch : MonoBehaviourPun
         isOn = true;
     }
 
+    /// <summary>
+    /// Sends an RPC to the other player triggering the lever to its off state.
+    /// </summary>
     [PunRPC] private void setLeverOff()
     {
         Debug.Log("PUN: setLeverOff() has been called.");
@@ -136,6 +163,10 @@ public class Switch : MonoBehaviourPun
         isOn = false;
     }
 
+    /// <summary>
+    /// Coroutine displaying the hint to the player.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator WaitHideHint()
     {
         hintHolder.SetActive(true);
@@ -145,6 +176,10 @@ public class Switch : MonoBehaviourPun
         StartCoroutine("FadeHintHolder");
     }
 
+    /// <summary>
+    /// Coroutine making the hint jump into place.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator JumpInHintHolder()
     {
         hintImage.transform.localScale = new Vector3(5, 5, 5);
@@ -157,6 +192,10 @@ public class Switch : MonoBehaviourPun
         hintImage.transform.localScale = new Vector3(1, 1, 1);
     }
 
+    /// <summary>
+    /// Coroutine making the hint fade out after it has been on screen enough time.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator FadeHintHolder()
     {
         while (panel.alpha > 0)

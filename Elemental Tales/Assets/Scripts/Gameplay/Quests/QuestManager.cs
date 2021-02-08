@@ -4,6 +4,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 1.0.0
+ *    @version 1.0.0
+ *    
+ *    Manages the quests panel on the HUD, and stores active quests.
+ */
+
 public class QuestManager : MonoBehaviour
 {
     [SerializeField] private Animator animator;
@@ -13,6 +21,9 @@ public class QuestManager : MonoBehaviour
     [SerializeField] private TMP_Text quest1Desc;
     private int noQuests;
 
+    /// <summary>
+    /// Updates the HUD with quest information.
+    /// </summary>
     private void Update()
     {
         if(quests.Count == 0)
@@ -26,6 +37,10 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds the parameter quest to the list of quests held by the manager.
+    /// </summary>
+    /// <param name="quest"></param>
     public void addQuest(Quest quest)
     {
         quests.Add(quest);

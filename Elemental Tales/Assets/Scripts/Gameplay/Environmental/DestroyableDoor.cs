@@ -15,11 +15,18 @@ public class DestroyableDoor : MonoBehaviour
     [SerializeField] private int maxHealth = 100;
     private int currentHealth;
 
+    /// <summary>
+    /// Sets the current health of the door.
+    /// </summary>
     private void Start()
     {
         currentHealth = maxHealth;
     }
 
+    /// <summary>
+    /// Damages the health of the door with the given damage parameter, and destroys the door if the health drops below 0.
+    /// </summary>
+    /// <param name="damage"></param>
     public void damageDoor(int damage)
     {
         currentHealth -= damage;
@@ -29,7 +36,9 @@ public class DestroyableDoor : MonoBehaviour
         }
     }
 
-    
+    /// <summary>
+    /// Destroys the door.
+    /// </summary>
     private void destroyDoor()
     {
         gameObject.SetActive(false);

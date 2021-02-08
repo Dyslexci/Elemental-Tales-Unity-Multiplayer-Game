@@ -23,7 +23,9 @@ public class PlayerInput : MonoBehaviourPun
 	public bool pauseKeyDown;
 	public bool interactKeyDown;
 
-	// Initialises the player inputs script
+	/// <summary>
+	/// Initialises the player inputs script.
+	/// </summary>
 	void Start()
 	{
 		player = GetComponent<PlayerInputs>();
@@ -31,7 +33,9 @@ public class PlayerInput : MonoBehaviourPun
 		hasControl = true;
 	}
 
-	// Accepts player input and sorts jump logic
+	/// <summary>
+	/// Accepts player input and sorts jump logic
+	/// </summary>
 	void Update()
 	{
 		if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
