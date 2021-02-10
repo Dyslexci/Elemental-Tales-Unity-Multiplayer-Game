@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /** 
  *    @author Matthew Ahearn
@@ -21,6 +22,8 @@ public class OptionsManager : MonoBehaviour
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private GameObject settingsTab;
     [SerializeField] private GameObject controlsTab;
+    [SerializeField] Button settingsButton;
+    [SerializeField] Button controlsButton;
 
     private const string resolutionWidthPlayerPrefKey = "ResolutionWidth";
     private const string resolutionHeightPlayerPrefKey = "ResolutionHeight";
@@ -69,6 +72,12 @@ public class OptionsManager : MonoBehaviour
         resDropdown.value = currentResolutionIndex;
         resDropdown.RefreshShownValue();
 
+        openSettingsTab();
+        settingsButton.Select();
+    }
+
+    public void ResetOptionsMenu()
+    {
         openSettingsTab();
     }
 

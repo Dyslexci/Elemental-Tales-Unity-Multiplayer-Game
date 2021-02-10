@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using TMPro;
@@ -12,7 +12,7 @@ using Photon.Realtime;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 1.0.0
+ *    @version 2.0.0
  *    
  *    Stores global variables, player checkpoints and location for loading and saving, player scores, and etc. Created for all static variables and functions.
  */
@@ -54,6 +54,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public GameObject playerLeftObject;
     public TMP_Text playerLeftText;
     public CanvasGroup panel;
+    public CanvasGroup fadeToBlackPanel;
 
     private Transform lastCheckpoint;
 
@@ -64,6 +65,18 @@ public class GameMaster : MonoBehaviourPunCallbacks
     float playedTime;
 
     TimerController timer;
+
+    float tempCameraStartPos = 101.8f;
+    public Camera tempCamera;
+    public Camera mainCam;
+    public CanvasGroup tempCamPanel;
+    public CanvasGroup HUDPanel;
+    public CanvasGroup tempCamTextPanel;
+
+    public AudioSource music;
+    public AudioSource ambientSound;
+    float musicStartVolume;
+    float ambientSoundStartVolume;
 
     /// <summary>
     /// Initialises various game states and instantiates the player prefabs, allocating one to the local player and one to the other player.
@@ -77,6 +90,12 @@ public class GameMaster : MonoBehaviourPunCallbacks
         playerLeftObject.SetActive(false);
         timer = GetComponent<TimerController>();
         timer.BeginTimer();
+
+        musicStartVolume = music.volume;
+        ambientSoundStartVolume = ambientSound.volume;
+
+        fadeToBlackPanel.alpha = 0;
+        fadeToBlackPanel.gameObject.SetActive(false);
 
         collectible1 = 0;
 
@@ -95,6 +114,16 @@ public class GameMaster : MonoBehaviourPunCallbacks
                 lastCheckpoint = spawnPoint2;
             }
             Debug.LogFormat("We are Instantiating LocalPlayer");
+        }
+        StartCoroutine(StartSceneCinematic());
+    }
+
+    private void Update()
+    {
+        if(!this.gameObject.activeSelf)
+        {
+            this.gameObject.SetActive(true);
+            Debug.Log("The game manager was inactive, resetting...");
         }
     }
 
@@ -202,14 +231,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// </summary>
     public void leaveGame()
     {
-        if(PhotonNetwork.IsConnectedAndReady)
-        {
-            Debug.Log("Quitting Game....");
-            PhotonNetwork.LeaveRoom();
-        } else
-        {
-            SceneManager.LoadScene(0);
-        }
+        playerObject.GetComponent<PlayerInput>().StartCoroutine(FadeToBlackQuit());
     }
 
     /// <summary>
@@ -268,5 +290,124 @@ public class GameMaster : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(2.0f);
         playerObject.transform.SetPositionAndRotation(new Vector3(lastCheckpoint.position.x, lastCheckpoint.position.y, 0f), Quaternion.identity);
         playerObject.GetComponent<StatController>().resetPlayerAfterDeath();
+    }
+
+    /// <summary>
+    /// Fades the HUD to black and then exits the game.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FadeToBlackQuit()
+    {
+        fadeToBlackPanel.alpha = 0;
+        fadeToBlackPanel.gameObject.SetActive(true);
+        while(fadeToBlackPanel.alpha < 1)
+        {
+            yield return new WaitForEndOfFrame();
+            fadeToBlackPanel.alpha += 0.05f;
+        }
+        if (PhotonNetwork.IsConnectedAndReady)
+        {
+            Debug.Log("Quitting Game....");
+            PhotonNetwork.LeaveRoom();
+        }
+        else
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
+
+    /// <summary>
+    /// Pans the temporary camera down from the starting position to the players position and fades in the HUD.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator StartSceneCinematic()
+    {
+        mainCam.gameObject.SetActive(false);
+        tempCamera.gameObject.SetActive(true);
+        tempCamTextPanel.gameObject.SetActive(true);
+        tempCamTextPanel.alpha = 0;
+        HUDPanel.alpha = 0;
+        music.volume = 0;
+        ambientSound.volume = 0;
+        float increaseAmount = .1f;
+        while(playerObject == null)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        playerObject.GetComponent<PlayerInput>().hasControl = false;
+        while(tempCamTextPanel.alpha < 1)
+        {
+            yield return new WaitForFixedUpdate();
+            tempCamTextPanel.alpha += 0.03f;
+        }
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(FadeInFromBlack());
+        tempCamera.transform.position = new Vector3(playerObject.transform.position.x, tempCameraStartPos, -10);
+        while(tempCamera.transform.position.y > playerObject.transform.position.y)
+        {
+            yield return new WaitForFixedUpdate();
+            tempCamera.transform.position = new Vector3(tempCamera.transform.position.x, tempCamera.transform.position.y - increaseAmount, tempCamera.transform.position.z);
+            if (tempCamera.transform.position.y > 83.5f)
+            {
+                increaseAmount += 0.005f;
+            }
+            if(tempCamera.transform.position.y < playerObject.transform.position.y + 19f && increaseAmount > 0.01f)
+            {
+                increaseAmount -= 0.005f;
+                if(tempCamTextPanel.alpha == 1)
+                {
+                    StartCoroutine(FadeOutTempTextPanel());
+                }
+            }
+        }
+        tempCamera.gameObject.SetActive(false);
+        mainCam.gameObject.SetActive(true);
+        playerObject.GetComponent<PlayerInput>().hasControl = true;
+        while (HUDPanel.alpha < 1)
+        {
+            yield return new WaitForFixedUpdate();
+            HUDPanel.alpha += 0.03f;
+        }
+        HUDPanel.alpha = 1;
+    }
+
+    /// <summary>
+    /// Fades the camera in from a black screen, and the music/global sound effects from silence to the default volume.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FadeInFromBlack()
+    {
+        tempCamPanel.alpha = 1;
+        tempCamPanel.gameObject.SetActive(true);
+        while(tempCamPanel.alpha > 0)
+        {
+            yield return new WaitForFixedUpdate();
+            tempCamPanel.alpha -= 0.008f;
+            if(music.volume < musicStartVolume)
+            {
+                music.volume += 0.008f * musicStartVolume;
+            }
+            if(ambientSound.volume < ambientSoundStartVolume)
+            {
+                ambientSound.volume += 0.008f * ambientSoundStartVolume;
+            }
+        }
+        music.volume = musicStartVolume;
+        ambientSound.volume = ambientSoundStartVolume;
+        tempCamPanel.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Fades out the text at the top of the screen during the intro cinematic, displaying the name of the level.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FadeOutTempTextPanel()
+    {
+        while(tempCamTextPanel.alpha > 0)
+        {
+            yield return new WaitForFixedUpdate();
+            tempCamTextPanel.alpha -= 0.03f;
+        }
+        tempCamTextPanel.gameObject.SetActive(false);
     }
 }

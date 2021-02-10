@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
-using UnityEngine.UI;
 
 /** 
  *    @author Matthew Ahearn
@@ -115,7 +117,6 @@ namespace Com.Team12.ElementalTales
 
         #region Private Serializable Fields
 
-        //[SerializeField] private byte maxPlayersPerRoom = 2;
         const string chars = "ABCDEFGHJKLMNOPQRSTUVWXYZ023456789";
         private string connectCode;
 
@@ -123,7 +124,6 @@ namespace Com.Team12.ElementalTales
 
 
         #region Private Fields
-
 
         /// <summary>
         /// This client's version number. Users are separated from each other by gameVersion (which allows you to make breaking changes).
@@ -146,6 +146,15 @@ namespace Com.Team12.ElementalTales
         [SerializeField] private GameObject invalidCodeText;
         [SerializeField] private GameObject StartGameButton;
         [SerializeField] private TMP_InputField codeInputField;
+        [SerializeField] CanvasGroup fadeOutPanel;
+        [SerializeField] GameObject canvasHolder;
+        [SerializeField] Camera mainCam;
+        [SerializeField] AudioSource music;
+        [SerializeField] AudioSource sound;
+        [SerializeField] AudioSource startGameSound;
+        bool fadeCalled;
+        float musicStartVolume;
+        float soundStartVolume;
 
         #endregion
 
@@ -185,6 +194,10 @@ namespace Com.Team12.ElementalTales
             invalidCodeText.SetActive(false);
             codeInputField.characterLimit = 5;
             codeInputField.onValidateInput += delegate (string s, int i, char c) { return char.ToUpper(c); };
+            fadeOutPanel.alpha = 0;
+            fadeOutPanel.gameObject.SetActive(false);
+            musicStartVolume = music.volume;
+            soundStartVolume = sound.volume;
         }
 
 
@@ -252,10 +265,57 @@ namespace Com.Team12.ElementalTales
             connectCode = "";
         }
 
+        /// <summary>
+        /// Starts the asynchronous scene loading and begins the camera animation.
+        /// </summary>
         public void startGame()
         {
-            Debug.Log("Starting game.");
+            startGameSound.Play();
+            Debug.Log("Launcher: startGame() called, calling LoadAsyncScene() and PanCameraUp()");
+            //PhotonNetwork.LoadLevel(1);
+            StartCoroutine(PanCameraUp());
+        }
+
+        /// <summary>
+        /// Pans the camera up to the given position, and then starts the fadeout.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator PanCameraUp()
+        {
+            float increaseAmount = 0.5f;
+            fadeOutPanel.gameObject.SetActive(true);
+            while (mainCam.transform.position.y < 156.5f)
+            {
+                yield return new WaitForFixedUpdate();
+                mainCam.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y + increaseAmount, mainCam.transform.position.z);
+                canvasHolder.transform.position = new Vector3(canvasHolder.transform.position.x, canvasHolder.transform.position.y - increaseAmount * 100, canvasHolder.transform.position.z);
+                if(mainCam.transform.position.y > 116.5f)
+                {
+                    increaseAmount -= 0.003f;
+                }
+                if (!fadeCalled && mainCam.transform.position.y > 126.5f)
+                {
+                    StartCoroutine(FadeCameraToStartGame());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fades the camera to black and then waits to call the next scene.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator FadeCameraToStartGame()
+        {
+            fadeCalled = true;
+            while (fadeOutPanel.alpha < 1)
+            {
+                yield return new WaitForFixedUpdate();
+                fadeOutPanel.alpha += 0.008f;
+                music.volume -= (0.008f * musicStartVolume);
+                sound.volume -= (0.008f * soundStartVolume);
+            }
             PhotonNetwork.LoadLevel(1);
+            Debug.Log("PUN: FadeCameraToStartGame() has finished loading the level and has launched the next scene");
         }
 
 
