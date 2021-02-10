@@ -17,10 +17,10 @@ MonoBehaviour:
   logLevel: 1
   _frameCount: 120
   _bufferCorrection: 0
-  _targetBufferSize: 2
-  _maxBufferSize: 3
+  _targetBufferSize: 5
+  _maxBufferSize: 6
   _minBufferSize: 1
   _ticksBeforeGrow: 3
   _ticksBeforeShrink: 6
-  _sendEveryXTick: 1
+  _sendEveryXTick: 2
   showGUIHeaders: 1

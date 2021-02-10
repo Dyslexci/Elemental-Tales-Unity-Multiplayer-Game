@@ -11,7 +11,7 @@ using TMPro;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 0.1.0
+ *    @version 1.1.1
  *    
  *    Implements the lobby system and launcer for the PUN2 networking package.
  */
@@ -270,8 +270,17 @@ namespace Com.Team12.ElementalTales
         /// </summary>
         public void startGame()
         {
+            photonView.RPC("StartGameNetwork", RpcTarget.AllBuffered);
+        }
+
+        /// <summary>
+        /// Calls an RPC to all buffered clients to trigger the start of the game animation, and for the master client, load the next scene.
+        /// </summary>
+        [PunRPC]
+        private void StartGameNetwork()
+        {
             startGameSound.Play();
-            Debug.Log("Launcher: startGame() called, calling LoadAsyncScene() and PanCameraUp()");
+            Debug.Log("Launcher: startGame() called, callingand PanCameraUp()");
             //PhotonNetwork.LoadLevel(1);
             StartCoroutine(PanCameraUp());
         }
@@ -314,8 +323,14 @@ namespace Com.Team12.ElementalTales
                 music.volume -= (0.008f * musicStartVolume);
                 sound.volume -= (0.008f * soundStartVolume);
             }
-            PhotonNetwork.LoadLevel(1);
-            Debug.Log("PUN: FadeCameraToStartGame() has finished loading the level and has launched the next scene");
+            if(PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.LoadLevel(1);
+                Debug.Log("PUN: FadeCameraToStartGame() has finished loading the level and has launched the next scene");
+            } else
+            {
+                Debug.Log("PUN: FadeCameraToStartGame() has finished loading the level and is waiting for the master client to launch the next scene");
+            }
         }
 
 
