@@ -113,7 +113,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
                 PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(spawnPoint2.position.x, spawnPoint2.position.y, 0f), Quaternion.identity, 0);
                 lastCheckpoint = spawnPoint2;
             }
-            Debug.LogFormat("We are Instantiating LocalPlayer");
         }
         StartCoroutine(StartSceneCinematic());
     }
@@ -149,7 +148,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public void setPlayer(GameObject player)
     {
         playerObject = player;
-        Debug.Log("Player has been successfully assigned to the game master - " + playerObject.name);
+        Debug.Log("GAMEMASTER: Player has been successfully instantiated and assigned to the game master");
     }
 
     /// <summary>
@@ -221,7 +220,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// </summary>
     public void optionsMenu()
     {
-        Debug.Log("Options pressed");
         //optionsMenuUI.SetActive(true);
         //pauseMenuUI.SetActive(false);
     }
@@ -307,7 +305,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
         }
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            Debug.Log("Quitting Game....");
             PhotonNetwork.LeaveRoom();
         }
         else

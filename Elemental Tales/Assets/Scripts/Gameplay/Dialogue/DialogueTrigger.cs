@@ -14,12 +14,18 @@ public class DialogueTrigger : MonoBehaviour
 {
     public Dialogue dialogue;
     public Quest quest;
+    public NPCBehaviourTemp NPCObject;
+
+    private void Start()
+    {
+        NPCObject = GetComponent<NPCBehaviourTemp>();
+    }
 
     /// <summary>
     /// Triggers the dialogue with the given dialogue and quest parameters.
     /// </summary>
     public void TriggerDialogue()
     {
-        FindObjectOfType<DialogueManager>().StartDialogue(dialogue, quest);
+        FindObjectOfType<DialogueManager>().StartDialogue(dialogue, NPCObject, quest);
     }
 }

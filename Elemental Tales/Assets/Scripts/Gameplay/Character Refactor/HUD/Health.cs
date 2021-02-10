@@ -108,7 +108,6 @@ public class Health : MonoBehaviourPun
     public void resetPlayerAfterDeath()
     {
         isRespawning = false;
-        Debug.Log("Player has respawned, new health is: " + currentHealth);
     }
 
     public void takeDamage(int damage)

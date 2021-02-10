@@ -75,11 +75,7 @@ public class CameraWork : MonoBehaviour
         /// </summary>
         void Follow()
         {
-        
-        var virtcam = vcam.GetComponentsInChildren<CinemachineVirtualCamera>();
-            
-
-            Debug.Log("Following " + gameObject.name);
+            var virtcam = vcam.GetComponentsInChildren<CinemachineVirtualCamera>();
             
             virtcam[0].Follow = gameObject.transform;
             virtcam[0].LookAt = gameObject.transform;

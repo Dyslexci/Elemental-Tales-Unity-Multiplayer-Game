@@ -41,23 +41,18 @@ public class ElementOrb : MonoBehaviour
         if(element.Equals("Earth"))
         {
             elementOrb.sprite = EarthOrb;
-            print("Changed to earth");
         } else if (element.Equals("Water"))
         {
             elementOrb.sprite = WaterOrb;
-            print("Changed to water");
         } else if (element.Equals("Air"))
         {
             elementOrb.sprite = AirOrb;
-            print("Changed to air");
         } else if (element.Equals("Fire"))
         {
             elementOrb.sprite = FireOrb;
-            print("Changed to fire");
         } else
         {
             elementOrb.sprite = emptyOrb;
-            print("Changed to empty");
         }
     }
 }

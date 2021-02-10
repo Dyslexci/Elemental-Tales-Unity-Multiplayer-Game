@@ -35,8 +35,6 @@ public class Switch : MonoBehaviourPun
     Image hintImage;
     bool isDisplayingHint;
 
-    public bool debug;
-
     /// <summary>
     /// Initialises switch values.
     /// </summary>
@@ -65,10 +63,6 @@ public class Switch : MonoBehaviourPun
         otherPlayerPresent = false;
 
         checkPresent();
-        if(debug)
-        {
-            print("Checked present, result is: " + playerPresent);
-        }
 
         if (playerPresent && Input.GetButton("Interact"))
         {

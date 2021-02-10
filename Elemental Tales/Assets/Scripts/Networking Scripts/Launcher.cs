@@ -51,7 +51,6 @@ namespace Com.Team12.ElementalTales
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN: OnJoinedRoom() called by PUN. Now this client is in a room.");
-            Debug.Log("In lobby: " + PhotonNetwork.InLobby);
             invalidCodeText.SetActive(false);
             progressPanel.SetActive(false);
             lobbyPanel.SetActive(true);
