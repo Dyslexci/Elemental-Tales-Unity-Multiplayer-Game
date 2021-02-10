@@ -30,6 +30,8 @@ public class NPCBehaviourTemp : MonoBehaviour
     Image hintImage;
     bool isDisplayingHint;
 
+    GameObject player;
+
     public bool isTalking;
 
     /// <summary>
@@ -71,6 +73,7 @@ public class NPCBehaviourTemp : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             playerInArea = true;
+            player = collision.gameObject;
             if(!isDisplayingHint)
             {
                 GameObject.Find("Game Manager").GetComponent<GameMaster>().hintSound.Play(0);
@@ -88,6 +91,7 @@ public class NPCBehaviourTemp : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             playerInArea = false;
+            player = null;
         }
     }
 

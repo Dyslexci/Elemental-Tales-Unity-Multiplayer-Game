@@ -24,7 +24,7 @@ public class doorTwoInputs : MonoBehaviour
         if (switch1.getLeverState() && switch2.getLeverState())
         {
             this.gameObject.SetActive(false);
-            GameObject.Find("Game Master").GetComponent<GameMaster>().openDoorSound.Play();
+            GameObject.Find("Game Master").GetComponent<GameMaster>().openDoorSound.Play(0);
         }
     }
 }

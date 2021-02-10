@@ -7,10 +7,10 @@ using Photon.Pun;
 
 /** 
  *    @author Matthew Ahearn
- *    @since 0.0.0
- *    @version 1.0.0
+ *    @since 1.0.0
+ *    @version 1.0.1
  *    
- *    Causes the player to leave the room - DEPRECATED.
+ *    Causes the player to leave the room, only for use in the post-level screen.
  */
 public class EndScreenManager : MonoBehaviourPunCallbacks
 {
@@ -27,6 +27,13 @@ public class EndScreenManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void exitGame()
     {
-        PhotonNetwork.LeaveRoom();
+        if (PhotonNetwork.IsConnectedAndReady)
+        {
+            PhotonNetwork.LeaveRoom();
+        }
+        else
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 }

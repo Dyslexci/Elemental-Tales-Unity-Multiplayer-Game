@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Main Testing/Main Testing.unity
     guid: 5370de55b56e5394db6a13b058ae974f
+  - enabled: 1
+    path: Assets/Scenes/Game Scenes/Levels/EndgameScene.unity
+    guid: fc3380fec234e614dadd89802c8be300
   m_configObjects: {}
