@@ -17,6 +17,7 @@ public class RaycastController : MonoBehaviourPunCallbacks
 {
 	[Header("Layer Masks")]
 	public LayerMask collisionMask;
+	public LayerMask triggerMask;
 
 	[Header("Raycast Variables")]
 	public const float skinWidth = .015f;

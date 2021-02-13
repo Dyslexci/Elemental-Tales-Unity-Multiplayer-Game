@@ -9,6 +9,7 @@ TagManager:
   - Bullet
   - Permeable
   - Pushable
+  - Fallable
   layers:
   - Default
   - TransparentFX
@@ -25,7 +26,7 @@ TagManager:
   - Background/Foreground
   - Obstacles
   - Pushable
-  - 
+  - Fallable
   - 
   - 
   - 

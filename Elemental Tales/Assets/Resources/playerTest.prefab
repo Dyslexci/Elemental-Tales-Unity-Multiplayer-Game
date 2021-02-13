@@ -154,9 +154,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionMask:
     serializedVersion: 2
-    m_Bits: 24576
-  horizontalRayCount: 4
-  verticalRayCount: 4
+    m_Bits: 57344
+  triggerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  horizontalRayCount: 8
+  verticalRayCount: 8
   horizontalRaySpacing: 0
   verticalRaySpacing: 0
   boxCollider: {fileID: 0}
@@ -164,6 +167,7 @@ MonoBehaviour:
   playerInput: {x: 0, y: 0}
   isPlayer: 1
   isPushable: 0
+  isFallable: 0
   debugEnabled: 0
 --- !u!114 &4422737345570962266
 MonoBehaviour:

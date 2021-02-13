@@ -21,6 +21,7 @@ public class CharacterControllerRaycast : RaycastController
 	public Vector2 playerInput;
 	public bool isPlayer;
 	public bool isPushable;
+	public bool isFallable;
 	public bool debugEnabled = true;
 	
 	/// <summary>
@@ -233,7 +234,11 @@ public class CharacterControllerRaycast : RaycastController
 
 			Vector2 rayOrigin = (directionY == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
 			rayOrigin += Vector2.right * (verticalRaySpacing * i + moveAmount.x);
+			Vector2 rayOriginDown = raycastOrigins.bottomLeft;
+			rayOriginDown += Vector2.right * (verticalRaySpacing * i + moveAmount.x);
 			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, collisionMask);
+			RaycastHit2D hitOpposite = Physics2D.Raycast(rayOrigin, Vector2.up * -directionY, rayLength, collisionMask);
+
 
 			Debug.DrawRay(rayOrigin, Vector2.up * directionY, Color.red);
 
@@ -268,7 +273,37 @@ public class CharacterControllerRaycast : RaycastController
 
 				collisions.below = directionY == -1;
 				collisions.above = directionY == 1;
+
+				if (isPlayer)
+				{
+					
+				}
+
+				if (isPlayer)
+                {
+					if(hitOpposite)
+                    {
+						if(hit.distance <= skinWidth * 2 && hitOpposite.distance <= skinWidth * 2 && (hit.collider.tag == "Fallable" || hitOpposite.collider.tag == "Fallable"))
+                        {
+							GetComponent<StatController>().DamageHealth(100000);
+                        }
+                    }
+                }
 			}
+
+			if(isFallable)
+            {
+				RaycastHit2D hit2 = Physics2D.Raycast(rayOriginDown, Vector2.down, 10, triggerMask);
+				Debug.DrawRay(rayOriginDown, Vector2.down * 10, Color.cyan);
+
+				if(hit2)
+                {
+					if(hit2.collider.tag == "Player")
+                    {
+						GetComponent<FallingBlock>().TriggerFalling();
+                    }
+                }
+            }
 		}
 
 		if (collisions.climbingSlope)

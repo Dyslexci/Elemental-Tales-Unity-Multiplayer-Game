@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using TMPro;
+
 using Photon.Pun;
 
 /** 
@@ -18,6 +20,10 @@ public class endGame : MonoBehaviourPunCallbacks
     public CanvasGroup fadeToBlackPanel;
     bool hasEnded;
 
+    public GameObject playerLeftObject;
+    public TMP_Text playerLeftText;
+    public CanvasGroup panel;
+
     /// <summary>
     /// Loads the main menu when the player has successfully left the room.
     /// </summary>
@@ -26,9 +32,15 @@ public class endGame : MonoBehaviourPunCallbacks
         SceneManager.LoadScene(0);
     }
 
+    private void Start()
+    {
+        playerLeftObject =  GameObject.Find("Game Manager").GetComponent<GameMaster>().playerLeftObject;
+        playerLeftText = GameObject.Find("Game Manager").GetComponent<GameMaster>().playerLeftText;
+        panel = GameObject.Find("Game Manager").GetComponent<GameMaster>().panel;
+    }
+
     private void FixedUpdate()
     {
-        
         if(noPlayersInEndCollider == 2 && !hasEnded)
         {
             hasEnded = true;
@@ -57,6 +69,20 @@ public class endGame : MonoBehaviourPunCallbacks
         if (collision.gameObject.tag == "Player")
         {
             noPlayersInEndCollider += 1;
+            if(noPlayersInEndCollider == 1)
+            {
+                playerLeftObject.SetActive(true);
+                if (collision.gameObject.GetPhotonView().IsMine)
+                {
+                    playerLeftText.text = "Waiting for <color=#ffeb04>" + PhotonNetwork.PlayerListOthers[0].NickName + " <color=#ffffff>to finish the level...";
+                } else
+                {
+                    playerLeftText.text = "<color=#ffeb04>" + PhotonNetwork.PlayerListOthers[0].NickName + " <color=#ffffff>is waiting for you at the end of the level!";
+                }
+            } else
+            {
+                playerLeftObject.SetActive(false);
+            }
         }
     }
 
