@@ -113,6 +113,8 @@ MonoBehaviour:
   wallLeap: {x: 18, y: 17}
   wallSlideSpeedMax: 3
   wallStickTime: 0.5
+  dashSpeed: 50
+  numberOfDashes: 2
   controller: {fileID: 0}
 --- !u!61 &4422737345570962276
 BoxCollider2D:

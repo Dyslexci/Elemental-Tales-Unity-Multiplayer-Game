@@ -39,6 +39,11 @@ public class PlayerInputs : MonoBehaviour
 	public float wallStickTime = .25f;
 	float timeToWallUnstick;
 
+	[Header("Dash Variables")]
+	public float dashSpeed = 60;
+	public int numberOfDashes = 2;
+	int currentNumberOfDashes;
+
 	float gravity;
 	float maxJumpVelocity;
 	float minJumpVelocity;
@@ -47,6 +52,7 @@ public class PlayerInputs : MonoBehaviour
 
 	[HideInInspector]
 	public CharacterControllerRaycast controller;
+	ElementController elementController;
 
 	Vector2 directionalInput;
 	bool wallSliding;
@@ -59,7 +65,9 @@ public class PlayerInputs : MonoBehaviour
 	void Start()
 	{
 		currentNumberOfJumps = numberOfJumps;
+		currentNumberOfDashes = numberOfDashes;
 		controller = GetComponent<CharacterControllerRaycast>();
+		elementController = GetComponent<ElementController>();
 
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -72,7 +80,11 @@ public class PlayerInputs : MonoBehaviour
 	void FixedUpdate()
     {
 		if (controller.collisions.below)
-            currentNumberOfJumps = numberOfJumps;
+        {
+			currentNumberOfJumps = numberOfJumps;
+			currentNumberOfDashes = numberOfDashes;
+		}
+            
 
 		CalculateVelocity();
         HandleWallSliding();
@@ -153,6 +165,22 @@ public class PlayerInputs : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Dashes the player in their current direction
+	/// </summary>
+	public void OnDashInputDown()
+	{
+		currentNumberOfDashes -= 1;
+
+		if ((controller.collisions.below || currentNumberOfDashes > 0) && elementController.getElement().Equals("Air"))
+        {
+			velocity.x = dashSpeed * directionalInput.x;
+		}
+	}
+
+	/// <summary>
+	/// Sets the player to be pulling an object, used for other logic
+	/// </summary>
 	public void OnPullingDown()
     {
 		if(controller.collisions.isHoldingObject)
@@ -162,6 +190,9 @@ public class PlayerInputs : MonoBehaviour
         }
     }
 
+	/// <summary>
+	/// Unsets the player from pulling an object, used for other logic
+	/// </summary>
 	public void OnPullingUp()
     {
 		controller.collisions.isPulling = false;

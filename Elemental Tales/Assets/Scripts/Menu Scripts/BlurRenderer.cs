@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 1.0.0
  *    @version 1.0.0
- *    
+ *
  *    Blurs the scene behind the UI when enabled for certain panels.
  */
 

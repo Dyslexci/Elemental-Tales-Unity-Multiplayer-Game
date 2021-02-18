@@ -15,14 +15,23 @@ public class getElement : MonoBehaviourPun
 {
     [SerializeField] private string heldElement;
     ElementController elementController;
+    NPCBehaviourTemp npcManager;
+
+    private void Start()
+    {
+        npcManager = GetComponent<NPCBehaviourTemp>();
+    }
 
     /// <summary>
     /// Initialises the player object.
     /// </summary>
-    private void Update()
+    private void FixedUpdate()
     {
         if(elementController == null)
             InitialisePlayer();
+
+        if(npcManager.hasTalked)
+            gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -40,6 +49,9 @@ public class getElement : MonoBehaviourPun
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (npcManager.isTalking)
+            return;
+
         if (collision.gameObject.tag == "Player")
         {
             if (collision.gameObject.GetPhotonView().IsMine == false && PhotonNetwork.IsConnected == true)
@@ -48,7 +60,7 @@ public class getElement : MonoBehaviourPun
             elementController.addElement(heldElement);
             photonView.RPC("addElement", RpcTarget.AllBuffered);
             Debug.Log("PUN: RPC has been sent to add the element to all players.");
-            gameObject.SetActive(false);
+            
         }
     }
 
@@ -59,6 +71,7 @@ public class getElement : MonoBehaviourPun
     {
         Debug.Log("PUN: addElement() has been called, adding the element to the player.");
         elementController.addElement(heldElement);
-        gameObject.SetActive(false);
+        FindObjectOfType<DialogueManager>().StartDialogue(GetComponent<DialogueTrigger>().dialogue, npcManager, GetComponent<DialogueTrigger>().quest);
+        npcManager.isTalking = true;
     }
 }

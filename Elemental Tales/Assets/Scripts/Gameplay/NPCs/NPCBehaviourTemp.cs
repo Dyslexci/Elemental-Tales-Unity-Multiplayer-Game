@@ -21,6 +21,8 @@ public class NPCBehaviourTemp : MonoBehaviour
     [SerializeField] private DialogueTrigger dialogueTrigger;
     [SerializeField] private DialogueTrigger dialogueTriggerHasTalked;
 
+    public bool isNPC = true;
+
     bool playerInArea = false;
     public bool hasTalked = false;
 
@@ -39,6 +41,9 @@ public class NPCBehaviourTemp : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        if (!isNPC)
+            return;
+
         hintText = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getHintText();
         hintHolder = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().GetHintHolder();
         hintImage = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getHintContainer();
@@ -50,6 +55,9 @@ public class NPCBehaviourTemp : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+        if (!isNPC)
+            return;
+
         if (Input.GetButtonDown("Interact") && playerInArea && !hasTalked && !isTalking)
         {
             isTalking = true;
@@ -70,6 +78,9 @@ public class NPCBehaviourTemp : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!isNPC)
+            return;
+
         if (collision.gameObject.CompareTag("Player"))
         {
             playerInArea = true;
@@ -88,6 +99,9 @@ public class NPCBehaviourTemp : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (!isNPC)
+            return;
+
         if (collision.gameObject.CompareTag("Player"))
         {
             playerInArea = false;

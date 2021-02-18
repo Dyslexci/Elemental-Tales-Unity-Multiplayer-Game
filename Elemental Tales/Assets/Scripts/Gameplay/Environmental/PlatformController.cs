@@ -15,6 +15,8 @@ using System.Collections.Generic;
 public class PlatformController : RaycastController
 {
 	public LayerMask passengerMask;
+	public bool isSwitchable;
+	public Switch switchToggle;
 
 	[Header("Waypoints")]
 	public Vector3[] localWaypoints;
@@ -53,6 +55,11 @@ public class PlatformController : RaycastController
 	/// </summary>
 	void Update()
 	{
+		if(isSwitchable && !switchToggle.getLeverState())
+        {
+			return;
+        }
+
 		UpdateRaycastOrigins();
 
 		Vector3 velocity = CalculatePlatformMovement();

@@ -288,6 +288,7 @@ public class MainMenuManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator FadeIntoMenuAlt()
     {
+        startBlackPanel.alpha = 1;
         while(startBlackPanel.alpha > 0)
         {
             yield return new WaitForFixedUpdate();

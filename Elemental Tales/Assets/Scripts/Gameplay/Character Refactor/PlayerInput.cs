@@ -84,6 +84,10 @@ public class PlayerInput : MonoBehaviourPun
             {
 				interactKeyDown = false;
             }
+			if(Input.GetKeyDown(KeyCode.LeftControl))
+            {
+				player.OnDashInputDown();
+            }
 		} else
         {
 			Vector2 directionalInput = new Vector2(0, 0);

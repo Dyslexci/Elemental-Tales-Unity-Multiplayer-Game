@@ -60,9 +60,15 @@ public class ElementController : MonoBehaviour
             controller.currentElement = "Fire";
             elementOrb.setElement("Fire");
         }
+        if(Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            currentElement = "Empty";
+            controller.currentElement = "Empty";
+            elementOrb.setElement("Empty");
+        }
     }
 
-    private string getElement()
+    public string getElement()
     {
         return currentElement;
     }
@@ -71,19 +77,15 @@ public class ElementController : MonoBehaviour
     {
         if(element.Equals("Air"))
         {
-            Debug.Log("Added air element");
             hasAir = true;
         } else if(element.Equals("Earth"))
         {
-            Debug.Log("Added earth element");
             hasEarth = true;
         } else if(element.Equals("Water"))
         {
-            Debug.Log("Added water element");
             hasWater = true;
         } else if(element.Equals("Fire"))
         {
-            Debug.Log("Added fire element");
             hasFire = true;
         }
     }

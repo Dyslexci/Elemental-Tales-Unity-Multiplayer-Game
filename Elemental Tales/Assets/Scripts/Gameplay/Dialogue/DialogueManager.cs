@@ -52,9 +52,11 @@ public class DialogueManager : MonoBehaviour
     /// <param name="quest"></param>
     public void StartDialogue(Dialogue dialogue, NPCBehaviourTemp _NPCObject, Quest quest = null)
     {
+        GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<PlayerInput>().hasControl = false;
         inDialogue = true;
         NPCObject = _NPCObject;
-        if(!(quest == null))
+        NPCObject.isTalking = true;
+        if (!(quest == null))
             newQuest = quest;
         canvasObect.SetActive(true);
         animator.SetBool("isOpen", true);
@@ -92,6 +94,15 @@ public class DialogueManager : MonoBehaviour
         dialogueText.text = "";
         foreach(char letter in sentence.ToCharArray())
         {
+            if(letter.Equals('%'))
+            {
+                dialogueText.text += "<color=#ffeb04>";
+                continue;
+            } else if(letter.Equals('$'))
+            {
+                dialogueText.text += "<color=#ffffff>";
+                continue;
+            }
             dialogueText.text += letter;
             yield return new WaitForFixedUpdate();
         }
@@ -103,6 +114,7 @@ public class DialogueManager : MonoBehaviour
     private void EndDialogue()
     {
         NPCObject.isTalking = false;
+        NPCObject.hasTalked = true;
         inDialogue = false;
         if(newQuest.getQuestable())
         {
@@ -110,6 +122,7 @@ public class DialogueManager : MonoBehaviour
         }
         animator.SetBool("isOpen", false);
         canvasObect.SetActive(false);
+        GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<PlayerInput>().hasControl = true;
     }
 
     /// <summary>
