@@ -195,8 +195,15 @@ public class PlayerInputs : MonoBehaviour
 	/// </summary>
 	public void OnPullingUp()
     {
-		controller.collisions.isPulling = false;
-		isHoldingObject = false;
+		try
+        {
+			controller.collisions.isPulling = false;
+			isHoldingObject = false;
+		} catch
+        {
+			Debug.LogWarning("Warning: PlayerInputs has failed to initialise the player collisions struct isPulling variable. If this message repeats, please contact Matt.");
+        }
+		
 	}
 
 	/// <summary>

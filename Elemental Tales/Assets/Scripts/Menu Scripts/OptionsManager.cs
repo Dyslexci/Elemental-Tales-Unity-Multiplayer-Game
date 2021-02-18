@@ -163,7 +163,15 @@ public class OptionsManager : MonoBehaviour
     /// </summary>
     public void openSettingsTab()
     {
-        settingsTab.SetActive(true);
+        try
+        {
+            settingsTab.SetActive(true);
+        } catch
+        {
+            Debug.LogWarning("Warning: OptionsManager has failed to initialise the settingsTab variable. This message should only play during debugging and testing, and is safe to ignore." +
+                " If this message shows when the project is due in, please contact Matt.");
+        }
+        
         controlsTab.SetActive(false);
     }
 

@@ -39,8 +39,17 @@ public class getElement : MonoBehaviourPun
     /// </summary>
     void InitialisePlayer()
     {
-        elementController = GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<ElementController>();
-        print("getElement: InitialisePlayer() has been called, initialising player element controller has succeeded");
+        try
+        {
+            elementController = GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<ElementController>();
+            print("getElement: InitialisePlayer() has been called, initialising player element controller has succeeded");
+        } catch
+        {
+            Debug.LogWarning("Warning: getElement class has not correctly initialised elementController variable. This is expected to happen once or twice, but if this message repeats multiple times" +
+                ", please contact Matt.");
+        }
+        
+        
     }
 
     /// <summary>
