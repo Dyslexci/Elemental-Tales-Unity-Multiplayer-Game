@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using UnityEngine.Experimental.Rendering.Universal;
 using TMPro;
 
 using Photon.Pun;
@@ -56,6 +57,14 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public TMP_Text playerLeftText;
     public CanvasGroup panel;
     public CanvasGroup fadeToBlackPanel;
+    public CanvasGroup HUDBlackPanel;
+    public CanvasGroup HUDWhitePanel;
+    public Light2D deathLight;
+
+    public CanvasGroup deathMessage1Panel;
+    public CanvasGroup deathMessage2Panel;
+    public CanvasGroup deathMessage3Panel;
+    public CanvasGroup deathMessage4Panel;
 
     private Transform lastCheckpoint;
 
@@ -96,8 +105,15 @@ public class GameMaster : MonoBehaviourPunCallbacks
         musicStartVolume = music.volume;
         ambientSoundStartVolume = ambientSound.volume;
 
+        HUDBlackPanel.alpha = 0;
+        HUDBlackPanel.gameObject.SetActive(false);
+        HUDWhitePanel.gameObject.SetActive(false);
         fadeToBlackPanel.alpha = 0;
         fadeToBlackPanel.gameObject.SetActive(false);
+        deathMessage1Panel.gameObject.SetActive(false);
+        deathMessage2Panel.gameObject.SetActive(false);
+        deathMessage3Panel.gameObject.SetActive(false);
+        deathMessage4Panel.gameObject.SetActive(false);
 
         collectible1 = 0;
 
@@ -125,6 +141,11 @@ public class GameMaster : MonoBehaviourPunCallbacks
         {
             this.gameObject.SetActive(true);
             Debug.Log("The game manager was inactive, resetting...");
+        }
+
+        if(Input.GetKeyDown(KeyCode.H))
+        {
+            respawn();
         }
     }
 
@@ -179,7 +200,129 @@ public class GameMaster : MonoBehaviourPunCallbacks
         Debug.Log("GameMaster: respawn() has been called.");
         localPlayerDeaths++;
         //photonView.RPC("AddOppositePlayerDeath", RpcTarget.OthersBuffered);
-        StartCoroutine(Respawn());
+        StartCoroutine(RespawnAnimation());
+    }
+
+    IEnumerator RespawnAnimation()
+    {
+        HUDBlackPanel.alpha = 0;
+        HUDBlackPanel.gameObject.SetActive(true);
+        deathLight.intensity = 0;
+        deathLight.gameObject.SetActive(false);
+        playerObject.SetActive(false);
+        while (HUDBlackPanel.alpha < 1)
+        {
+            yield return new WaitForFixedUpdate();
+            HUDPanel.alpha -= .05f;
+            HUDBlackPanel.alpha += .05f;
+            music.volume -= musicStartVolume / 20;
+            ambientSound.volume -= ambientSoundStartVolume / 20;
+        }
+        ambientSound.volume = 0;
+        music.volume = 0;
+        yield return new WaitForSeconds(.5f);
+
+        deathMessage1Panel.gameObject.SetActive(true);
+        deathMessage1Panel.alpha = 0;
+        deathMessage2Panel.gameObject.SetActive(true);
+        deathMessage2Panel.alpha = 0;
+        deathMessage3Panel.gameObject.SetActive(true);
+        deathMessage3Panel.alpha = 0;
+        deathMessage4Panel.gameObject.SetActive(true);
+        deathMessage4Panel.alpha = 0;
+        if (localPlayerDeaths == 1)
+        {
+            deathMessage2Panel.GetComponentInChildren<TMP_Text>().text = "So this is how it ends...";
+            deathMessage3Panel.GetComponentInChildren<TMP_Text>().text = "You only wish your partner could be here, with you";
+            deathMessage4Panel.GetComponentInChildren<TMP_Text>().text = "What?";
+            while(deathMessage2Panel.alpha < 1)
+            {
+                yield return new WaitForFixedUpdate();
+                deathMessage2Panel.alpha += .01f;
+            }
+            yield return new WaitForSeconds(.5f);
+            while (deathMessage3Panel.alpha < 1)
+            {
+                yield return new WaitForFixedUpdate();
+                deathMessage3Panel.alpha += .01f;
+            }
+            yield return new WaitForSeconds(.5f);
+            while (deathMessage4Panel.alpha < 1)
+            {
+                yield return new WaitForFixedUpdate();
+                deathMessage4Panel.alpha += .01f;
+            }
+            yield return new WaitForSeconds(.5f);
+        } else
+        {
+            deathMessage1Panel.GetComponentInChildren<TMP_Text>().text = "And here is the darkness again...";
+            deathMessage2Panel.GetComponentInChildren<TMP_Text>().text = "How many times, now?";
+            deathMessage3Panel.GetComponentInChildren<TMP_Text>().text = localPlayerDeaths + "?";
+            deathMessage4Panel.GetComponentInChildren<TMP_Text>().text = "And here we go again...";
+            while (deathMessage1Panel.alpha < 1)
+            {
+                yield return new WaitForFixedUpdate();
+                deathMessage1Panel.alpha += .01f;
+            }
+            yield return new WaitForSeconds(.5f);
+            while (deathMessage2Panel.alpha < 1)
+            {
+                yield return new WaitForFixedUpdate();
+                deathMessage2Panel.alpha += .01f;
+            }
+            yield return new WaitForSeconds(.5f);
+            while (deathMessage3Panel.alpha < 1)
+            {
+                yield return new WaitForFixedUpdate();
+                deathMessage3Panel.alpha += .01f;
+            }
+            yield return new WaitForSeconds(.5f);
+            while (deathMessage4Panel.alpha < 1)
+            {
+                yield return new WaitForFixedUpdate();
+                deathMessage4Panel.alpha += .01f;
+            }
+            yield return new WaitForSeconds(.5f);
+        }
+        StartCoroutine(FinishRespawnAnimation());
+    }
+
+    IEnumerator FinishRespawnAnimation()
+    {
+        deathLight.gameObject.SetActive(true);
+        playerObject.transform.SetPositionAndRotation(new Vector3(lastCheckpoint.position.x, lastCheckpoint.position.y, 0f), Quaternion.identity);
+        playerObject.GetComponent<StatController>().resetPlayerAfterDeath();
+        while (deathLight.intensity < 1)
+        {
+            yield return new WaitForFixedUpdate();
+            deathLight.intensity += .025f;
+        }
+        while (deathLight.intensity < 9)
+        {
+            yield return new WaitForFixedUpdate();
+            deathLight.intensity += 0.25f;
+        }
+        HUDWhitePanel.alpha = 1;
+        HUDWhitePanel.gameObject.SetActive(true);
+        HUDBlackPanel.gameObject.SetActive(false);
+        HUDBlackPanel.alpha = 0;
+        deathMessage1Panel.gameObject.SetActive(false);
+        deathMessage2Panel.gameObject.SetActive(false);
+        deathMessage3Panel.gameObject.SetActive(false);
+        deathMessage4Panel.gameObject.SetActive(false);
+        deathLight.gameObject.SetActive(false);
+        HUDPanel.alpha = 1;
+        playerObject.SetActive(true);
+        while (HUDWhitePanel.alpha > 0)
+        {
+            yield return new WaitForFixedUpdate();
+            HUDWhitePanel.alpha -= .025f;
+            music.volume += musicStartVolume / 40;
+            ambientSound.volume += ambientSoundStartVolume / 40;
+        }
+        ambientSound.volume = ambientSoundStartVolume;
+        music.volume = musicStartVolume;
+        HUDWhitePanel.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -279,17 +422,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
         playerLeftObject.SetActive(false);
         panel.alpha = 1;
-    }
-
-    /// <summary>
-    /// Respawns the player after a certain amount of time.
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator Respawn()
-    {
-        yield return new WaitForSeconds(2.0f);
-        playerObject.transform.SetPositionAndRotation(new Vector3(lastCheckpoint.position.x, lastCheckpoint.position.y, 0f), Quaternion.identity);
-        playerObject.GetComponent<StatController>().resetPlayerAfterDeath();
     }
 
     /// <summary>
