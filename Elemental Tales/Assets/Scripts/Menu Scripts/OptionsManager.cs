@@ -73,7 +73,6 @@ public class OptionsManager : MonoBehaviour
         resDropdown.RefreshShownValue();
 
         openSettingsTab();
-        settingsButton.Select();
     }
 
     public void ResetOptionsMenu()
@@ -171,8 +170,14 @@ public class OptionsManager : MonoBehaviour
             Debug.LogWarning("Warning: OptionsManager has failed to initialise the settingsTab variable. This message should only play during debugging and testing, and is safe to ignore." +
                 " If this message shows when the project is due in, please contact Matt.");
         }
-        
-        controlsTab.SetActive(false);
+        try
+        {
+            controlsTab.SetActive(false);
+        } catch
+        {
+            Debug.LogWarning("Warning: OptionsManager has failed to initialise the controlsTab variable. This message should only play during debugging and testing, and is safe to ignore." +
+                " If this message shows when the project is due in, please contact Matt.");
+        }
     }
 
     /// <summary>

@@ -10,6 +10,7 @@ TagManager:
   - Permeable
   - Pushable
   - Fallable
+  - Bashable
   layers:
   - Default
   - TransparentFX

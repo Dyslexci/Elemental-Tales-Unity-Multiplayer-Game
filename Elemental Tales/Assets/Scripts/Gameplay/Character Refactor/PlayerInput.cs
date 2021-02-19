@@ -88,6 +88,14 @@ public class PlayerInput : MonoBehaviourPun
             {
 				player.OnDashInputDown();
             }
+			if(Input.GetKeyDown(KeyCode.S))
+            {
+				player.OnSmashInputDown();
+            }
+			if(Input.GetKey(KeyCode.Mouse1))
+            {
+				player.OnSlingshotInputDown();
+            }
 		} else
         {
 			Vector2 directionalInput = new Vector2(0, 0);

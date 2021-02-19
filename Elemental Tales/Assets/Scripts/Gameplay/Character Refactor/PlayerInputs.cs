@@ -44,6 +44,19 @@ public class PlayerInputs : MonoBehaviour
 	public int numberOfDashes = 2;
 	int currentNumberOfDashes;
 
+	[Header("Smash Variables")]
+	public float smashSpeed = -35f;
+	bool isSmashing;
+
+	[Header("Bash Variables")]
+	[SerializeField] float radius;
+	[SerializeField] GameObject bashableObj;
+	bool nearToBashableObj;
+	bool isChoosingDir;
+	bool isBashing;
+	public float bashPower = 60;
+	GameObject arrow;
+
 	float gravity;
 	float maxJumpVelocity;
 	float minJumpVelocity;
@@ -69,22 +82,29 @@ public class PlayerInputs : MonoBehaviour
 		controller = GetComponent<CharacterControllerRaycast>();
 		elementController = GetComponent<ElementController>();
 
+		arrow = GameObject.Find("Game Manager").GetComponent<GameMaster>().arrow;
+
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
 		minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
 	}
 
-	/// <summary>
-	/// Calculates and sends off the current desired/expected velocity, taking into account obstacles, gravity and player input.
-	/// </summary>
-	void FixedUpdate()
+    /// <summary>
+    /// Calculates and sends off the current desired/expected velocity, taking into account obstacles, gravity and player input.
+    /// </summary>
+    void Update()
     {
 		if (controller.collisions.below)
         {
 			currentNumberOfJumps = numberOfJumps;
 			currentNumberOfDashes = numberOfDashes;
-		}
-            
+			if(isSmashing)
+            {
+				isSmashing = false;
+				GetComponent<PlayerInput>().hasControl = true;
+				Debug.Log("Smashed!");
+			}
+		} 
 
 		CalculateVelocity();
         HandleWallSliding();
@@ -95,7 +115,20 @@ public class PlayerInputs : MonoBehaviour
             return;
         }
 
-        controller.Move(velocity * Time.deltaTime, directionalInput);
+		if(isSmashing)
+        {
+			velocity.x = 0;
+        }
+
+		if(isBashing)
+        {
+			velocity.x = 0;
+			velocity.y = 0;
+        }
+
+		OnSlingshotInputDown();
+
+		controller.Move(velocity * Time.deltaTime, directionalInput);
 
         if (controller.collisions.above || controller.collisions.below)
         {
@@ -164,6 +197,82 @@ public class PlayerInputs : MonoBehaviour
 			velocity.y = minJumpVelocity;
 		}
 	}
+
+	public void OnSmashInputDown()
+    {
+		if(!controller.collisions.below && elementController.getElement().Equals("Earth"))
+        {
+			velocity.x = 0f;
+			isSmashing = true;
+			GetComponent<PlayerInput>().hasControl = false;
+			StartCoroutine(SmashAnimation());
+        }
+    }
+
+	IEnumerator SmashAnimation()
+    {
+		float currentRot = 0f;
+		Vector3 currentPos = gameObject.transform.position;
+		while (currentRot < 360)
+		{
+			this.gameObject.transform.Rotate(new Vector3(0, 0, 20f), Space.Self);
+			gameObject.transform.position = currentPos;
+			currentRot += 20f;
+			yield return new WaitForFixedUpdate();
+		}
+
+		velocity.y = smashSpeed;
+	}
+
+	public void OnSlingshotInputDown()
+    {
+		Vector2 currentPos = transform.position;
+
+		RaycastHit2D[] rays = Physics2D.CircleCastAll(transform.position, radius, Vector3.forward);
+		foreach(RaycastHit2D ray in rays)
+        {
+			nearToBashableObj = false;
+
+			if(ray.collider.tag == "Bashable")
+            {
+				nearToBashableObj = true;
+				bashableObj = ray.collider.transform.gameObject;
+				break;
+            }
+        }
+		if(nearToBashableObj)
+        {
+			bashableObj.GetComponent<SpriteRenderer>().color = Color.yellow;
+			if(Input.GetKey(KeyCode.Mouse1))
+            {
+				transform.position = currentPos;
+				bashableObj.transform.localScale = new Vector2(0.6f, 0.6f);
+				arrow.SetActive(true);
+				arrow.transform.position = transform.position;
+				isChoosingDir = true;
+				velocity.x = 0;
+				velocity.y = 0;
+				isBashing = true;
+            } else if(isChoosingDir && Input.GetKeyUp(KeyCode.Mouse1))
+            {
+				Debug.Log("X vel: " + velocity.x + " Y vel: " + velocity.y);
+				bashableObj.transform.localScale = new Vector2(0.4f, 0.4f);
+				isChoosingDir = false;
+				isBashing = false;
+				arrow.SetActive(false);
+
+				Vector3 direction = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
+				float angle = Mathf.Atan2(direction.y, direction.x);
+				velocity.x = Mathf.Clamp(Mathf.Cos(angle) * bashPower, -60, 60);
+				velocity.y = Mathf.Clamp(Mathf.Sin(angle) * bashPower,-30,30);
+				Debug.Log(arrow.GetComponent<ArrowBehaviour>().angle);
+				Debug.Log("X vel: " + velocity.x + " Y vel: " + velocity.y);
+			}
+        } else if(bashableObj != null)
+        {
+			bashableObj.GetComponent<SpriteRenderer>().color = Color.white;
+        }
+    }
 
 	/// <summary>
 	/// Dashes the player in their current direction

@@ -44,6 +44,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject pauseMenuUI;
     [Tooltip("The prefab to use for representing the player")]
     public GameObject playerPrefab;
+    public GameObject arrow;
     [SerializeField] private Transform spawnPoint1;
     [SerializeField] private Transform spawnPoint2;
     [SerializeField] private GameObject optionsMenuUI;
@@ -90,6 +91,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
         playerLeftObject.SetActive(false);
         timer = GetComponent<TimerController>();
         timer.BeginTimer();
+        arrow.SetActive(false);
 
         musicStartVolume = music.volume;
         ambientSoundStartVolume = ambientSound.volume;
