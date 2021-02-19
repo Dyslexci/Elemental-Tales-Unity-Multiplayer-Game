@@ -118,7 +118,7 @@ MonoBehaviour:
   smashSpeed: -35
   radius: 3
   bashableObj: {fileID: 0}
-  bashPower: 50
+  bashPower: 40
   controller: {fileID: 0}
 --- !u!61 &4422737345570962276
 BoxCollider2D:

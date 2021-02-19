@@ -6,6 +6,9 @@ public class ArrowBehaviour : MonoBehaviour
 {
     public float angle;
 
+    /// <summary>
+    /// Rotates the arrow to point at the mouse.
+    /// </summary>
     void Update()
     {
         Vector3 direction = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);

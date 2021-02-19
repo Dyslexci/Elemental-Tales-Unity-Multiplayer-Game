@@ -22,6 +22,7 @@ public class PlayerInputs : MonoBehaviour
 	float accelerationTimeGrounded = .1f;
 	public int numberOfJumps = 2;
 	int currentNumberOfJumps;
+	bool isJumping;
 
 	[Header("Movement Variables")]
 	public float moveSpeed = 12;
@@ -54,6 +55,8 @@ public class PlayerInputs : MonoBehaviour
 	bool nearToBashableObj;
 	bool isChoosingDir;
 	bool isBashing;
+	bool isMidBash;
+	float lastAngle;
 	public float bashPower = 60;
 	GameObject arrow;
 
@@ -98,13 +101,29 @@ public class PlayerInputs : MonoBehaviour
         {
 			currentNumberOfJumps = numberOfJumps;
 			currentNumberOfDashes = numberOfDashes;
+			if(isJumping)
+            {
+				isJumping = false;
+				StopCoroutine(StartJumpAnimation());
+				transform.localScale = new Vector2(1, 1);
+				StartCoroutine(EndJumpAnimation());
+			}
+			
 			if(isSmashing)
             {
 				isSmashing = false;
 				GetComponent<PlayerInput>().hasControl = true;
-				Debug.Log("Smashed!");
 			}
+			if(isMidBash)
+            {
+				isMidBash = false;
+            }
 		} 
+
+		if(isMidBash && directionalInput.x == 0)
+        {
+			directionalInput.x = lastAngle;
+        }
 
 		CalculateVelocity();
         HandleWallSliding();
@@ -158,6 +177,13 @@ public class PlayerInputs : MonoBehaviour
 		if (isHoldingObject)
 			return;
 
+		if(currentNumberOfJumps == 2 && !wallSliding)
+        {
+			StopCoroutine(EndJumpAnimation());
+			transform.localScale = new Vector2(1, 1);
+			StartCoroutine(StartJumpAnimation());
+		}
+
 		currentNumberOfJumps -= 1;
 
 		if (wallSliding) {
@@ -198,6 +224,9 @@ public class PlayerInputs : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Changes character velocities when smashing, and sets the smashing state to true, if possible.
+	/// </summary>
 	public void OnSmashInputDown()
     {
 		if(!controller.collisions.below && elementController.getElement().Equals("Earth"))
@@ -209,6 +238,51 @@ public class PlayerInputs : MonoBehaviour
         }
     }
 
+	/// <summary>
+	/// Makes the player thinner and taller for a split second before returning them to normal again.
+	/// </summary>
+	/// <returns></returns>
+	IEnumerator StartJumpAnimation()
+    {
+		float startXScale = transform.localScale.x;
+
+		while(transform.localScale.x > .65f)
+        {
+			yield return new WaitForFixedUpdate();
+			transform.localScale = new Vector2(transform.localScale.x - 0.1f, transform.localScale.y + 0.1f);
+        }
+		isJumping = true;
+		while (transform.localScale.x < startXScale)
+        {
+			yield return new WaitForFixedUpdate();
+			transform.localScale = new Vector2(transform.localScale.x + 0.1f, transform.localScale.y - 0.1f);
+        }
+    }
+
+	/// <summary>
+	/// Makes the player wider and shorter for a split second before returning them to normal again.
+	/// </summary>
+	/// <returns></returns>
+	IEnumerator EndJumpAnimation()
+    {
+		float startXScale = transform.localScale.x;
+		while(transform.localScale.x < 1.4f)
+        {
+			yield return new WaitForFixedUpdate();
+			transform.localScale = new Vector2(transform.localScale.x + 0.1f, transform.localScale.y - 0.1f);
+		}
+		while(transform.localScale.x > 1)
+        {
+			yield return new WaitForFixedUpdate();
+			transform.position = new Vector2(transform.position.x, transform.position.y + .1f);
+			transform.localScale = new Vector2(transform.localScale.x - 0.1f, transform.localScale.y + 0.1f);
+		}
+    }
+
+	/// <summary>
+	/// Rotates the player in place before smashing them into the ground.
+	/// </summary>
+	/// <returns></returns>
 	IEnumerator SmashAnimation()
     {
 		float currentRot = 0f;
@@ -224,6 +298,9 @@ public class PlayerInputs : MonoBehaviour
 		velocity.y = smashSpeed;
 	}
 
+	/// <summary>
+	/// Allows the player to grab onto bashable objects (which are highlighted in the game world when nearby), and launch themselves in a direction dictated by the mouse position.
+	/// </summary>
 	public void OnSlingshotInputDown()
     {
 		Vector2 currentPos = transform.position;
@@ -259,12 +336,14 @@ public class PlayerInputs : MonoBehaviour
 				bashableObj.transform.localScale = new Vector2(0.4f, 0.4f);
 				isChoosingDir = false;
 				isBashing = false;
+				isMidBash = true;
 				arrow.SetActive(false);
 
 				Vector3 direction = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
 				float angle = Mathf.Atan2(direction.y, direction.x);
-				velocity.x = Mathf.Clamp(Mathf.Cos(angle) * bashPower, -60, 60);
-				velocity.y = Mathf.Clamp(Mathf.Sin(angle) * bashPower,-30,30);
+				lastAngle = Mathf.Cos(angle);
+				velocity.x = Mathf.Clamp(Mathf.Cos(angle) * bashPower, -bashPower, bashPower);
+				velocity.y = Mathf.Clamp(Mathf.Sin(angle) * bashPower,-bashPower*.6f,bashPower*.6f);
 				Debug.Log(arrow.GetComponent<ArrowBehaviour>().angle);
 				Debug.Log("X vel: " + velocity.x + " Y vel: " + velocity.y);
 			}
