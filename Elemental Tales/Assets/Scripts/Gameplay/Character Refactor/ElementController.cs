@@ -5,7 +5,7 @@ using UnityEngine;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 0.1.0
+ *    @version 1.0.0
  *    
  *    This script sets the player 1 element, changes the hud accordingly, and changes the player controller element variable.
  */
@@ -21,6 +21,9 @@ public class ElementController : MonoBehaviour
     bool hasEarth;
     bool hasWater;
 
+    /// <summary>
+    /// Sets the start conditions where possible
+    /// </summary>
     private void Start()
     {
         elementOrb = GetComponent<ElementOrb>();
@@ -29,11 +32,24 @@ public class ElementController : MonoBehaviour
         hasFire = false;
         hasEarth = false;
         hasWater = false;
+        StartCoroutine(delaySetElements());
+    }
+
+    /// <summary>
+    /// Delays setting the start conditions for the elements, as sometimes the player spawning is delayed by a frame
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator delaySetElements()
+    {
+        yield return new WaitForSeconds(1);
         currentElement = "Empty";
         controller.currentElement = "Empty";
         elementOrb.setElement("Empty");
     }
 
+    /// <summary>
+    /// Allows the player to choose the active element
+    /// </summary>
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && hasAir)
@@ -68,11 +84,19 @@ public class ElementController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Returns the current chosen element
+    /// </summary>
+    /// <returns></returns>
     public string getElement()
     {
         return currentElement;
     }
 
+    /// <summary>
+    /// Adds a specific element to the available elements for this player
+    /// </summary>
+    /// <param name="element"></param>
     public void addElement(string element)
     {
         if(element.Equals("Air"))

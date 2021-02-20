@@ -13,7 +13,7 @@ using Photon.Realtime;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 2.0.0
+ *    @version 2.2.0
  *    
  *    Stores global variables, player checkpoints and location for loading and saving, player scores, and etc. Created for all static variables and functions.
  */
@@ -41,8 +41,10 @@ public class GameMaster : MonoBehaviourPunCallbacks
     private int collectible1;
     private GameObject playerObject;
 
+    [Header("Generic Setup")]
     private static bool pausedGame = false;
     [SerializeField] private GameObject pauseMenuUI;
+    public GameObject HUDCanvas;
     [Tooltip("The prefab to use for representing the player")]
     public GameObject playerPrefab;
     public GameObject arrow;
@@ -50,9 +52,16 @@ public class GameMaster : MonoBehaviourPunCallbacks
     [SerializeField] private Transform spawnPoint2;
     [SerializeField] private GameObject optionsMenuUI;
 
+    [Header("Death Variables")]
     public int localPlayerDeaths;
+    public TMP_Text playerDeathCounter;
     public int otherPlayerDeaths;
 
+    [Header("Collectible Variables")]
+    public TMP_Text collectible1Counter;
+    public int totalCollectible1;
+
+    [Header("Canvas Variables")]
     public GameObject playerLeftObject;
     public TMP_Text playerLeftText;
     public CanvasGroup panel;
@@ -66,16 +75,27 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public CanvasGroup deathMessage3Panel;
     public CanvasGroup deathMessage4Panel;
 
+    [Header("Checkpoint Variables")]
     private Transform lastCheckpoint;
+    private ArrayList checkpointsVisited;
+    private int numCheckpointsVisited;
+    public int totalCheckpoints;
+    public TMP_Text percentageTracker;
 
+    [Header("Audio Variables")]
     public AudioSource openDoorSound;
     public AudioSource collectGem1Sound;
     public AudioSource hintSound;
+    public AudioSource music;
+    public AudioSource ambientSound;
+    float musicStartVolume;
+    float ambientSoundStartVolume;
 
     float playedTime;
 
     TimerController timer;
 
+    [Header("Camera Variables")]
     float tempCameraStartPos = 101.8f;
     public Camera tempCamera;
     public Camera mainCam;
@@ -83,10 +103,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public CanvasGroup HUDPanel;
     public CanvasGroup tempCamTextPanel;
 
-    public AudioSource music;
-    public AudioSource ambientSound;
-    float musicStartVolume;
-    float ambientSoundStartVolume;
+    
 
     /// <summary>
     /// Initialises various game states and instantiates the player prefabs, allocating one to the local player and one to the other player.
@@ -95,12 +112,16 @@ public class GameMaster : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.AutomaticallySyncScene = true;
 
+        checkpointsVisited = new ArrayList();
+
+        HUDCanvas.SetActive(true);
         pauseMenuUI.SetActive(false);
         optionsMenuUI.SetActive(false);
         playerLeftObject.SetActive(false);
         timer = GetComponent<TimerController>();
         timer.BeginTimer();
         arrow.SetActive(false);
+        playerDeathCounter.text = "0";
 
         musicStartVolume = music.volume;
         ambientSoundStartVolume = ambientSound.volume;
@@ -190,6 +211,15 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public void setCheckpoint(Transform newCheckpoint)
     {
         lastCheckpoint = newCheckpoint;
+        if(checkpointsVisited.Contains(newCheckpoint))
+        {
+            return;
+        } else
+        {
+            checkpointsVisited.Add(newCheckpoint);
+            numCheckpointsVisited++;
+            percentageTracker.text = Mathf.RoundToInt((numCheckpointsVisited / totalCheckpoints) * 100) + "%";
+        }
     }
 
     /// <summary>
@@ -199,10 +229,15 @@ public class GameMaster : MonoBehaviourPunCallbacks
     {
         Debug.Log("GameMaster: respawn() has been called.");
         localPlayerDeaths++;
+        playerDeathCounter.text = localPlayerDeaths.ToString();
         //photonView.RPC("AddOppositePlayerDeath", RpcTarget.OthersBuffered);
         StartCoroutine(RespawnAnimation());
     }
 
+    /// <summary>
+    /// Fades in parts of the death screen one after the other to display text, the death counter, etc
+    /// </summary>
+    /// <returns></returns>
     IEnumerator RespawnAnimation()
     {
         HUDBlackPanel.alpha = 0;
@@ -287,6 +322,10 @@ public class GameMaster : MonoBehaviourPunCallbacks
         StartCoroutine(FinishRespawnAnimation());
     }
 
+    /// <summary>
+    /// Begins fading out various parts of the death screen to smoothly return to the game
+    /// </summary>
+    /// <returns></returns>
     IEnumerator FinishRespawnAnimation()
     {
         deathLight.gameObject.SetActive(true);
@@ -331,6 +370,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public void addCollectible1()
     {
         collectible1++;
+        collectible1Counter.text = collectible1 + "/" + totalCollectible1;
     }
 
     /// <summary>

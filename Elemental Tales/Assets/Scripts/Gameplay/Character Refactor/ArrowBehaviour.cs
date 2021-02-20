@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 1.2.2
+ *    @version 1.0.0
+ *    
+ *    Controls the direction of the arrow which shows the player which direction they will slingshot in.
+ */
+
 public class ArrowBehaviour : MonoBehaviour
 {
     public float angle;

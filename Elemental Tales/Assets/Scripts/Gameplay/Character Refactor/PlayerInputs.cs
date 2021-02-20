@@ -4,7 +4,7 @@ using System.Collections;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.0.0
+ *    @version 2.0.0
  *    
  *    Accepts player input and converts it to directions to be sent to the controller class. Sets up the physical simulation parameters of the object.
  */
@@ -104,9 +104,6 @@ public class PlayerInputs : MonoBehaviour
 			if(isJumping)
             {
 				isJumping = false;
-				StopCoroutine(StartJumpAnimation());
-				transform.localScale = new Vector2(1, 1);
-				StartCoroutine(EndJumpAnimation());
 			}
 			
 			if(isSmashing)
@@ -177,13 +174,6 @@ public class PlayerInputs : MonoBehaviour
 		if (isHoldingObject)
 			return;
 
-		if(currentNumberOfJumps == 2 && !wallSliding)
-        {
-			StopCoroutine(EndJumpAnimation());
-			transform.localScale = new Vector2(1, 1);
-			StartCoroutine(StartJumpAnimation());
-		}
-
 		currentNumberOfJumps -= 1;
 
 		if (wallSliding) {
@@ -236,47 +226,6 @@ public class PlayerInputs : MonoBehaviour
 			GetComponent<PlayerInput>().hasControl = false;
 			StartCoroutine(SmashAnimation());
         }
-    }
-
-	/// <summary>
-	/// Makes the player thinner and taller for a split second before returning them to normal again.
-	/// </summary>
-	/// <returns></returns>
-	IEnumerator StartJumpAnimation()
-    {
-		float startXScale = transform.localScale.x;
-
-		while(transform.localScale.x > .65f)
-        {
-			yield return new WaitForFixedUpdate();
-			transform.localScale = new Vector2(transform.localScale.x - 0.1f, transform.localScale.y + 0.1f);
-        }
-		isJumping = true;
-		while (transform.localScale.x < startXScale)
-        {
-			yield return new WaitForFixedUpdate();
-			transform.localScale = new Vector2(transform.localScale.x + 0.1f, transform.localScale.y - 0.1f);
-        }
-    }
-
-	/// <summary>
-	/// Makes the player wider and shorter for a split second before returning them to normal again.
-	/// </summary>
-	/// <returns></returns>
-	IEnumerator EndJumpAnimation()
-    {
-		float startXScale = transform.localScale.x;
-		while(transform.localScale.x < 1.4f)
-        {
-			yield return new WaitForFixedUpdate();
-			transform.localScale = new Vector2(transform.localScale.x + 0.1f, transform.localScale.y - 0.1f);
-		}
-		while(transform.localScale.x > 1)
-        {
-			yield return new WaitForFixedUpdate();
-			transform.position = new Vector2(transform.position.x, transform.position.y + .1f);
-			transform.localScale = new Vector2(transform.localScale.x - 0.1f, transform.localScale.y + 0.1f);
-		}
     }
 
 	/// <summary>

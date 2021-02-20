@@ -5,8 +5,8 @@ using Photon.Pun;
 
 /** 
  *    @author Matthew Ahearn
- *    @since 0.0.0
- *    @version 0.1.0
+ *    @since 1.0.0
+ *    @version 1.1.0
  *    
  *    Takes input from the player and converts to logic which can be used by controller classes.
  */
