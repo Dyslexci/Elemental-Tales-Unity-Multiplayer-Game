@@ -165,7 +165,7 @@ public class Switch : MonoBehaviourPun
     {
         hintHolder.SetActive(true);
         StartCoroutine("JumpInHintHolder");
-        hintText.text = "<color=#ffffff>Press E to <color=#ffeb04> grab and switch <color=#ffffff>levers!";
+        hintText.text = "<color=#ffffff>Press E to <color=#ffeb04>grab and switch <color=#ffffff>levers!";
         yield return new WaitForSeconds(2);
         StartCoroutine("FadeHintHolder");
     }

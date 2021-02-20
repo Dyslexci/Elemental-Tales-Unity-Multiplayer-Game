@@ -96,6 +96,22 @@ public class PlayerInput : MonoBehaviourPun
             {
 				player.OnSlingshotInputDown();
             }
+			if(Input.GetKeyDown(KeyCode.W) && player.controller.collisions.below)
+            {
+				player.PanCamUpKeyDown();
+            }
+			if(Input.GetKeyUp(KeyCode.W))
+            {
+				player.PanCamUpKeyUp();
+            }
+			if(Input.GetKeyDown(KeyCode.S) && player.controller.collisions.below)
+            {
+				player.PanCamDownKeyDown();
+            }
+			if(Input.GetKeyUp(KeyCode.S))
+            {
+				player.PanCamDownKeyUp();
+            }
 		} else
         {
 			Vector2 directionalInput = new Vector2(0, 0);

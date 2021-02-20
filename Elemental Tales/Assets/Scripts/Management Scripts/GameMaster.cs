@@ -13,7 +13,7 @@ using Photon.Realtime;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 2.2.0
+ *    @version 2.2.1
  *    
  *    Stores global variables, player checkpoints and location for loading and saving, player scores, and etc. Created for all static variables and functions.
  */
@@ -43,7 +43,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     [Header("Generic Setup")]
     private static bool pausedGame = false;
-    [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject pauseMenuHolder;
     public GameObject HUDCanvas;
     [Tooltip("The prefab to use for representing the player")]
     public GameObject playerPrefab;
@@ -51,6 +51,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     [SerializeField] private Transform spawnPoint1;
     [SerializeField] private Transform spawnPoint2;
     [SerializeField] private GameObject optionsMenuUI;
+    public CanvasGroup pauseMenuPanel;
 
     [Header("Death Variables")]
     public int localPlayerDeaths;
@@ -74,6 +75,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public CanvasGroup deathMessage2Panel;
     public CanvasGroup deathMessage3Panel;
     public CanvasGroup deathMessage4Panel;
+
+    public CanvasGroup pauseQuitPanel;
 
     [Header("Checkpoint Variables")]
     private Transform lastCheckpoint;
@@ -115,7 +118,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
         checkpointsVisited = new ArrayList();
 
         HUDCanvas.SetActive(true);
-        pauseMenuUI.SetActive(false);
+        pauseMenuHolder.SetActive(false);
+        pauseQuitPanel.gameObject.SetActive(false);
         optionsMenuUI.SetActive(false);
         playerLeftObject.SetActive(false);
         timer = GetComponent<TimerController>();
@@ -162,11 +166,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
         {
             this.gameObject.SetActive(true);
             Debug.Log("The game manager was inactive, resetting...");
-        }
-
-        if(Input.GetKeyDown(KeyCode.H))
-        {
-            respawn();
         }
     }
 
@@ -387,8 +386,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// </summary>
     public void resumeGame()
     {
+        playerObject.GetComponent<PlayerInput>().hasControl = true;
         pausedGame = false;
-        pauseMenuUI.SetActive(false);
+        pauseMenuHolder.SetActive(false);
     }
 
     /// <summary>
@@ -396,7 +396,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// </summary>
     void Pause()
     {
-        pauseMenuUI.SetActive(true);
+        playerObject.GetComponent<PlayerInput>().hasControl = false;
+        GetComponent<PauseMenuManager>().skillTitle.text = "";
+        pauseMenuHolder.SetActive(true);
         pausedGame = true;
     }
 
@@ -405,8 +407,15 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// </summary>
     public void optionsMenu()
     {
-        //optionsMenuUI.SetActive(true);
-        //pauseMenuUI.SetActive(false);
+        
+        optionsMenuUI.gameObject.SetActive(true);
+        pauseMenuPanel.gameObject.SetActive(false);
+    }
+
+    public void CloseOptionsMenu()
+    {
+        optionsMenuUI.gameObject.SetActive(false);
+        pauseMenuPanel.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -414,7 +423,61 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// </summary>
     public void leaveGame()
     {
+        StartCoroutine(FadePauseQuitPanelIn());
+    }
+
+    /// <summary>
+    /// Fades in the quit confirmation screen
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FadePauseQuitPanelIn()
+    {
+        pauseQuitPanel.alpha = 0;
+        pauseQuitPanel.gameObject.SetActive(true);
+        while (pauseQuitPanel.alpha < 1)
+        {
+            yield return new WaitForFixedUpdate();
+            pauseQuitPanel.alpha += .05f;
+        }
+    }
+
+    /// <summary>
+    /// Quits the game back to the main menu
+    /// </summary>
+    public void QuitToMenu()
+    {
         playerObject.GetComponent<PlayerInput>().StartCoroutine(FadeToBlackQuit());
+    }
+
+    /// <summary>
+    /// Quits the application to desktop - may negatively affect second player
+    /// </summary>
+    public void QuitToDesktop()
+    {
+        Application.Quit();
+    }
+
+    /// <summary>
+    /// Cancels the quit confirmation
+    /// </summary>
+    public void QuitCancel()
+    {
+        StartCoroutine(FadePauseQuitPanelOut());
+    }
+
+    /// <summary>
+    /// Fades out the quit confirmation screen
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FadePauseQuitPanelOut()
+    {
+        pauseQuitPanel.alpha = 1;
+        while (pauseQuitPanel.alpha > 0)
+        {
+            yield return new WaitForFixedUpdate();
+            pauseQuitPanel.alpha -= .05f;
+        }
+        pauseQuitPanel.gameObject.SetActive(false);
     }
 
     /// <summary>

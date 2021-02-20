@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Cinemachine;
 
 /** 
  *    @author Matthew Ahearn
@@ -75,6 +76,8 @@ public class PlayerInputs : MonoBehaviour
 	int wallDirX;
 	bool isHoldingObject;
 
+	CinemachineFramingTransposer vCam;
+
 	/// <summary>
 	/// Initialises the player components and physical parameters.
 	/// </summary>
@@ -86,6 +89,7 @@ public class PlayerInputs : MonoBehaviour
 		elementController = GetComponent<ElementController>();
 
 		arrow = GameObject.Find("Game Manager").GetComponent<GameMaster>().arrow;
+		vCam = GameObject.Find("Virtual Camera").GetComponentInChildren<CinemachineFramingTransposer>();
 
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -158,6 +162,70 @@ public class PlayerInputs : MonoBehaviour
             }
         }
     }
+
+	public void PanCamDownKeyDown()
+    {
+		StopCoroutine(PanUpCam());
+		StopCoroutine(ReturnCamToCentreFromPanUp());
+		StopCoroutine(ReturnCamToCentreFromPanDown());
+		StartCoroutine(PanDownCam());
+    }
+
+	public void PanCamDownKeyUp()
+    {
+		StopCoroutine(PanDownCam());
+		StartCoroutine(ReturnCamToCentreFromPanDown());
+    }
+
+	public void PanCamUpKeyDown()
+    {
+		StopCoroutine(PanDownCam());
+		StopCoroutine(ReturnCamToCentreFromPanUp());
+		StopCoroutine(ReturnCamToCentreFromPanDown());
+		StartCoroutine(PanUpCam());
+	}
+
+	public void PanCamUpKeyUp()
+	{
+		StopCoroutine(PanUpCam());
+		StartCoroutine(ReturnCamToCentreFromPanUp());
+	}
+
+	IEnumerator PanDownCam()
+    {
+		while (vCam.m_ScreenY > .25f)
+        {
+			yield return new WaitForFixedUpdate();
+			vCam.m_ScreenY -= .005f;
+        }
+    }
+
+	IEnumerator ReturnCamToCentreFromPanDown()
+    {
+		while (vCam.m_ScreenY < .5f)
+        {
+			yield return new WaitForFixedUpdate();
+			vCam.m_ScreenY += .005f;
+        }
+    }
+
+	IEnumerator PanUpCam()
+    {
+		while (vCam.m_ScreenY < .75f)
+        {
+			yield return new WaitForFixedUpdate();
+			vCam.m_ScreenY += .005f;
+        }
+    }
+
+	IEnumerator ReturnCamToCentreFromPanUp()
+    {
+		while (vCam.m_ScreenY > .5f)
+        {
+			yield return new WaitForFixedUpdate();
+			vCam.m_ScreenY -= .005f;
+		}
+	}
 
 	/// <summary>
 	/// Sets the current player input.
@@ -274,7 +342,7 @@ public class PlayerInputs : MonoBehaviour
 				transform.position = currentPos;
 				bashableObj.transform.localScale = new Vector2(0.6f, 0.6f);
 				arrow.SetActive(true);
-				arrow.transform.position = transform.position;
+				arrow.transform.position = bashableObj.transform.position;
 				isChoosingDir = true;
 				velocity.x = 0;
 				velocity.y = 0;
@@ -288,6 +356,7 @@ public class PlayerInputs : MonoBehaviour
 				isMidBash = true;
 				arrow.SetActive(false);
 
+				transform.position = bashableObj.transform.position;
 				Vector3 direction = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
 				float angle = Mathf.Atan2(direction.y, direction.x);
 				lastAngle = Mathf.Cos(angle);
