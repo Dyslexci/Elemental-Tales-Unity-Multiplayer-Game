@@ -106,7 +106,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public CanvasGroup HUDPanel;
     public CanvasGroup tempCamTextPanel;
 
-    
+    public bool playerHasInstantiated = false;
 
     /// <summary>
     /// Initialises various game states and instantiates the player prefabs, allocating one to the local player and one to the other player.
@@ -191,6 +191,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public void setPlayer(GameObject player)
     {
         playerObject = player;
+        playerHasInstantiated = true;
         Debug.Log("GAMEMASTER: Player has been successfully instantiated and assigned to the game master");
     }
 

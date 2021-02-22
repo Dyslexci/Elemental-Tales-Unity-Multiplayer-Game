@@ -28,7 +28,7 @@ public class StatController : MonoBehaviourPun
     [Header("Mana Variables")]
     private Image[] manas;
     public int maxMana = 3;
-    [SerializeField] private int currentMana;
+    public int currentMana;
     [SerializeField] private Sprite fullMana;
     [SerializeField] private Sprite emptyMana;
 

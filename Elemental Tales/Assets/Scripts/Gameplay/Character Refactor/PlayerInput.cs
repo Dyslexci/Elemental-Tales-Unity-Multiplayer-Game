@@ -23,6 +23,9 @@ public class PlayerInput : MonoBehaviourPun
 	public bool pauseKeyDown;
 	public bool interactKeyDown;
 
+	[SerializeField] private float attackRate = 2f;
+	private float nextAttackTime = 0f;
+
 	/// <summary>
 	/// Initialises the player inputs script.
 	/// </summary>
@@ -112,6 +115,14 @@ public class PlayerInput : MonoBehaviourPun
             {
 				player.PanCamDownKeyUp();
             }
+			if(Input.GetKeyDown(KeyCode.Mouse0))
+            {
+				if (Time.time >= nextAttackTime)
+				{
+					player.Attack();
+					nextAttackTime = Time.time + 1f / attackRate;
+				}
+			}
 		} else
         {
 			Vector2 directionalInput = new Vector2(0, 0);

@@ -4872,9 +4872,18 @@ MonoBehaviour:
   dashSpeed: 50
   numberOfDashes: 2
   smashSpeed: -35
+  slamParticles: {fileID: 4546826693351841692, guid: f6374eafbd659d44cb14be2ebf73d292,
+    type: 3}
   radius: 3
   bashableObj: {fileID: 0}
   bashPower: 40
+  animator: {fileID: 0}
+  attackPoint: {fileID: 0}
+  attackRange: 0.5
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 2048
+  camAnim: {fileID: 0}
   controller: {fileID: 0}
 --- !u!61 &4422737345570962276
 BoxCollider2D:
@@ -4948,6 +4957,7 @@ MonoBehaviour:
   pushKeyDown: 0
   pauseKeyDown: 0
   interactKeyDown: 0
+  attackRate: 2
 --- !u!50 &4422737345570962278
 Rigidbody2D:
   serializedVersion: 4
@@ -4997,12 +5007,12 @@ MonoBehaviour:
   currentElement: 
   maxHealth: 3
   currentHealth: 3
-  fullHeart: {fileID: 21300000, guid: 9b55be0a30ceefa4a8aa125f8771efec, type: 3}
-  emptyHeart: {fileID: 21300000, guid: 64e8b05385526ed468180374eaaa4c08, type: 3}
+  fullHeart: {fileID: 21300000, guid: 7c6f59bfe2bfab341ba3dced82f61866, type: 3}
+  emptyHeart: {fileID: 21300000, guid: 4326fd8d6c7ec4d42a7851397070ecfa, type: 3}
   maxMana: 3
   currentMana: 3
-  fullMana: {fileID: 21300000, guid: d05431d70fec8364883377b6771484ad, type: 3}
-  emptyMana: {fileID: 21300000, guid: 326e75742d855714781215f6a4a1de91, type: 3}
+  fullMana: {fileID: 21300000, guid: 8bd80d10d246c8b42bd5bd7b19e68a9e, type: 3}
+  emptyMana: {fileID: 21300000, guid: 85bb992552a351146aab705bb8f7fbf9, type: 3}
   isRespawning: 0
 --- !u!114 &4422737345570962270
 MonoBehaviour:
@@ -5016,11 +5026,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0c64d6c03f2ca64aa5f6d194e854f23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EarthOrb: {fileID: 21300000, guid: 334382ddf63a10241a3130b74e6a802c, type: 3}
-  WaterOrb: {fileID: 21300000, guid: d77bbc40b76d2f546bf2e1db3ab54866, type: 3}
-  AirOrb: {fileID: 21300000, guid: e71244ff9f4312640a29601ae3265ab0, type: 3}
-  FireOrb: {fileID: 21300000, guid: a9458989f1d296640a19ddd8cb97ea20, type: 3}
-  emptyOrb: {fileID: 21300000, guid: e4a99984831157343a8fe68259ff2065, type: 3}
+  EarthOrb: {fileID: 21300000, guid: 6aafcf9ad9746ec4d81671198ad183b9, type: 3}
+  WaterOrb: {fileID: 21300000, guid: 9a6ea88ddb601884490532ba68c81300, type: 3}
+  AirOrb: {fileID: 21300000, guid: 086497c14729a6e47830aae681674c7c, type: 3}
+  FireOrb: {fileID: 21300000, guid: 3d34594dbd007b04f9a87833fedab59c, type: 3}
+  emptyOrb: {fileID: 21300000, guid: ff94c8decdc26b047b1f9cc8961e2ecd, type: 3}
 --- !u!114 &4422737345570962265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5033,6 +5043,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1f754567c480f842964c6050f3840b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasAir: 1
+  hasFire: 1
+  hasEarth: 1
+  hasWater: 1
 --- !u!114 &4422737345570962272
 MonoBehaviour:
   m_ObjectHideFlags: 0

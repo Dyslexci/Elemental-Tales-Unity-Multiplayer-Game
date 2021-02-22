@@ -5,7 +5,7 @@ using Cinemachine;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 2.0.0
+ *    @version 3.0.0
  *    
  *    Accepts player input and converts it to directions to be sent to the controller class. Sets up the physical simulation parameters of the object.
  */
@@ -48,6 +48,7 @@ public class PlayerInputs : MonoBehaviour
 
 	[Header("Smash Variables")]
 	public float smashSpeed = -35f;
+	public GameObject slamParticles;
 	bool isSmashing;
 
 	[Header("Bash Variables")]
@@ -60,6 +61,15 @@ public class PlayerInputs : MonoBehaviour
 	float lastAngle;
 	public float bashPower = 60;
 	GameObject arrow;
+
+	[Header("Attack Variables")]
+	[SerializeField] private Animator animator;
+
+	[SerializeField] private Transform attackPoint;
+	[SerializeField] private float attackRange = 0.5f;
+	[SerializeField] private LayerMask enemyLayers;
+
+	public Animator camAnim;
 
 	float gravity;
 	float maxJumpVelocity;
@@ -78,6 +88,8 @@ public class PlayerInputs : MonoBehaviour
 
 	CinemachineFramingTransposer vCam;
 
+	bool elementControllerHasInstantiated = false;
+
 	/// <summary>
 	/// Initialises the player components and physical parameters.
 	/// </summary>
@@ -87,9 +99,11 @@ public class PlayerInputs : MonoBehaviour
 		currentNumberOfDashes = numberOfDashes;
 		controller = GetComponent<CharacterControllerRaycast>();
 		elementController = GetComponent<ElementController>();
+		elementControllerHasInstantiated = true;
 
 		arrow = GameObject.Find("Game Manager").GetComponent<GameMaster>().arrow;
 		vCam = GameObject.Find("Virtual Camera").GetComponentInChildren<CinemachineFramingTransposer>();
+		camAnim = GameObject.Find("Virtual Camera").GetComponentInChildren<Animator>();
 
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -113,6 +127,8 @@ public class PlayerInputs : MonoBehaviour
 			if(isSmashing)
             {
 				isSmashing = false;
+				camAnim.SetTrigger("Trigger");
+				Instantiate(slamParticles, new Vector3(transform.position.x + .0375f, transform.position.y, transform.position.z), Quaternion.identity);
 				GetComponent<PlayerInput>().hasControl = true;
 			}
 			if(isMidBash)
@@ -161,7 +177,15 @@ public class PlayerInputs : MonoBehaviour
                 velocity.y = 0;
             }
         }
-    }
+
+		for (int i = 0; i < controller.horizontalRayCount; i++)
+		{
+			Vector2 rayOrigin = (controller.collisions.faceDir == -1) ? controller.raycastOrigins.bottomLeft : controller.raycastOrigins.bottomRight;
+			rayOrigin += Vector2.up * (controller.horizontalRaySpacing * i);
+
+			Debug.DrawRay(rayOrigin, Vector2.right * controller.collisions.faceDir * 2, Color.red);
+		}
+	}
 
 	public void PanCamDownKeyDown()
     {
@@ -320,6 +344,20 @@ public class PlayerInputs : MonoBehaviour
 	/// </summary>
 	public void OnSlingshotInputDown()
     {
+		if (!GameObject.Find("Game Manager").GetComponent<GameMaster>().playerHasInstantiated || !elementControllerHasInstantiated)
+			return;
+
+		try
+        {
+			if (!elementController.getElement().Equals("Water"))
+				return;
+		} catch
+        {
+			Debug.LogWarning("PlayerInputs: elementController has not yet instantiated. This message may repeat multiple times - please ignore unless it continues past 100 times.");
+			return;
+        }
+		
+
 		Vector2 currentPos = transform.position;
 
 		RaycastHit2D[] rays = Physics2D.CircleCastAll(transform.position, radius, Vector3.forward);
@@ -349,7 +387,6 @@ public class PlayerInputs : MonoBehaviour
 				isBashing = true;
             } else if(isChoosingDir && Input.GetKeyUp(KeyCode.Mouse1))
             {
-				Debug.Log("X vel: " + velocity.x + " Y vel: " + velocity.y);
 				bashableObj.transform.localScale = new Vector2(0.4f, 0.4f);
 				isChoosingDir = false;
 				isBashing = false;
@@ -362,8 +399,6 @@ public class PlayerInputs : MonoBehaviour
 				lastAngle = Mathf.Cos(angle);
 				velocity.x = Mathf.Clamp(Mathf.Cos(angle) * bashPower, -bashPower, bashPower);
 				velocity.y = Mathf.Clamp(Mathf.Sin(angle) * bashPower,-bashPower*.6f,bashPower*.6f);
-				Debug.Log(arrow.GetComponent<ArrowBehaviour>().angle);
-				Debug.Log("X vel: " + velocity.x + " Y vel: " + velocity.y);
 			}
         } else if(bashableObj != null)
         {
@@ -382,6 +417,41 @@ public class PlayerInputs : MonoBehaviour
         {
 			velocity.x = dashSpeed * directionalInput.x;
 		}
+	}
+
+	/// <summary>
+	/// Cause the player to search for enemies directly in front of it, and trigger the damage method in any which are present
+	/// </summary>
+	public void Attack()
+	{
+		if (!elementController.getElement().Equals("Fire"))
+			return;
+
+		//animator.SetTrigger("Attack");
+		for (int i = 0; i < controller.horizontalRayCount; i++)
+		{
+			Vector2 rayOrigin = (controller.collisions.faceDir == -1) ? controller.raycastOrigins.bottomLeft : controller.raycastOrigins.bottomRight;
+			rayOrigin += Vector2.up * (controller.horizontalRaySpacing * i);
+			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * controller.collisions.faceDir, 2, enemyLayers);
+
+			Debug.DrawRay(rayOrigin, Vector2.right * controller.collisions.faceDir * 2, Color.red);
+
+			if(hit)
+            {
+				hit.collider.GetComponent<DestroyableDoor>().damageDoor(40);
+				return;
+            }
+		}
+	}
+
+	/// <summary>
+	/// Draw the area the player can attack in
+	/// </summary>
+	private void OnDrawGizmosSelected()
+	{
+		if (attackPoint == null)
+			return;
+		Gizmos.DrawWireSphere(attackPoint.position, attackRange);
 	}
 
 	/// <summary>

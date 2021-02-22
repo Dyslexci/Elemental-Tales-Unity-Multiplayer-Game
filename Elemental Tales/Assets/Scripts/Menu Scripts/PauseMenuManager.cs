@@ -102,6 +102,18 @@ public class PauseMenuManager : MonoBehaviour
         StartCoroutine(DisplayPopUp());
     }
 
+    public void DisplayHealthPopUp()
+    {
+        skillPopUpText.text = "<color=#ffeb04>Health Fragments<color=#ffffff> increase your maximum <color=#ffeb04>Health<color=#ffffff>";
+        StartCoroutine(DisplayPopUp());
+    }
+
+    public void DisplayKeysPopUp()
+    {
+        skillPopUpText.text = "<color=#ffeb04>Keystones<color=#ffffff> can be used to unlock <color=#ffeb04>Doors<color=#ffffff>";
+        StartCoroutine(DisplayPopUp());
+    }
+
     public void ChangeDoubleJumpTitle()
     {
         skillTitle.text = "Double Jump";

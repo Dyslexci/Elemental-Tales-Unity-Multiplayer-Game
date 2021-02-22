@@ -16,10 +16,10 @@ public class ElementController : MonoBehaviour
     string currentElement;
     ElementOrb elementOrb;
     StatController controller;
-    bool hasAir;
-    bool hasFire;
-    bool hasEarth;
-    bool hasWater;
+    public bool hasAir;
+    public bool hasFire;
+    public bool hasEarth;
+    public bool hasWater;
 
     /// <summary>
     /// Sets the start conditions where possible

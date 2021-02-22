@@ -1,16 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 0.1.0
+ *    @version 1.0.0
  *    
  *    Allows assigned doors to be destroyed.
  */
 
-public class DestroyableDoor : MonoBehaviour
+public class DestroyableDoor : MonoBehaviourPun
 {
     [SerializeField] private int maxHealth = 100;
     private int currentHealth;
@@ -29,11 +30,7 @@ public class DestroyableDoor : MonoBehaviour
     /// <param name="damage"></param>
     public void damageDoor(int damage)
     {
-        currentHealth -= damage;
-        if(currentHealth <= 0)
-        {
-            destroyDoor();
-        }
+        photonView.RPC("damageDoorRPC", RpcTarget.AllBuffered, damage);
     }
 
     /// <summary>
@@ -42,5 +39,19 @@ public class DestroyableDoor : MonoBehaviour
     private void destroyDoor()
     {
         gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// RPC triggering damage for all players on network
+    /// </summary>
+    /// <param name="damage"></param>
+    [PunRPC]
+    private void damageDoorRPC(int damage)
+    {
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            destroyDoor();
+        }
     }
 }
