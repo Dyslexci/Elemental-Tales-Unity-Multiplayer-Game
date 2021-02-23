@@ -20,6 +20,7 @@ public class TimerController : MonoBehaviour
 
     TimeSpan timePlaying;
     bool timerGoing;
+    public bool isMainGame = true;
 
     float elapsedTime;
 
@@ -70,8 +71,15 @@ public class TimerController : MonoBehaviour
             elapsedTime += Time.deltaTime;
             timePlaying = TimeSpan.FromSeconds(elapsedTime);
             string timePlayingStr = timePlaying.ToString("hh':'mm':'ss");
-            timeCounter.text = timePlayingStr;
-
+            if(isMainGame)
+            {
+                timeCounter.text = timePlayingStr;
+            } else
+            {
+                timeCounter.text = "Time:   " + timePlayingStr;
+            }
+            
+            
             yield return null;
         }
     }
