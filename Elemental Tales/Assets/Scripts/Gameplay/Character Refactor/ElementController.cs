@@ -58,13 +58,13 @@ public class ElementController : MonoBehaviour
             controller.currentElement = "Air";
             elementOrb.setElement("Air");
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2) && hasEarth)
+        if (Input.GetKeyDown(KeyCode.Alpha3) && hasEarth)
         {
             currentElement = "Earth";
             controller.currentElement = "Earth";
             elementOrb.setElement("Earth");
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3) && hasWater)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && hasWater)
         {
             currentElement = "Water";
             controller.currentElement = "Water";
