@@ -35,6 +35,9 @@ public class StatController : MonoBehaviourPun
     PlayerInput inputs;
     GameMaster gameMaster;
 
+    AudioSource[] injuryAudio;
+    AudioSource[] deathAudio;
+
     int currentCollectibles1 = 0;
     public bool isRespawning;
 
@@ -49,6 +52,8 @@ public class StatController : MonoBehaviourPun
         manas = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getManas();
         gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
         inputs = GetComponent<PlayerInput>();
+        injuryAudio = gameMaster.injuryAudio;
+        deathAudio = gameMaster.deathAudio;
     }
 
     /// <summary>
@@ -65,6 +70,7 @@ public class StatController : MonoBehaviourPun
 
         if (currentHealth <= 0 && !isRespawning)
         {
+            deathAudio[Random.Range(0, deathAudio.Length)].Play(0);
             Debug.Log("Player has died.");
             gameMaster.respawn();
             inputs.hasControl = false;
@@ -152,6 +158,7 @@ public class StatController : MonoBehaviourPun
     {
         if(currentHealth != 0)
         {
+            injuryAudio[Random.Range(0, injuryAudio.Length)].Play(0);
             currentHealth -= damage;
             print(damage * -1 + " damage taken. " + currentHealth + " health remaining.");
         }

@@ -69,8 +69,8 @@ public class SignPostBehaviour : MonoBehaviour
     /// <returns></returns>
     IEnumerator FadeInSigns()
     {
-        Debug.Log("Fading in signs");
-        while(signs.alpha < 1)
+        GameObject.Find("Game Manager").GetComponent<GameMaster>().signpostEnterRange.Play(0);
+        while (signs.alpha < 1)
         {
             yield return new WaitForFixedUpdate();
             signs.alpha += .02f;
@@ -83,7 +83,7 @@ public class SignPostBehaviour : MonoBehaviour
     /// <returns></returns>
     IEnumerator FadeOutSigns()
     {
-        Debug.Log("Fading out signs");
+        GameObject.Find("Game Manager").GetComponent<GameMaster>().signpostExitRange.Play(0);
         while (signs.alpha > 0)
         {
             yield return new WaitForFixedUpdate();

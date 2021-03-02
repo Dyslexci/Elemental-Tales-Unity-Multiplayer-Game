@@ -68,8 +68,6 @@ public class getElement : MonoBehaviourPun
 
             elementController.addElement(heldElement);
             photonView.RPC("addElement", RpcTarget.AllBuffered);
-            Debug.Log("PUN: RPC has been sent to add the element to all players.");
-            
         }
     }
 
@@ -80,7 +78,24 @@ public class getElement : MonoBehaviourPun
     {
         Debug.Log("PUN: addElement() has been called, adding the element to the player.");
         elementController.addElement(heldElement);
+        //FindObjectOfType<DialogueManager>().StartDialogue(GetComponent<DialogueTrigger>().dialogue, npcManager, GetComponent<DialogueTrigger>().quest);
+        StartCoroutine(TriggerDialogue());
+    }
+
+    IEnumerator TriggerDialogue()
+    {
+
+        GameMaster gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
+        gameMaster.getPlayer().GetComponent<PlayerInput>().hasControl = false;
+
+        gameMaster.elementalGetStart.Play(0);
+        while(gameMaster.elementalGetStart.isPlaying)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        gameMaster.elementDialogueStart.Play(0);
         FindObjectOfType<DialogueManager>().StartDialogue(GetComponent<DialogueTrigger>().dialogue, npcManager, GetComponent<DialogueTrigger>().quest);
         npcManager.isTalking = true;
+        gameObject.SetActive(false);
     }
 }

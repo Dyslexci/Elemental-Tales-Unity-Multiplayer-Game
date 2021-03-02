@@ -20,6 +20,7 @@ public class ElementController : MonoBehaviour
     public bool hasFire;
     public bool hasEarth;
     public bool hasWater;
+    AudioSource[] elementChangeAudio;
 
     /// <summary>
     /// Sets the start conditions where possible
@@ -45,6 +46,7 @@ public class ElementController : MonoBehaviour
         currentElement = "Empty";
         controller.currentElement = "Empty";
         elementOrb.setElement("Empty");
+        elementChangeAudio = GameObject.Find("Game Manager").GetComponent<GameMaster>().elementChangeAudio;
     }
 
     /// <summary>
@@ -54,30 +56,35 @@ public class ElementController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && hasAir)
         {
+            elementChangeAudio[Random.Range(0, elementChangeAudio.Length)].Play(0);
             currentElement = "Air";
             controller.currentElement = "Air";
             elementOrb.setElement("Air");
         }
         if (Input.GetKeyDown(KeyCode.Alpha3) && hasEarth)
         {
+            elementChangeAudio[Random.Range(0, elementChangeAudio.Length)].Play(0);
             currentElement = "Earth";
             controller.currentElement = "Earth";
             elementOrb.setElement("Earth");
         }
         if (Input.GetKeyDown(KeyCode.Alpha2) && hasWater)
         {
+            elementChangeAudio[Random.Range(0, elementChangeAudio.Length)].Play(0);
             currentElement = "Water";
             controller.currentElement = "Water";
             elementOrb.setElement("Water");
         }
         if (Input.GetKeyDown(KeyCode.Alpha4) && hasFire)
         {
+            elementChangeAudio[Random.Range(0, elementChangeAudio.Length)].Play(0);
             currentElement = "Fire";
             controller.currentElement = "Fire";
             elementOrb.setElement("Fire");
         }
         if(Input.GetKeyDown(KeyCode.Alpha0))
         {
+            elementChangeAudio[Random.Range(0, elementChangeAudio.Length)].Play(0);
             currentElement = "Empty";
             controller.currentElement = "Empty";
             elementOrb.setElement("Empty");

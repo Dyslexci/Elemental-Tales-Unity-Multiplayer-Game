@@ -80,9 +80,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     [Header("Checkpoint Variables")]
     private Transform lastCheckpoint;
-    private ArrayList checkpointsVisited;
-    private int numCheckpointsVisited;
-    public int totalCheckpoints;
+    public float numberOfCheckpointsReached = 0;
+    public float totalCheckpoints;
     public TMP_Text percentageTracker;
 
     [Header("Audio Variables")]
@@ -91,8 +90,35 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public AudioSource hintSound;
     public AudioSource music;
     public AudioSource ambientSound;
+    public AudioSource switchPull;
+    public AudioSource signpostEnterRange;
+    public AudioSource signpostExitRange;
     float musicStartVolume;
     float ambientSoundStartVolume;
+
+    [Header("Player Audio Variables")]
+    public AudioSource[] stompStartAudio;
+    public AudioSource[] stompFallAudio;
+    public AudioSource[] stompLandAudio;
+    public AudioSource[] doubleJumpsAudio;
+    public AudioSource[] jumpsAudio;
+    public AudioSource[] landAudio;
+    public AudioSource[] wallclimbStartAudio;
+    public AudioSource[] wallJumpAudio;
+    public AudioSource[] dashAudio;
+    public AudioSource bashStartAudio;
+    public AudioSource[] bashEndAudio;
+    public AudioSource[] onEnterBashRangeAudio;
+    public AudioSource[] lanternOnBashAudio;
+    public AudioSource attackStartAudio;
+    public AudioSource[] attackEndAudio;
+    public AudioSource respawnAudio;
+    public AudioSource[] deathAudio;
+    public AudioSource[] injuryAudio;
+    public AudioSource[] elementChangeAudio;
+    public AudioSource[] panCameraAudio;
+    public AudioSource elementalGetStart;
+    public AudioSource elementDialogueStart;
 
     float playedTime;
 
@@ -106,6 +132,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public CanvasGroup HUDPanel;
     public CanvasGroup tempCamTextPanel;
 
+    
+
     public bool playerHasInstantiated = false;
 
     /// <summary>
@@ -114,8 +142,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
     void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
-
-        checkpointsVisited = new ArrayList();
 
         HUDCanvas.SetActive(true);
         pauseMenuHolder.SetActive(false);
@@ -126,6 +152,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
         timer.BeginTimer();
         arrow.SetActive(false);
         playerDeathCounter.text = "0";
+        percentageTracker.text = "00%";
 
         musicStartVolume = music.volume;
         ambientSoundStartVolume = ambientSound.volume;
@@ -211,15 +238,14 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public void setCheckpoint(Transform newCheckpoint)
     {
         lastCheckpoint = newCheckpoint;
-        if(checkpointsVisited.Contains(newCheckpoint))
-        {
-            return;
-        } else
-        {
-            checkpointsVisited.Add(newCheckpoint);
-            numCheckpointsVisited++;
-            percentageTracker.text = Mathf.RoundToInt((numCheckpointsVisited / totalCheckpoints) * 100) + "%";
-        }
+    }
+
+    /// <summary>
+    /// Triggered by the CheckpointRegion script to re-draw the percentage explored text
+    /// </summary>
+    public void AddPercentageExplored()
+    {
+        percentageTracker.text = (numberOfCheckpointsReached / totalCheckpoints).ToString("0.00%");
     }
 
     /// <summary>
@@ -352,6 +378,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
         deathLight.gameObject.SetActive(false);
         HUDPanel.alpha = 1;
         playerObject.SetActive(true);
+        respawnAudio.Play(0);
         while (HUDWhitePanel.alpha > 0)
         {
             yield return new WaitForFixedUpdate();
