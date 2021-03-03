@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5148906769171364090}
   - component: {fileID: 4417773154738807674}
   - component: {fileID: 4959266903740647832}
+  - component: {fileID: -8700149739638859217}
   m_Layer: 0
   m_Name: GroundSlamParticles
   m_TagString: Untagged
@@ -4754,3 +4755,15 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &-8700149739638859217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4243943927501147440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d47b1371c32c6a478e3697a39dbe5d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

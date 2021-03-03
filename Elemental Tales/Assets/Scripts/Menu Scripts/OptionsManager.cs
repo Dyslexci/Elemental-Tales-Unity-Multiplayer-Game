@@ -24,23 +24,56 @@ public class OptionsManager : MonoBehaviour
     [SerializeField] private GameObject controlsTab;
     [SerializeField] Button settingsButton;
     [SerializeField] Button controlsButton;
-
-    private const string resolutionWidthPlayerPrefKey = "ResolutionWidth";
-    private const string resolutionHeightPlayerPrefKey = "ResolutionHeight";
-    private const string resolutionRefreshRatePlayerPrefKey = "RefreshRate";
-    private const string fullScreenPlayerPrefKey = "FullScreen";
+    public Slider musicSlider;
+    public Slider soundSlider;
 
     private List<Resolution> resolutionsTemp;
     private Resolution[] resolutions;
     private Resolution selectedResolution;
-    private float currentVolume;
+    private float currentMusicVolume;
+    private float currentSoundVolume;
     private bool vsync = false;
+    private bool fullscreenEnabled = true;
+
+    float startingMusicVolume;
+    float startingSoundVolume;
+    bool startingVsync;
+    bool startingFullscreen;
 
     /// <summary>
     /// Sets the default options.
     /// </summary>
     private void Start()
     {
+        if(!PlayerPrefs.HasKey("hasLoadedOnce"))
+        {
+            PlayerPrefs.SetFloat("currentMusicVolume", 1);
+            PlayerPrefs.SetFloat("currentSoundVolume", 1);
+            PlayerPrefs.SetInt("fullscreenEnabled", 1);
+            PlayerPrefs.SetInt("vSyncEnabled", 0);
+            PlayerPrefs.SetInt("hasLoadedOnce", 1);
+            Debug.LogError("Initialising first time preferences");
+        }
+
+        setMusicVolume(PlayerPrefs.GetFloat("currentMusicVolume"));
+        musicSlider.value = PlayerPrefs.GetFloat("currentMusicVolume");
+        setSoundVolume(PlayerPrefs.GetFloat("currentSoundVolume"));
+        soundSlider.value = PlayerPrefs.GetFloat("currentSoundVolume");
+        if (PlayerPrefs.GetInt("fullscreenEnabled") == 0)
+        {
+            toggleFullscreen();
+        }
+        if(PlayerPrefs.GetInt("vSyncEnabled") == 0)
+        {
+            toggleVSync();
+        }
+
+        Debug.Log("Current music volume from prefs: " + PlayerPrefs.GetFloat("currentMusicVolume"));
+        Debug.Log("Current sound volume from prefs: " + PlayerPrefs.GetFloat("currentSoundVolume"));
+        Debug.Log("Fullscreen enabled from prefs: " + PlayerPrefs.GetInt("fullscreenEnabled"));
+        Debug.Log("vSync enabled from prefs: " + PlayerPrefs.GetInt("vSyncEnabled"));
+        Debug.Log("Has loaded initial prefs: " + PlayerPrefs.GetInt("hasLoadedOnce"));
+
         Screen.fullScreen = true;
         fullscreenToggleText.text = "On";
         resolutionsTemp = new List<Resolution>();
@@ -77,6 +110,10 @@ public class OptionsManager : MonoBehaviour
 
     public void ResetOptionsMenu()
     {
+        startingFullscreen = fullscreenEnabled;
+        startingVsync = vsync;
+        startingMusicVolume = currentMusicVolume;
+        startingSoundVolume = currentSoundVolume;
         openSettingsTab();
     }
 
@@ -100,10 +137,12 @@ public class OptionsManager : MonoBehaviour
         if (Screen.fullScreen)
         {
             fullscreenToggleText.text = "Off";
+            fullscreenEnabled = false;
         }
         else
         {
             fullscreenToggleText.text = "On";
+            fullscreenEnabled = true;
         }
     }
 
@@ -115,6 +154,11 @@ public class OptionsManager : MonoBehaviour
         if(vsync)
         {
 
+            vsync = false;
+        } else
+        {
+
+            vsync = true;
         }
     }
 
@@ -125,7 +169,7 @@ public class OptionsManager : MonoBehaviour
     public void setMusicVolume(float volume)
     {
         audioMixer.SetFloat("musicVol", Mathf.Log(volume) * 20);
-        currentVolume = volume;
+        currentMusicVolume = volume;
     }
 
     /// <summary>
@@ -135,6 +179,7 @@ public class OptionsManager : MonoBehaviour
     public void setSoundVolume(float volume)
     {
         audioMixer.SetFloat("soundVol", Mathf.Log(volume) * 20);
+        currentSoundVolume = volume;
     }
 
     /// <summary>
@@ -143,6 +188,10 @@ public class OptionsManager : MonoBehaviour
     public void optionsApply()
     {
         openSettingsTab();
+        PlayerPrefs.SetFloat("currentMusicVolume", currentMusicVolume);
+        PlayerPrefs.SetFloat("currentSoundVolume", currentSoundVolume);
+        PlayerPrefs.SetInt("fullscreenEnabled", fullscreenEnabled ? 1 : 0);
+        PlayerPrefs.SetInt("vSyncEnabled", vsync ? 1 : 0);
         optionsScreen.SetActive(false);
         menuScreen.SetActive(true);
     }
@@ -152,6 +201,14 @@ public class OptionsManager : MonoBehaviour
     /// </summary>
     public void optionsCancel()
     {
+        setMusicVolume(startingMusicVolume);
+        musicSlider.value = startingMusicVolume;
+        setSoundVolume(startingSoundVolume);
+        soundSlider.value = startingSoundVolume;
+        if (fullscreenEnabled != startingFullscreen)
+            toggleFullscreen();
+        if (vsync != startingVsync)
+            toggleVSync();
         openSettingsTab();
         optionsScreen.SetActive(false);
         menuScreen.SetActive(true);

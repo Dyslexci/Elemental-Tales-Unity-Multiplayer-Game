@@ -73,9 +73,9 @@ public class PlayerInputs : MonoBehaviour
 	public Animator camAnim;
 
 	float gravity;
-	float maxJumpVelocity;
+	public float maxJumpVelocity;
 	float minJumpVelocity;
-	Vector3 velocity;
+	public Vector3 velocity;
 	float velocityXSmoothing;
 
 	[Header("Audio Variables")]
@@ -100,7 +100,7 @@ public class PlayerInputs : MonoBehaviour
 	public CharacterControllerRaycast controller;
 	ElementController elementController;
 
-	Vector2 directionalInput;
+	public Vector2 directionalInput;
 	bool wallSliding;
 	int wallDirX;
 	bool isHoldingObject;

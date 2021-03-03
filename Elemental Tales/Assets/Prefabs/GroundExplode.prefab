@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4546826693352142226}
   - component: {fileID: 4546826693371524178}
   - component: {fileID: 4546826693371955932}
+  - component: {fileID: -1176149276023514082}
   m_Layer: 0
   m_Name: GroundExplode
   m_TagString: Untagged
@@ -4820,6 +4821,18 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &-1176149276023514082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4546826693351841692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d47b1371c32c6a478e3697a39dbe5d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4546826693351845306
 GameObject:
   m_ObjectHideFlags: 0
