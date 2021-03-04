@@ -24,6 +24,7 @@ public class PlayerInputs : MonoBehaviour
 	public int numberOfJumps = 2;
 	int currentNumberOfJumps;
 	bool isJumping;
+	bool wasJumping;
 
 	[Header("Movement Variables")]
 	public float moveSpeed = 12;
@@ -72,16 +73,34 @@ public class PlayerInputs : MonoBehaviour
 	public Animator camAnim;
 
 	float gravity;
-	float maxJumpVelocity;
+	public float maxJumpVelocity;
 	float minJumpVelocity;
-	Vector3 velocity;
+	public Vector3 velocity;
 	float velocityXSmoothing;
+
+	[Header("Audio Variables")]
+	AudioSource[] stompStartAudio;
+	AudioSource[] stompFallAudio;
+	AudioSource[] stompLandAudio;
+	AudioSource[] doubleJumpsAudio;
+	AudioSource[] jumpsAudio;
+	AudioSource[] landAudio;
+	AudioSource[] wallclimbStartAudio;
+	AudioSource[] wallJumpAudio;
+	AudioSource[] dashAudio;
+	AudioSource bashStartAudio;
+	AudioSource[] bashEndAudio;
+	AudioSource[] onEnterBashRangeAudio;
+	AudioSource[] lanternOnBashAudio;
+	AudioSource attackStartAudio;
+	AudioSource[] attackEndAudio;
+	AudioSource[] panCameraAudio;
 
 	[HideInInspector]
 	public CharacterControllerRaycast controller;
 	ElementController elementController;
 
-	Vector2 directionalInput;
+	public Vector2 directionalInput;
 	bool wallSliding;
 	int wallDirX;
 	bool isHoldingObject;
@@ -89,6 +108,8 @@ public class PlayerInputs : MonoBehaviour
 	CinemachineFramingTransposer vCam;
 
 	bool elementControllerHasInstantiated = false;
+
+	GameMaster gameMaster;
 
 	/// <summary>
 	/// Initialises the player components and physical parameters.
@@ -100,8 +121,25 @@ public class PlayerInputs : MonoBehaviour
 		controller = GetComponent<CharacterControllerRaycast>();
 		elementController = GetComponent<ElementController>();
 		elementControllerHasInstantiated = true;
+		gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
+		stompStartAudio = gameMaster.stompStartAudio;
+		stompLandAudio = gameMaster.stompLandAudio;
+		stompFallAudio = gameMaster.stompFallAudio;
+		doubleJumpsAudio = gameMaster.doubleJumpsAudio;
+		jumpsAudio = gameMaster.jumpsAudio;
+		landAudio = gameMaster.landAudio;
+		wallclimbStartAudio = gameMaster.wallclimbStartAudio;
+		wallJumpAudio = gameMaster.wallJumpAudio;
+		dashAudio = gameMaster.dashAudio;
+		bashStartAudio = gameMaster.bashStartAudio;
+		bashEndAudio = gameMaster.bashEndAudio;
+		onEnterBashRangeAudio = gameMaster.onEnterBashRangeAudio;
+		lanternOnBashAudio = gameMaster.lanternOnBashAudio;
+		attackStartAudio = gameMaster.attackStartAudio;
+		attackEndAudio = gameMaster.attackEndAudio;
+		panCameraAudio = gameMaster.panCameraAudio;
 
-		arrow = GameObject.Find("Game Manager").GetComponent<GameMaster>().arrow;
+		arrow = gameMaster.arrow;
 		vCam = GameObject.Find("Virtual Camera").GetComponentInChildren<CinemachineFramingTransposer>();
 		camAnim = GameObject.Find("Virtual Camera").GetComponentInChildren<Animator>();
 
@@ -119,13 +157,15 @@ public class PlayerInputs : MonoBehaviour
         {
 			currentNumberOfJumps = numberOfJumps;
 			currentNumberOfDashes = numberOfDashes;
-			if(isJumping)
+			if(wasJumping)
             {
 				isJumping = false;
+				landAudio[Random.Range(0, landAudio.Length)].Play(0);
 			}
 			
 			if(isSmashing)
             {
+				stompLandAudio[Random.Range(0, stompLandAudio.Length)].Play(0);
 				isSmashing = false;
 				camAnim.SetTrigger("Trigger");
 				Instantiate(slamParticles, new Vector3(transform.position.x + .0375f, transform.position.y, transform.position.z), Quaternion.identity);
@@ -134,7 +174,8 @@ public class PlayerInputs : MonoBehaviour
 			if(isMidBash)
             {
 				isMidBash = false;
-            }
+				landAudio[Random.Range(0, landAudio.Length)].Play(0);
+			}
 		} 
 
 		if(isMidBash && directionalInput.x == 0)
@@ -185,6 +226,8 @@ public class PlayerInputs : MonoBehaviour
 
 			Debug.DrawRay(rayOrigin, Vector2.right * controller.collisions.faceDir * 2, Color.red);
 		}
+
+		wasJumping = isJumping;
 	}
 
 	public void PanCamDownKeyDown()
@@ -217,6 +260,7 @@ public class PlayerInputs : MonoBehaviour
 
 	IEnumerator PanDownCam()
     {
+		panCameraAudio[Random.Range(0, panCameraAudio.Length)].Play(0);
 		while (vCam.m_ScreenY > .25f)
         {
 			yield return new WaitForFixedUpdate();
@@ -235,6 +279,7 @@ public class PlayerInputs : MonoBehaviour
 
 	IEnumerator PanUpCam()
     {
+		panCameraAudio[Random.Range(0, panCameraAudio.Length)].Play(0);
 		while (vCam.m_ScreenY < .75f)
         {
 			yield return new WaitForFixedUpdate();
@@ -269,6 +314,7 @@ public class PlayerInputs : MonoBehaviour
 		currentNumberOfJumps -= 1;
 
 		if (wallSliding) {
+			wallJumpAudio[Random.Range(0, wallJumpAudio.Length)].Play(0);
 			if (wallDirX == directionalInput.x) {
 				velocity.x = -wallDirX * wallJumpClimb.x;
 				velocity.y = wallJumpClimb.y;
@@ -281,8 +327,19 @@ public class PlayerInputs : MonoBehaviour
 				velocity.x = -wallDirX * wallLeap.x;
 				velocity.y = wallLeap.y;
 			}
+			isJumping = true;
 		}
 		if (controller.collisions.below || currentNumberOfJumps > 0) {
+			if(!wallSliding && !isJumping)
+            {
+				jumpsAudio[Random.Range(0, jumpsAudio.Length)].Play(0);
+			}
+				
+			if (isJumping)
+            {
+				doubleJumpsAudio[Random.Range(0, doubleJumpsAudio.Length)].Play(0);
+			}
+				
 			if (controller.collisions.slidingDownMaxSlope) {
 				if (directionalInput.x != -Mathf.Sign(controller.collisions.slopeNormal.x)) { // not jumping against max slope
 					velocity.y = maxJumpVelocity * controller.collisions.slopeNormal.y;
@@ -292,6 +349,8 @@ public class PlayerInputs : MonoBehaviour
 			else {
 				velocity.y = maxJumpVelocity;
 			}
+
+			isJumping = true;
 		}
 	}
 
@@ -328,6 +387,7 @@ public class PlayerInputs : MonoBehaviour
     {
 		float currentRot = 0f;
 		Vector3 currentPos = gameObject.transform.position;
+		stompStartAudio[Random.Range(0, stompStartAudio.Length)].Play(0);
 		while (currentRot < 360)
 		{
 			this.gameObject.transform.Rotate(new Vector3(0, 0, 20f), Space.Self);
@@ -337,6 +397,7 @@ public class PlayerInputs : MonoBehaviour
 		}
 
 		velocity.y = smashSpeed;
+		stompFallAudio[Random.Range(0, stompFallAudio.Length)].Play(0);
 	}
 
 	/// <summary>
@@ -367,6 +428,7 @@ public class PlayerInputs : MonoBehaviour
 
 			if(ray.collider.tag == "Bashable")
             {
+				onEnterBashRangeAudio[Random.Range(0, onEnterBashRangeAudio.Length)].Play(0);
 				nearToBashableObj = true;
 				bashableObj = ray.collider.transform.gameObject;
 				break;
@@ -377,6 +439,7 @@ public class PlayerInputs : MonoBehaviour
 			bashableObj.GetComponent<SpriteRenderer>().color = Color.yellow;
 			if(Input.GetKey(KeyCode.Mouse1))
             {
+				bashStartAudio.Play(0);
 				transform.position = currentPos;
 				bashableObj.transform.localScale = new Vector2(0.6f, 0.6f);
 				arrow.SetActive(true);
@@ -387,6 +450,10 @@ public class PlayerInputs : MonoBehaviour
 				isBashing = true;
             } else if(isChoosingDir && Input.GetKeyUp(KeyCode.Mouse1))
             {
+				bashEndAudio[Random.Range(0, bashEndAudio.Length)].Play(0);
+				camAnim.SetTrigger("Trigger");
+				currentNumberOfJumps = numberOfJumps;
+				currentNumberOfDashes = numberOfDashes;
 				bashableObj.transform.localScale = new Vector2(0.4f, 0.4f);
 				isChoosingDir = false;
 				isBashing = false;
@@ -415,6 +482,7 @@ public class PlayerInputs : MonoBehaviour
 
 		if ((controller.collisions.below || currentNumberOfDashes > 0) && elementController.getElement().Equals("Air"))
         {
+			dashAudio[Random.Range(0, dashAudio.Length)].Play(0);
 			velocity.x = dashSpeed * directionalInput.x;
 		}
 	}
@@ -427,6 +495,7 @@ public class PlayerInputs : MonoBehaviour
 		if (!elementController.getElement().Equals("Fire"))
 			return;
 
+		attackStartAudio.Play(0);
 		//animator.SetTrigger("Attack");
 		for (int i = 0; i < controller.horizontalRayCount; i++)
 		{
@@ -438,6 +507,7 @@ public class PlayerInputs : MonoBehaviour
 
 			if(hit)
             {
+				attackEndAudio[Random.Range(0, attackEndAudio.Length)].Play(0);
 				hit.collider.GetComponent<DestroyableDoor>().damageDoor(40);
 				return;
             }
@@ -492,6 +562,7 @@ public class PlayerInputs : MonoBehaviour
 		if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0 && !controller.collisions.isHoldingObject) {
 			wallSliding = true;
 			currentNumberOfJumps = numberOfJumps + 1;
+			currentNumberOfDashes = numberOfDashes + 1;
 
 			if (velocity.y < -wallSlideSpeedMax) {
 				velocity.y = -wallSlideSpeedMax;

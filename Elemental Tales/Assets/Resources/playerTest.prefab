@@ -4884,7 +4884,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   camAnim: {fileID: 0}
+  maxJumpVelocity: 0
+  velocity: {x: 0, y: 0, z: 0}
   controller: {fileID: 0}
+  directionalInput: {x: 0, y: 0}
 --- !u!61 &4422737345570962276
 BoxCollider2D:
   m_ObjectHideFlags: 0

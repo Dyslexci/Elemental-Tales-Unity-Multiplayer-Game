@@ -69,11 +69,13 @@ public class Switch : MonoBehaviourPun
             if (isOn == true)
                 return;
             photonView.RPC("setLeverOn", RpcTarget.AllBuffered);
+            GameObject.Find("Game Manager").GetComponent<GameMaster>().switchPull.Play(0);
         } else if(playerPresent && !otherPlayerPresent)
         {
             if (isOn == false)
                 return;
             photonView.RPC("setLeverOff", RpcTarget.AllBuffered);
+            GameObject.Find("Game Manager").GetComponent<GameMaster>().switchPull.Play(0);
         }
     }
 

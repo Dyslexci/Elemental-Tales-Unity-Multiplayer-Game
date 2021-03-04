@@ -44,6 +44,16 @@ public class PlayerInput : MonoBehaviourPun
 		if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
 			return;
 
+		if (Input.GetButtonDown("Pause"))
+		{
+			gameMaster.PauseGame();
+			pauseKeyDown = true;
+		}
+		else
+		{
+			pauseKeyDown = false;
+		}
+
 		if (hasControl)
 		{
 			Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
@@ -72,14 +82,6 @@ public class PlayerInput : MonoBehaviourPun
 				}
 				pushKeyDown = false;
 			}
-			if(Input.GetButtonDown("Pause"))
-            {
-				gameMaster.PauseGame();
-				pauseKeyDown = true;
-            } else
-            {
-				pauseKeyDown = false;
-            }
 			if(Input.GetButtonDown("Interact"))
             {
 				interactKeyDown = true;

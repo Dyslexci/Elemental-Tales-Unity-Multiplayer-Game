@@ -107,7 +107,7 @@ public class MainMenuManager : MonoBehaviour
             } else if(activeMenu.Equals("optionsMenu"))
             {
                 buttonClick.Play();
-                CloseOptionsMenu();
+                GetComponent<OptionsManager>().optionsApply();
             }
         }
     }
