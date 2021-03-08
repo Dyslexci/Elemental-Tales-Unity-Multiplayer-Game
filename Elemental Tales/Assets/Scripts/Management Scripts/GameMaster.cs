@@ -102,6 +102,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public AudioSource signpostEnterRange;
     public AudioSource signpostExitRange;
     public AudioSource healthRefillCollect;
+    public AudioSource healthCollector;
+    public AudioSource manaCollector;
     float musicStartVolume;
     float ambientSoundStartVolume;
 

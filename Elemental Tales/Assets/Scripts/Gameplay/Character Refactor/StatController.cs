@@ -197,6 +197,17 @@ public class StatController : MonoBehaviourPun
         currentMana = mana;
     }
 
+    public void IncreaseMaxHealth()
+    {
+        maxHealth += 1;
+        currentHealth = maxHealth;
+    }
+
+    public void IncreaseMaxMana()
+    {
+        maxMana += 1;
+    }
+
     /// <summary>
     /// Returns the current element of this object.
     /// </summary>

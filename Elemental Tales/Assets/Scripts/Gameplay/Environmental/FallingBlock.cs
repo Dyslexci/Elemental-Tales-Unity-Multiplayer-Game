@@ -21,6 +21,9 @@ public class FallingBlock : RaycastController
     Vector3 velocity;
     bool isFalling;
 
+	public AudioSource blockFalling;
+	public AudioSource blockHitFloor;
+
 	List<PassengerMovement> passengerMovement;
 	Dictionary<Transform, CharacterControllerRaycast> passengerDictionary = new Dictionary<Transform, CharacterControllerRaycast>();
 
@@ -31,22 +34,19 @@ public class FallingBlock : RaycastController
 
     void FixedUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.V))
-        {
-            isFalling = !isFalling;
-        }
-
 		UpdateRaycastOrigins();
 
 		// Perform gravity and collisions check
 		if (isFalling)
         {
             velocity += Vector3.down * gravity * Time.deltaTime;
+			blockFalling.Play(0);
             //controller.Move(velocity * Time.deltaTime, false);
         }
         if (controller.collisions.below)
         {
             velocity = Vector3.zero;
+			blockHitFloor.Play(0);
         }
         if(!isFalling)
         {

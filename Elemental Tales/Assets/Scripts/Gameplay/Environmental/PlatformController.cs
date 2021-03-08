@@ -33,6 +33,10 @@ public class PlatformController : RaycastController
 	float percentBetweenWaypoints;
 	float nextMoveTime;
 
+	bool isMoving;
+	bool wasMoving;
+	public AudioSource platformAudio;
+
 	List<PassengerMovement> passengerMovement;
 	Dictionary<Transform, CharacterControllerRaycast> passengerDictionary = new Dictionary<Transform, CharacterControllerRaycast>();
 
@@ -60,9 +64,28 @@ public class PlatformController : RaycastController
 			return;
         }
 
+		wasMoving = isMoving;
+
 		UpdateRaycastOrigins();
 
 		Vector3 velocity = CalculatePlatformMovement();
+
+		if(velocity != new Vector3(0,0,0))
+        {
+			isMoving = true;
+        } else
+        {
+			isMoving = false;
+        }
+
+		if(!wasMoving && isMoving)
+        {
+			platformAudio.Play(0);
+        }
+		if(wasMoving && !isMoving)
+        {
+			platformAudio.Stop();
+        }
 
 		CalculatePassengerMovement(velocity);
 
