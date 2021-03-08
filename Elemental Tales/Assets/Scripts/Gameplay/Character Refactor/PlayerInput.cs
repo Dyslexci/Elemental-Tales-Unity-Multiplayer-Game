@@ -103,19 +103,19 @@ public class PlayerInput : MonoBehaviourPun
             }
 			if(Input.GetKeyDown(KeyCode.W) && player.controller.collisions.below)
             {
-				player.PanCamUpKeyDown();
+				//player.PanCamUpKeyDown();
             }
 			if(Input.GetKeyUp(KeyCode.W))
             {
-				player.PanCamUpKeyUp();
+				//player.PanCamUpKeyUp();
             }
 			if(Input.GetKeyDown(KeyCode.S) && player.controller.collisions.below)
             {
-				player.PanCamDownKeyDown();
+				//player.PanCamDownKeyDown();
             }
 			if(Input.GetKeyUp(KeyCode.S))
             {
-				player.PanCamDownKeyUp();
+				//player.PanCamDownKeyUp();
             }
 			if(Input.GetKeyDown(KeyCode.Mouse0))
             {

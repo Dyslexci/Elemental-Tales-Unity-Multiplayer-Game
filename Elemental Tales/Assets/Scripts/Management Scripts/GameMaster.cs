@@ -84,6 +84,14 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public float totalCheckpoints;
     public TMP_Text percentageTracker;
 
+    [Header("Game Repetition Variables")]
+    public GameObject blocker1;
+    public GameObject blocker2;
+    public GameObject blocker3;
+    public GameObject end1;
+    public GameObject end2;
+    public GameObject end3;
+
     [Header("Audio Variables")]
     public AudioSource openDoorSound;
     public AudioSource collectGem1Sound;
@@ -98,21 +106,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
     float ambientSoundStartVolume;
 
     [Header("Player Audio Variables")]
-    public AudioSource[] stompStartAudio;
-    public AudioSource[] stompFallAudio;
-    public AudioSource[] stompLandAudio;
-    public AudioSource[] doubleJumpsAudio;
-    public AudioSource[] jumpsAudio;
-    public AudioSource[] landAudio;
-    public AudioSource[] wallclimbStartAudio;
-    public AudioSource[] wallJumpAudio;
-    public AudioSource[] dashAudio;
-    public AudioSource bashStartAudio;
-    public AudioSource[] bashEndAudio;
-    public AudioSource[] onEnterBashRangeAudio;
-    public AudioSource[] lanternOnBashAudio;
-    public AudioSource attackStartAudio;
-    public AudioSource[] attackEndAudio;
     public AudioSource respawnAudio;
     public AudioSource[] deathAudio;
     public AudioSource[] injuryAudio;
@@ -186,6 +179,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
             }
         }
         StartCoroutine(StartSceneCinematic());
+
+        if(PhotonNetwork.IsMasterClient)
+            photonView.RPC("SetCurrentStage", RpcTarget.AllBuffered, GlobalVariableManager.Level1Stage);
     }
 
     private void Update()
@@ -195,6 +191,30 @@ public class GameMaster : MonoBehaviourPunCallbacks
             this.gameObject.SetActive(true);
             Debug.Log("The game manager was inactive, resetting...");
         }
+    }
+
+    [PunRPC] private void SetCurrentStage(int currentStage)
+    {
+        if(currentStage == 1)
+        {
+            blocker1.SetActive(false);
+            end1.SetActive(false);
+        } else if(currentStage == 2)
+        {
+            blocker1.SetActive(false);
+            blocker2.SetActive(false);
+            end1.SetActive(false);
+            end2.SetActive(false);
+        } else if(currentStage == 3)
+        {
+            blocker1.SetActive(false);
+            blocker2.SetActive(false);
+            blocker3.SetActive(false);
+            end1.SetActive(false);
+            end2.SetActive(false);
+            end3.SetActive(false);
+        }
+        Debug.Log("Loading level 1 with current stage set as " + currentStage);
     }
 
     /// <summary>

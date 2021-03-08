@@ -203,6 +203,12 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(FadeOutPanel(optionsFaderPanel, optionsBlurPanel, optionsScreen, menuScreen));
     }
 
+    public void ResetLevel1Stages()
+    {
+        GlobalVariableManager.Level1Stage = 0;
+        PlayerPrefs.SetInt("level1Stage", 0);
+    }
+
     /// <summary>
     /// Fades in a panel and activates its blur panel when finished fading.
     /// </summary>

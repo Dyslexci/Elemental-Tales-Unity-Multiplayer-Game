@@ -22,7 +22,7 @@ public class TimerController : MonoBehaviour
     bool timerGoing;
     public bool isMainGame = true;
 
-    float elapsedTime;
+    public float elapsedTime;
 
     /// <summary>
     /// Sets the instance of the object.
