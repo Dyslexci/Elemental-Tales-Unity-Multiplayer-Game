@@ -76,6 +76,11 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public CanvasGroup deathMessage3Panel;
     public CanvasGroup deathMessage4Panel;
 
+    public TMP_Text deathMessage1;
+    public TMP_Text deathMessage2;
+    public TMP_Text deathMessage3;
+    public TMP_Text deathMessage4;
+
     public CanvasGroup pauseQuitPanel;
 
     [Header("Checkpoint Variables")]
@@ -316,9 +321,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
         deathMessage4Panel.alpha = 0;
         if (localPlayerDeaths == 1)
         {
-            deathMessage2Panel.GetComponentInChildren<TMP_Text>().text = "So this is how it ends...";
-            deathMessage3Panel.GetComponentInChildren<TMP_Text>().text = "You only wish your partner could be here, with you";
-            deathMessage4Panel.GetComponentInChildren<TMP_Text>().text = "What?";
+            deathMessage2.text = "So this is how it ends...";
+            deathMessage3.text = "You only wish your partner could be here, with you";
+            deathMessage4.text = "What?";
             while(deathMessage2Panel.alpha < 1)
             {
                 yield return new WaitForFixedUpdate();
@@ -339,10 +344,10 @@ public class GameMaster : MonoBehaviourPunCallbacks
             yield return new WaitForSeconds(.5f);
         } else
         {
-            deathMessage1Panel.GetComponentInChildren<TMP_Text>().text = "And here is the darkness again...";
-            deathMessage2Panel.GetComponentInChildren<TMP_Text>().text = "How many times, now?";
-            deathMessage3Panel.GetComponentInChildren<TMP_Text>().text = localPlayerDeaths + "?";
-            deathMessage4Panel.GetComponentInChildren<TMP_Text>().text = "And here we go again...";
+            deathMessage1.text = "And here is the darkness again...";
+            deathMessage2.text = "How many times, now?";
+            deathMessage3.text = localPlayerDeaths + "?";
+            deathMessage4.text = "And here we go again...";
             while (deathMessage1Panel.alpha < 1)
             {
                 yield return new WaitForFixedUpdate();

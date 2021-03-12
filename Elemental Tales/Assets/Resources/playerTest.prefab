@@ -44,7 +44,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 161b32f5b9aa53846ae954404097d30f, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.45
+  m_Volume: 0.225
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -684,7 +684,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 781c6b430980d2940b6f40fa7cd6cc60, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.45
+  m_Volume: 0.225
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -843,7 +843,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 41996fa01395f4847b4bc634c77f2710, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.45
+  m_Volume: 0.225
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -6687,7 +6687,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 5dcf14257768b4547814884a7b8e55d9, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.45
+  m_Volume: 0.225
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -8098,7 +8098,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 4484db7699b43cc4fae5ba3f3caebc1c, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.45
+  m_Volume: 0.225
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -8191,8 +8191,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4422737344833566301}
-  - component: {fileID: 4422737345570962267}
-  - component: {fileID: 4422737345570962264}
   - component: {fileID: 4422737345570962279}
   - component: {fileID: 4422737345570962276}
   - component: {fileID: 4422737345570962277}
@@ -8230,53 +8228,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &4422737345570962267
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4422737345570962269}
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &4422737345570962264
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4422737345570962269}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: b862ec33126ae3046895934a024ddc2e, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
 --- !u!114 &4422737345570962279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8304,6 +8255,9 @@ MonoBehaviour:
   smashSpeed: -35
   slamParticles: {fileID: 4546826693351841692, guid: f6374eafbd659d44cb14be2ebf73d292,
     type: 3}
+  smashableLayers:
+    serializedVersion: 2
+    m_Bits: 65536
   radius: 3
   bashableObj: {fileID: 0}
   bashPower: 40
@@ -8419,7 +8373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionMask:
     serializedVersion: 2
-    m_Bits: 57344
+    m_Bits: 124928
   triggerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -9312,7 +9266,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 77e027421b3efbe4793d6f60232d5e3d, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.6
+  m_Volume: 0.45
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -9799,7 +9753,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: f3590753bc3c61f4e85df4bb8bc27140, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.6
+  m_Volume: 0.45
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -11393,6 +11347,440 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &2771316727067473292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7299644100395663811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bfa203032a269543b1fd3cee4aa1dd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabInstanceId: -190874
+  _applyOrder: 13
+  keyframeRate: 1
+  useDeltas: 1
+  _alwaysReady: 1
+  serializeThis: 1
+  interpolation: 1
+  extrapolateRatio: 0.5
+  teleportThreshold: 5
+  teleportReliable: 0
+  transformCrusher:
+    expanded: 0
+    defaultTransform: {fileID: 0}
+    posCrusher:
+      expanded: 0
+      isExpanded: 1
+      hideFieldName: 1
+      _trsType: 0
+      defaultTransform: {fileID: 0}
+      uniformAxes: 0
+      _xcrusher:
+        expanded: 0
+        axis: 0
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 1
+        enabled: 0
+        _accurateCenter: 1
+        outOfBoundsHandling: 1
+        encoder: 3276.7
+        decoder: 0.0003051851
+        actualMin: -10
+        actualMax: 10
+        wrappoint: 180
+        range: 20
+        rotationMaxValue: 350
+        maxEncodedVal: 65534
+        centerValue: 0
+        centerEncodedValue: 32767
+        _limitRange: 0
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -4
+        _bits: 10000000100000001000000010000000
+        _min: -10
+        _max: 10
+        _resolution: 4095
+        _precision: 0.004884005
+        _trsType: 0
+      _ycrusher:
+        expanded: 0
+        axis: 1
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 1
+        enabled: 0
+        _accurateCenter: 1
+        outOfBoundsHandling: 1
+        encoder: 21844.666
+        decoder: 0.000045777764
+        actualMin: -1
+        actualMax: 2
+        wrappoint: 180.5
+        range: 3
+        rotationMaxValue: 359
+        maxEncodedVal: 65534
+        centerValue: 0.5
+        centerEncodedValue: 32767
+        _limitRange: 0
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -4
+        _bits: 10000000100000001000000010000000
+        _min: -1
+        _max: 2
+        _resolution: 255
+        _precision: 0.011764706
+        _trsType: 0
+      _zcrusher:
+        expanded: 0
+        axis: 2
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 1
+        enabled: 0
+        _accurateCenter: 1
+        outOfBoundsHandling: 1
+        encoder: 3276.7
+        decoder: 0.0003051851
+        actualMin: -10
+        actualMax: 10
+        wrappoint: 180
+        range: 20
+        rotationMaxValue: 350
+        maxEncodedVal: 65534
+        centerValue: 0
+        centerEncodedValue: 32767
+        _limitRange: 0
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -4
+        _bits: 10000000100000001000000010000000
+        _min: -10
+        _max: 10
+        _resolution: 4095
+        _precision: 0.004884005
+        _trsType: 0
+      _ucrusher:
+        expanded: 0
+        axis: 4
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 0
+        enabled: 1
+        _accurateCenter: 0
+        outOfBoundsHandling: 1
+        encoder: 12.75
+        decoder: 0.078431375
+        actualMin: -10
+        actualMax: 10
+        wrappoint: 180
+        range: 20
+        rotationMaxValue: 350
+        maxEncodedVal: 255
+        centerValue: 0
+        centerEncodedValue: 127
+        _limitRange: 0
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -1
+        _bits: 08000000040000000300000000000000
+        _min: -10
+        _max: 10
+        _resolution: 255
+        _precision: 0.078431375
+        _trsType: 4
+      _qcrusher:
+        expanded: 0
+        bits: 0
+        _compressLevel: 64
+        transform: {fileID: 0}
+        local: 0
+        isStandalone: 1
+        showEnableToggle: 0
+        enabled: 1
+      local: 1
+      useWorldBounds: 0
+      boundsGroupId: 0
+      enableTRSTypeSelector: 0
+      enableLocalSelector: 1
+      bounds:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+    rotCrusher:
+      expanded: 0
+      isExpanded: 1
+      hideFieldName: 1
+      _trsType: 1
+      defaultTransform: {fileID: 0}
+      uniformAxes: 0
+      _xcrusher:
+        expanded: 0
+        axis: 0
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 1
+        enabled: 1
+        _accurateCenter: 1
+        outOfBoundsHandling: 1
+        encoder: 11.372222
+        decoder: 0.08793356
+        actualMin: -180
+        actualMax: 180
+        wrappoint: 180
+        range: 360
+        rotationMaxValue: 180
+        maxEncodedVal: 4094
+        centerValue: 0
+        centerEncodedValue: 2047
+        _limitRange: 0
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -1
+        _bits: 0c000000080000000600000000000000
+        _min: -180
+        _max: 180
+        _resolution: 4095
+        _precision: 0.08791209
+        _trsType: 1
+      _ycrusher:
+        expanded: 0
+        axis: 1
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 1
+        enabled: 1
+        _accurateCenter: 1
+        outOfBoundsHandling: 1
+        encoder: 11.372222
+        decoder: 0.08793356
+        actualMin: -180
+        actualMax: 180
+        wrappoint: 180
+        range: 360
+        rotationMaxValue: 180
+        maxEncodedVal: 4094
+        centerValue: 0
+        centerEncodedValue: 2047
+        _limitRange: 0
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -1
+        _bits: 0c000000080000000600000000000000
+        _min: -180
+        _max: 180
+        _resolution: 4095
+        _precision: 0.08791209
+        _trsType: 1
+      _zcrusher:
+        expanded: 0
+        axis: 2
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 1
+        enabled: 1
+        _accurateCenter: 1
+        outOfBoundsHandling: 1
+        encoder: 11.372222
+        decoder: 0.08793356
+        actualMin: -180
+        actualMax: 180
+        wrappoint: 180
+        range: 360
+        rotationMaxValue: 180
+        maxEncodedVal: 4094
+        centerValue: 0
+        centerEncodedValue: 2047
+        _limitRange: 0
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -1
+        _bits: 0c000000080000000600000000000000
+        _min: -180
+        _max: 180
+        _resolution: 4095
+        _precision: 0.08791209
+        _trsType: 1
+      _ucrusher:
+        expanded: 0
+        axis: 4
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 0
+        enabled: 1
+        _accurateCenter: 0
+        outOfBoundsHandling: 1
+        encoder: 12.75
+        decoder: 0.078431375
+        actualMin: -10
+        actualMax: 10
+        wrappoint: 180
+        range: 20
+        rotationMaxValue: 350
+        maxEncodedVal: 255
+        centerValue: 0
+        centerEncodedValue: 127
+        _limitRange: 0
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -1
+        _bits: 08000000040000000300000000000000
+        _min: -10
+        _max: 10
+        _resolution: 255
+        _precision: 0.078431375
+        _trsType: 4
+      _qcrusher:
+        expanded: 0
+        bits: 44
+        _compressLevel: -1
+        transform: {fileID: 0}
+        local: 0
+        isStandalone: 0
+        showEnableToggle: 1
+        enabled: 1
+      local: 1
+      useWorldBounds: 0
+      boundsGroupId: 0
+      enableTRSTypeSelector: 0
+      enableLocalSelector: 1
+      bounds:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+    sclCrusher:
+      expanded: 0
+      isExpanded: 1
+      hideFieldName: 1
+      _trsType: 3
+      defaultTransform: {fileID: 0}
+      uniformAxes: 0
+      _xcrusher:
+        expanded: 0
+        axis: 0
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 1
+        enabled: 1
+        _accurateCenter: 1
+        outOfBoundsHandling: 1
+        encoder: 127
+        decoder: 0.007874016
+        actualMin: -1
+        actualMax: 1
+        wrappoint: 180
+        range: 2
+        rotationMaxValue: 359
+        maxEncodedVal: 254
+        centerValue: 0
+        centerEncodedValue: 127
+        _limitRange: 1
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -1
+        _bits: 08000000040000000300000000000000
+        _min: -1
+        _max: 1
+        _resolution: 255
+        _precision: 0.007843138
+        _trsType: 3
+      _ycrusher:
+        expanded: 0
+        axis: 1
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 1
+        enabled: 0
+        _accurateCenter: 1
+        outOfBoundsHandling: 1
+        encoder: 127
+        decoder: 0.007874016
+        actualMin: -1
+        actualMax: 1
+        wrappoint: 180
+        range: 2
+        rotationMaxValue: 359
+        maxEncodedVal: 254
+        centerValue: 0
+        centerEncodedValue: 127
+        _limitRange: 1
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -1
+        _bits: 08000000040000000300000000000000
+        _min: -1
+        _max: 1
+        _resolution: 255
+        _precision: 0.007843138
+        _trsType: 3
+      _zcrusher:
+        expanded: 0
+        axis: 2
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 1
+        enabled: 0
+        _accurateCenter: 1
+        outOfBoundsHandling: 1
+        encoder: 127
+        decoder: 0.007874016
+        actualMin: -1
+        actualMax: 1
+        wrappoint: 180
+        range: 2
+        rotationMaxValue: 359
+        maxEncodedVal: 254
+        centerValue: 0
+        centerEncodedValue: 127
+        _limitRange: 1
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -1
+        _bits: 08000000040000000300000000000000
+        _min: -1
+        _max: 1
+        _resolution: 255
+        _precision: 0.007843138
+        _trsType: 3
+      _ucrusher:
+        expanded: 0
+        axis: 3
+        showBCL: 0
+        expandBCL: 0
+        showEnableToggle: 1
+        enabled: 1
+        _accurateCenter: 0
+        outOfBoundsHandling: 1
+        encoder: 511.5
+        decoder: 0.0019550342
+        actualMin: 0
+        actualMax: 2
+        wrappoint: 181
+        range: 2
+        rotationMaxValue: 360
+        maxEncodedVal: 1023
+        centerValue: 1
+        centerEncodedValue: 511
+        _limitRange: 1
+        _useHalfRangeX: 0
+        _bitsDeterminedBy: -1
+        _bits: 0a000000060000000500000000000000
+        _min: 0
+        _max: 2
+        _resolution: 1023
+        _precision: 0.0019550342
+        _trsType: 3
+      _qcrusher:
+        expanded: 0
+        bits: 0
+        _compressLevel: 64
+        transform: {fileID: 0}
+        local: 0
+        isStandalone: 1
+        showEnableToggle: 0
+        enabled: 1
+      local: 1
+      useWorldBounds: 0
+      boundsGroupId: 0
+      enableTRSTypeSelector: 0
+      enableLocalSelector: 1
+      bounds:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+    isExpanded: 1
 --- !u!114 &4934076381124096909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11438,6 +11826,7 @@ MonoBehaviour:
   - {fileID: 690205392018605116}
   - {fileID: 4677037223419547539}
   - {fileID: 9025196218213593180}
+  controller: {fileID: 4422737345570962277}
 --- !u!1 &7350415579390086277
 GameObject:
   m_ObjectHideFlags: 0
@@ -12060,7 +12449,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: f323d2296d6a71f43921cd060d96958b, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.6
+  m_Volume: 0.45
   m_Pitch: 1
   Loop: 0
   Mute: 0

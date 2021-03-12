@@ -7,7 +7,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.1.0
- *    @version 1.0.0
+ *    @version 2.0.0
  *    
  *    Adds new elements to the player objects.
  */
@@ -82,6 +82,10 @@ public class getElement : MonoBehaviourPun
         StartCoroutine(TriggerDialogue());
     }
 
+    /// <summary>
+    /// Triggers the dialogue associated with this object.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator TriggerDialogue()
     {
 

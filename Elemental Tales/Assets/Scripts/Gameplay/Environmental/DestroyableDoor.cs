@@ -45,8 +45,7 @@ public class DestroyableDoor : MonoBehaviourPun
     /// RPC triggering damage for all players on network
     /// </summary>
     /// <param name="damage"></param>
-    [PunRPC]
-    private void damageDoorRPC(int damage)
+    [PunRPC] private void damageDoorRPC(int damage)
     {
         currentHealth -= damage;
         if (currentHealth <= 0)

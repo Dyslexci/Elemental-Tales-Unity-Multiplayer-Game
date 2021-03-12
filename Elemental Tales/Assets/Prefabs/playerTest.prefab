@@ -112,7 +112,44 @@ MonoBehaviour:
   wallLeap: {x: 18, y: 17}
   wallSlideSpeedMax: 3
   wallStickTime: 0.5
+  dashSpeed: 60
+  numberOfDashes: 2
+  smashSpeed: -35
+  slamParticles: {fileID: 0}
+  smashableLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  radius: 0
+  bashableObj: {fileID: 0}
+  bashPower: 60
+  animator: {fileID: 0}
+  attackPoint: {fileID: 0}
+  attackRange: 0.5
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  camAnim: {fileID: 0}
+  playerAnim: {fileID: 0}
+  playerSprite: {fileID: 0}
+  maxJumpVelocity: 0
+  velocity: {x: 0, y: 0, z: 0}
+  stompStartAudio: []
+  stompFallAudio: []
+  stompLandAudio: []
+  doubleJumpsAudio: []
+  jumpsAudio: []
+  landAudio: []
+  wallclimbStartAudio: []
+  wallJumpAudio: []
+  dashAudio: []
+  bashStartAudio: {fileID: 0}
+  bashEndAudio: []
+  onEnterBashRangeAudio: []
+  lanternOnBashAudio: []
+  attackStartAudio: {fileID: 0}
+  attackEndAudio: []
   controller: {fileID: 0}
+  directionalInput: {x: 0, y: 0}
 --- !u!61 &3695681129435536333
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -154,6 +191,9 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 24576
+  triggerMask:
+    serializedVersion: 2
+    m_Bits: 0
   horizontalRayCount: 4
   verticalRayCount: 4
   horizontalRaySpacing: 0
@@ -161,6 +201,10 @@ MonoBehaviour:
   boxCollider: {fileID: 0}
   maxSlopeAngle: 50
   playerInput: {x: 0, y: 0}
+  isPlayer: 0
+  isPushable: 0
+  isFallable: 0
+  debugEnabled: 1
 --- !u!114 &3695681129435536371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,6 +218,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasControl: 0
+  jumpKeyDown: 0
+  pushKeyDown: 0
+  pauseKeyDown: 0
+  interactKeyDown: 0
+  attackRate: 2
 --- !u!50 &3695681129435536335
 Rigidbody2D:
   serializedVersion: 4
@@ -259,6 +308,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1f754567c480f842964c6050f3840b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasAir: 1
+  hasFire: 1
+  hasEarth: 1
+  hasWater: 1
 --- !u!114 &3695681129435536328
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ using System.Collections;
  *    
  *    Allows the player to input a name, limited to 12 characters.
  */
-namespace Com.MyCompany.MyGame
+namespace Com.Team12.ElementalTales
 {
     /// <summary>
     /// Player name input field. Let the user input his name, will appear above the player in the game.

@@ -165,6 +165,7 @@ public class endGame : MonoBehaviourPunCallbacks
     /// <returns></returns>
     IEnumerator FadeToBlackQuit()
     {
+        SetTextContents(GlobalVariableManager.Level1Stage);
         fadeToBlackPanel.alpha = 0;
         fadeToBlackPanel.gameObject.SetActive(true);
         while (fadeToBlackPanel.alpha < 1)
@@ -172,43 +173,53 @@ public class endGame : MonoBehaviourPunCallbacks
             yield return new WaitForEndOfFrame();
             fadeToBlackPanel.alpha += 0.05f;
         }
-        SetTextContents(GlobalVariableManager.Level1Stage);
+        yield return new WaitForSeconds(.5f);
         while(endgamePanel1.alpha < 1)
         {
             yield return new WaitForEndOfFrame();
-            endgamePanel1.alpha += 0.05f;
+            endgamePanel1.alpha += 0.015f;
         }
         yield return new WaitForSeconds(.5f);
         while (endgamePanel2.alpha < 1)
         {
             yield return new WaitForEndOfFrame();
-            endgamePanel2.alpha += 0.05f;
+            endgamePanel2.alpha += 0.015f;
         }
         yield return new WaitForSeconds(1);
         while (endgamePanel3.alpha < 1)
         {
             yield return new WaitForEndOfFrame();
-            endgamePanel3.alpha += 0.05f;
+            endgamePanel3.alpha += 0.015f;
         }
         yield return new WaitForSeconds(.5f);
         while (endgamePanel4.alpha < 1)
         {
             yield return new WaitForEndOfFrame();
-            endgamePanel4.alpha += 0.05f;
+            endgamePanel4.alpha += 0.015f;
         }
         yield return new WaitForSeconds(1);
         while (endgamePanel5.alpha < 1)
         {
             yield return new WaitForEndOfFrame();
-            endgamePanel5.alpha += 0.05f;
+            endgamePanel5.alpha += 0.015f;
         }
         yield return new WaitForSeconds(1);
         while (endgamePanel6.alpha < 1)
         {
             yield return new WaitForEndOfFrame();
-            endgamePanel6.alpha += 0.05f;
+            endgamePanel6.alpha += 0.0075f;
         }
         yield return new WaitForSeconds(3);
+
+        while(endgamePanel1.alpha > 0)
+        {
+            endgamePanel1.alpha -= .0075f;
+            endgamePanel2.alpha -= .0075f;
+            endgamePanel3.alpha -= .0075f;
+            endgamePanel4.alpha -= .0075f;
+            endgamePanel5.alpha -= .0075f;
+            endgamePanel6.alpha -= .0075f;
+        }
 
         EndSession();
     }

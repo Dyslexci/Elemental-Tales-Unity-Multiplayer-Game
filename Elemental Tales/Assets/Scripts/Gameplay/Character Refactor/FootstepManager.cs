@@ -6,9 +6,13 @@ using Photon.Pun;
 public class FootstepManager : MonoBehaviourPun
 {
     public AudioSource[] footstepsAudio;
+    public CharacterControllerRaycast controller;
 
     public void PlayFootsteps()
     {
+        if (!controller.collisions.below)
+            return;
+
         photonView.RPC("TriggerFootstep", RpcTarget.AllBuffered);
     }
 

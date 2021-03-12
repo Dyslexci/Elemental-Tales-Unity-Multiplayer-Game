@@ -14971,7 +14971,7 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents: []
-  viewIdField: 53
+  viewIdField: 64
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!4 &573809367
@@ -41366,6 +41366,8 @@ MonoBehaviour:
   controlsButton: {fileID: 8224470403056357049}
   musicSlider: {fileID: 8224470403461623304}
   soundSlider: {fileID: 8224470402887360582}
+  pauseMenuPanel: {fileID: 0}
+  optionsMenuPanel: {fileID: 0}
 --- !u!114 &1517920617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52893,7 +52895,7 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents: []
-  viewIdField: 56
+  viewIdField: 60
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &1952419896
@@ -68537,7 +68539,7 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents: []
-  viewIdField: 54
+  viewIdField: 62
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!1 &8224470403569549430

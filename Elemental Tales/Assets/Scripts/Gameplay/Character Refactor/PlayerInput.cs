@@ -26,6 +26,9 @@ public class PlayerInput : MonoBehaviourPun
 	[SerializeField] private float attackRate = 2f;
 	private float nextAttackTime = 0f;
 
+	float dashRate = 3.5f;
+	float nextDashTime = 0f;
+
 	/// <summary>
 	/// Initialises the player inputs script.
 	/// </summary>
@@ -91,7 +94,11 @@ public class PlayerInput : MonoBehaviourPun
             }
 			if(Input.GetKeyDown(KeyCode.LeftControl))
             {
-				player.OnDashInputDown();
+				if(Time.time >= nextDashTime)
+                {
+					player.OnDashInputDown();
+					nextDashTime = Time.time + 1f / dashRate;
+				}
             }
 			if(Input.GetKeyDown(KeyCode.S))
             {

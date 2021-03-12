@@ -27,6 +27,9 @@ public class OptionsManager : MonoBehaviour
     public Slider musicSlider;
     public Slider soundSlider;
 
+    public CanvasGroup pauseMenuPanel;
+    public GameObject optionsMenuPanel;
+
     private List<Resolution> resolutionsTemp;
     private Resolution[] resolutions;
     private Resolution selectedResolution;
@@ -212,6 +215,32 @@ public class OptionsManager : MonoBehaviour
         openSettingsTab();
         optionsScreen.SetActive(false);
         menuScreen.SetActive(true);
+    }
+
+    public void OptionsApplyInGame()
+    {
+        openSettingsTab();
+        PlayerPrefs.SetFloat("currentMusicVolume", currentMusicVolume);
+        PlayerPrefs.SetFloat("currentSoundVolume", currentSoundVolume);
+        PlayerPrefs.SetInt("fullscreenEnabled", fullscreenEnabled ? 1 : 0);
+        PlayerPrefs.SetInt("vSyncEnabled", vsync ? 1 : 0);
+        optionsMenuPanel.gameObject.SetActive(false);
+        pauseMenuPanel.gameObject.SetActive(true);
+    }
+
+    public void OptionsCancelInGame()
+    {
+        setMusicVolume(startingMusicVolume);
+        musicSlider.value = startingMusicVolume;
+        setSoundVolume(startingSoundVolume);
+        soundSlider.value = startingSoundVolume;
+        if (fullscreenEnabled != startingFullscreen)
+            toggleFullscreen();
+        if (vsync != startingVsync)
+            toggleVSync();
+        openSettingsTab();
+        optionsMenuPanel.gameObject.SetActive(false);
+        pauseMenuPanel.gameObject.SetActive(true);
     }
 
     /// <summary>

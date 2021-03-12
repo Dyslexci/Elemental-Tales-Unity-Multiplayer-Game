@@ -20,6 +20,8 @@ public class FallingBlock : RaycastController
     CharacterControllerRaycast controller;
     Vector3 velocity;
     bool isFalling;
+	bool fallMusicPlaying;
+	bool hasHitFloor;
 
 	public AudioSource blockFalling;
 	public AudioSource blockHitFloor;
@@ -40,19 +42,30 @@ public class FallingBlock : RaycastController
 		if (isFalling)
         {
             velocity += Vector3.down * gravity * Time.deltaTime;
-			blockFalling.Play(0);
-            //controller.Move(velocity * Time.deltaTime, false);
+			if(!fallMusicPlaying)
+            {
+				blockFalling.Play(0);
+				fallMusicPlaying = true;
+			}
         }
         if (controller.collisions.below)
         {
             velocity = Vector3.zero;
-			blockHitFloor.Play(0);
+			blockFalling.Stop();
+			if (!hasHitFloor)
+            {
+				blockHitFloor.Play(0);
+				blockFalling.Stop();
+				fallMusicPlaying = false;
+				hasHitFloor = true;
+			}
         }
         if(!isFalling)
         {
+			hasHitFloor = false;
             velocity += Vector3.up * raiseSpeed * Time.deltaTime;
-            //controller.Move(velocity * Time.deltaTime, false);
-            if(controller.collisions.above)
+			blockFalling.Stop();
+			if (controller.collisions.above)
             {
                 velocity = Vector3.zero;
             }

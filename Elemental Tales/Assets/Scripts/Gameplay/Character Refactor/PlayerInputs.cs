@@ -52,6 +52,7 @@ public class PlayerInputs : MonoBehaviourPun
 	public float smashSpeed = -35f;
 	public GameObject slamParticles;
 	bool isSmashing;
+	public LayerMask smashableLayers;
 
 	[Header("Bash Variables")]
 	[SerializeField] float radius;
@@ -63,6 +64,8 @@ public class PlayerInputs : MonoBehaviourPun
 	float lastAngle;
 	public float bashPower = 60;
 	GameObject arrow;
+	bool wasNearObject;
+	bool hasPlayedAudio;
 
 	[Header("Attack Variables")]
 	[SerializeField] private Animator animator;
@@ -97,7 +100,6 @@ public class PlayerInputs : MonoBehaviourPun
 	public AudioSource[] lanternOnBashAudio;
 	public AudioSource attackStartAudio;
 	public AudioSource[] attackEndAudio;
-	AudioSource[] panCameraAudio;
 
 	[HideInInspector]
 	public CharacterControllerRaycast controller;
@@ -107,6 +109,7 @@ public class PlayerInputs : MonoBehaviourPun
 	bool wallSliding;
 	int wallDirX;
 	bool isHoldingObject;
+	bool facingLeft = true;
 
 	CinemachineFramingTransposer vCam;
 
@@ -125,22 +128,6 @@ public class PlayerInputs : MonoBehaviourPun
 		elementController = GetComponent<ElementController>();
 		elementControllerHasInstantiated = true;
 		gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
-/*		stompStartAudio = gameMaster.stompStartAudio;
-		stompLandAudio = gameMaster.stompLandAudio;
-		stompFallAudio = gameMaster.stompFallAudio;
-		doubleJumpsAudio = gameMaster.doubleJumpsAudio;
-		jumpsAudio = gameMaster.jumpsAudio;
-		landAudio = gameMaster.landAudio;
-		wallclimbStartAudio = gameMaster.wallclimbStartAudio;
-		wallJumpAudio = gameMaster.wallJumpAudio;
-		dashAudio = gameMaster.dashAudio;
-		bashStartAudio = gameMaster.bashStartAudio;
-		bashEndAudio = gameMaster.bashEndAudio;
-		onEnterBashRangeAudio = gameMaster.onEnterBashRangeAudio;
-		lanternOnBashAudio = gameMaster.lanternOnBashAudio;
-		attackStartAudio = gameMaster.attackStartAudio;
-		attackEndAudio = gameMaster.attackEndAudio;*/
-		panCameraAudio = gameMaster.panCameraAudio;
 
 		arrow = gameMaster.arrow;
 		vCam = GameObject.Find("Virtual Camera").GetComponentInChildren<CinemachineFramingTransposer>();
@@ -168,6 +155,7 @@ public class PlayerInputs : MonoBehaviourPun
 			
 			if(isSmashing)
             {
+				CheckForSmashableObstacle();
 				photonView.RPC("TriggerSmashHitResults", RpcTarget.AllBuffered);
 				isSmashing = false;
 				camAnim.SetTrigger("Trigger");
@@ -231,13 +219,15 @@ public class PlayerInputs : MonoBehaviourPun
 
 		wasJumping = isJumping;
 
-		if(velocity.x > 0)
+		if(velocity.x > 0 && facingLeft)
         {
-			playerSprite.GetComponent<SpriteRenderer>().flipX = true;
-        }
-		if(velocity.x < 0)
+			photonView.RPC("FlipXRight", RpcTarget.AllBuffered);
+			facingLeft = false;
+		}
+		if(velocity.x < 0 && !facingLeft)
         {
-			playerSprite.GetComponent<SpriteRenderer>().flipX = false;
+			photonView.RPC("FlipXLeft", RpcTarget.AllBuffered);
+			facingLeft = true;
 		}
 		playerAnim.SetFloat("directionX", Mathf.Abs(velocity.x));
 		playerAnim.SetBool("isJumping", isJumping);
@@ -248,6 +238,16 @@ public class PlayerInputs : MonoBehaviourPun
         {
 			playerAnim.SetBool("hasReachedJumpZenith", false);
 		}
+	}
+
+	[PunRPC] private void FlipXRight()
+    {
+		playerSprite.GetComponent<SpriteRenderer>().flipX = true;
+	}
+
+	[PunRPC] private void FlipXLeft()
+    {
+		playerSprite.GetComponent<SpriteRenderer>().flipX = false;
 	}
 
 	[PunRPC] private void TriggerLand()
@@ -339,6 +339,19 @@ public class PlayerInputs : MonoBehaviourPun
     }
 
 	/// <summary>
+	/// Checks below the player for smashable objects with the intent of destroying them if true
+	/// </summary>
+	void CheckForSmashableObstacle()
+    {
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 2, smashableLayers);
+
+		if(hit)
+        {
+			hit.collider.GetComponent<SlamDoor>().DestroyDoor();
+        }
+	}
+
+	/// <summary>
 	/// Rotates the player in place before smashing them into the ground.
 	/// </summary>
 	/// <returns></returns>
@@ -395,6 +408,7 @@ public class PlayerInputs : MonoBehaviourPun
 		
 
 		Vector2 currentPos = transform.position;
+		
 
 		RaycastHit2D[] rays = Physics2D.CircleCastAll(transform.position, radius, Vector3.forward);
 		foreach(RaycastHit2D ray in rays)
@@ -403,7 +417,8 @@ public class PlayerInputs : MonoBehaviourPun
 
 			if(ray.collider.tag == "Bashable")
             {
-				onEnterBashRangeAudio[Random.Range(0, onEnterBashRangeAudio.Length)].Play(0);
+				if(!nearToBashableObj)
+					
 				nearToBashableObj = true;
 				bashableObj = ray.collider.transform.gameObject;
 				break;
@@ -411,10 +426,21 @@ public class PlayerInputs : MonoBehaviourPun
         }
 		if(nearToBashableObj)
         {
+			if(!wasNearObject)
+            {
+				onEnterBashRangeAudio[Random.Range(0, onEnterBashRangeAudio.Length)].Play(0);
+				wasNearObject = true;
+			}
+				
 			bashableObj.GetComponent<SpriteRenderer>().color = Color.yellow;
 			if(Input.GetKey(KeyCode.Mouse1))
             {
-				bashStartAudio.Play(0);
+				if(!hasPlayedAudio)
+                {
+					bashStartAudio.Play(0);
+					hasPlayedAudio = true;
+				}
+				
 				transform.position = currentPos;
 				bashableObj.transform.localScale = new Vector2(0.6f, 0.6f);
 				arrow.SetActive(true);
@@ -434,7 +460,7 @@ public class PlayerInputs : MonoBehaviourPun
 				isBashing = false;
 				isMidBash = true;
 				arrow.SetActive(false);
-
+				hasPlayedAudio = false;
 				transform.position = bashableObj.transform.position;
 				Vector3 direction = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
 				float angle = Mathf.Atan2(direction.y, direction.x);
@@ -445,6 +471,8 @@ public class PlayerInputs : MonoBehaviourPun
         } else if(bashableObj != null)
         {
 			bashableObj.GetComponent<SpriteRenderer>().color = Color.white;
+			nearToBashableObj = false;
+			wasNearObject = false;
         }
     }
 
@@ -463,6 +491,7 @@ public class PlayerInputs : MonoBehaviourPun
 		if ((controller.collisions.below || currentNumberOfDashes > 0) && elementController.getElement().Equals("Air"))
         {
 			velocity.x = dashSpeed * directionalInput.x;
+			velocity.y = 0;
 			photonView.RPC("TriggerDashResults", RpcTarget.AllBuffered);
 		}
 	}
@@ -578,70 +607,4 @@ public class PlayerInputs : MonoBehaviourPun
 		velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
 		velocity.y += gravity * Time.deltaTime;
 	}
-
-	/*	public void PanCamDownKeyDown()
-    {
-		StopCoroutine(PanUpCam());
-		StopCoroutine(ReturnCamToCentreFromPanUp());
-		StopCoroutine(ReturnCamToCentreFromPanDown());
-		StartCoroutine(PanDownCam());
-    }
-
-	public void PanCamDownKeyUp()
-    {
-		StopCoroutine(PanDownCam());
-		StartCoroutine(ReturnCamToCentreFromPanDown());
-    }
-
-	public void PanCamUpKeyDown()
-    {
-		StopCoroutine(PanDownCam());
-		StopCoroutine(ReturnCamToCentreFromPanUp());
-		StopCoroutine(ReturnCamToCentreFromPanDown());
-		StartCoroutine(PanUpCam());
-	}
-
-	public void PanCamUpKeyUp()
-	{
-		StopCoroutine(PanUpCam());
-		StartCoroutine(ReturnCamToCentreFromPanUp());
-	}
-
-	IEnumerator PanDownCam()
-    {
-		panCameraAudio[Random.Range(0, panCameraAudio.Length)].Play(0);
-		while (vCam.m_ScreenY > .25f)
-        {
-			yield return new WaitForFixedUpdate();
-			vCam.m_ScreenY -= .005f;
-        }
-    }
-
-	IEnumerator ReturnCamToCentreFromPanDown()
-    {
-		while (vCam.m_ScreenY < .5f)
-        {
-			yield return new WaitForFixedUpdate();
-			vCam.m_ScreenY += .005f;
-        }
-    }
-
-	IEnumerator PanUpCam()
-    {
-		panCameraAudio[Random.Range(0, panCameraAudio.Length)].Play(0);
-		while (vCam.m_ScreenY < .75f)
-        {
-			yield return new WaitForFixedUpdate();
-			vCam.m_ScreenY += .005f;
-        }
-    }
-
-	IEnumerator ReturnCamToCentreFromPanUp()
-    {
-		while (vCam.m_ScreenY > .5f)
-        {
-			yield return new WaitForFixedUpdate();
-			vCam.m_ScreenY -= .005f;
-		}
-	}*/
 }

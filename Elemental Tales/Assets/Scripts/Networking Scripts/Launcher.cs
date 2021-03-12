@@ -114,14 +114,6 @@ namespace Com.Team12.ElementalTales
 
         #endregion
 
-        #region Private Serializable Fields
-
-        const string chars = "ABCDEFGHJKLMNOPQRSTUVWXYZ023456789";
-        private string connectCode;
-
-        #endregion
-
-
         #region Private Fields
 
         /// <summary>
@@ -129,6 +121,20 @@ namespace Com.Team12.ElementalTales
         /// </summary>
         string gameVersion = "1";
         string roomCode;
+
+        bool fadeCalled;
+        float musicStartVolume;
+        float soundStartVolume;
+
+        const string chars = "ABCDEFGHJKLMNOPQRSTUVWXYZ023456789";
+        private string connectCode;
+
+        #endregion
+
+
+        #region Private Serializable Fields
+
+        
         
 
         [Tooltip("The UI panel to let the user enter name, connect and join")]
@@ -151,9 +157,7 @@ namespace Com.Team12.ElementalTales
         [SerializeField] AudioSource music;
         [SerializeField] AudioSource sound;
         [SerializeField] AudioSource startGameSound;
-        bool fadeCalled;
-        float musicStartVolume;
-        float soundStartVolume;
+        
 
         #endregion
 
