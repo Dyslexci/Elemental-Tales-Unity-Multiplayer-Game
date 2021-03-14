@@ -74,6 +74,8 @@ public class endGame : MonoBehaviourPunCallbacks
         GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<PlayerInput>().hasControl = false;
         StartCoroutine(FadeToBlackQuit());
         GlobalVariableManager.Level1Stage = currentStage + 1;
+        GlobalVariableManager.PreviousStage = currentStage;
+        GlobalVariableManager.PlayerDeaths = GameObject.Find("Game Manager").GetComponent<GameMaster>().localPlayerDeaths;
         PlayerPrefs.SetInt("level1Stage", currentStage + 1);
         timerController.EndTimer();
 
@@ -213,12 +215,13 @@ public class endGame : MonoBehaviourPunCallbacks
 
         while(endgamePanel1.alpha > 0)
         {
-            endgamePanel1.alpha -= .0075f;
-            endgamePanel2.alpha -= .0075f;
-            endgamePanel3.alpha -= .0075f;
-            endgamePanel4.alpha -= .0075f;
-            endgamePanel5.alpha -= .0075f;
-            endgamePanel6.alpha -= .0075f;
+            yield return new WaitForEndOfFrame();
+            endgamePanel1.alpha -= .015f;
+            endgamePanel2.alpha -= .015f;
+            endgamePanel3.alpha -= .015f;
+            endgamePanel4.alpha -= .015f;
+            endgamePanel5.alpha -= .015f;
+            endgamePanel6.alpha -= .015f;
         }
 
         EndSession();

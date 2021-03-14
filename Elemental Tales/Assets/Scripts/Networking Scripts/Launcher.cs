@@ -11,7 +11,7 @@ using TMPro;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 1.1.1
+ *    @version 1.2.1
  *    
  *    Implements the lobby system and launcer for the PUN2 networking package.
  */
@@ -60,7 +60,8 @@ namespace Com.Team12.ElementalTales
             if (PhotonNetwork.PlayerList.Length == 1)
             {
                 lobbyPlayer1Text.text = PhotonNetwork.NickName;
-            } else
+            }
+            else
             {
                 lobbyPlayer1Text.text = PhotonNetwork.PlayerList[0].NickName;
                 lobbyPlayer2Text.text = PhotonNetwork.NickName;
@@ -85,7 +86,7 @@ namespace Com.Team12.ElementalTales
         public override void OnCreatedRoom()
         {
             lobbyPlayer1Text.text = PhotonNetwork.NickName;
-            
+
         }
 
         /// <summary>
@@ -114,6 +115,7 @@ namespace Com.Team12.ElementalTales
 
         #endregion
 
+
         #region Private Fields
 
         /// <summary>
@@ -134,8 +136,8 @@ namespace Com.Team12.ElementalTales
 
         #region Private Serializable Fields
 
-        
-        
+
+
 
         [Tooltip("The UI panel to let the user enter name, connect and join")]
         [SerializeField] private GameObject controlPanel;
@@ -157,7 +159,7 @@ namespace Com.Team12.ElementalTales
         [SerializeField] AudioSource music;
         [SerializeField] AudioSource sound;
         [SerializeField] AudioSource startGameSound;
-        
+
 
         #endregion
 
@@ -175,10 +177,11 @@ namespace Com.Team12.ElementalTales
             PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = gameVersion;
-            if(PhotonNetwork.IsConnected)
+            if (PhotonNetwork.IsConnected)
             {
                 connectedStatusText.text = "Connected to master server: " + PhotonNetwork.ServerAddress;
-            } else
+            }
+            else
             {
                 connectedStatusText.text = "Connection to the master server has failed. Do you have an active internet connection?";
             }
@@ -217,10 +220,15 @@ namespace Com.Team12.ElementalTales
         /// </summary>
         public void Connect()
         {
-            for(int i = 0; i<5; i++)
+            do
             {
-                connectCode += chars[Random.Range(0, chars.Length)];
-            }
+                connectCode = "";
+                for (int i = 0; i < 5; i++)
+                {
+                    connectCode += chars[Random.Range(0, chars.Length)];
+                }
+            } while (isNaughty());
+
             progressPanel.SetActive(true);
             controlPanel.SetActive(false);
             Debug.Log("PUN: Connect() has been called, and a room will be created with code " + connectCode);
@@ -234,11 +242,12 @@ namespace Com.Team12.ElementalTales
         /// </summary>
         public void joinRoom()
         {
-            if(roomCode != null && roomCode != "")
+            if (roomCode != null && roomCode != "")
             {
                 PhotonNetwork.JoinRoom(roomCode);
                 Debug.Log("PUN: joinRoom() has been called, and the client will join room ID " + roomCode);
-            } else
+            }
+            else
             {
                 Debug.Log("PUN: joinRoom() has been called, but the roomCode value is either null or empty");
             }
@@ -301,7 +310,7 @@ namespace Com.Team12.ElementalTales
                 yield return new WaitForFixedUpdate();
                 mainCam.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y + increaseAmount, mainCam.transform.position.z);
                 canvasHolder.transform.position = new Vector3(canvasHolder.transform.position.x, canvasHolder.transform.position.y - increaseAmount * 100, canvasHolder.transform.position.z);
-                if(mainCam.transform.position.y > 116.5f)
+                if (mainCam.transform.position.y > 116.5f)
                 {
                     increaseAmount -= 0.003f;
                 }
@@ -326,11 +335,12 @@ namespace Com.Team12.ElementalTales
                 music.volume -= (0.008f * musicStartVolume);
                 sound.volume -= (0.008f * soundStartVolume);
             }
-            if(PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.IsMasterClient)
             {
                 PhotonNetwork.LoadLevel(1);
                 Debug.Log("PUN: FadeCameraToStartGame() has finished loading the level and has launched the next scene");
-            } else
+            }
+            else
             {
                 Debug.Log("PUN: FadeCameraToStartGame() has finished loading the level and is waiting for the master client to launch the next scene");
             }
@@ -340,5 +350,30 @@ namespace Com.Team12.ElementalTales
         #endregion
 
 
+        #region Private Methods
+
+        /// <summary>
+        /// Checks if connectCode contains bad words
+        /// </summary>
+        /// <returns></returns>
+        private bool isNaughty()
+        {
+            bool toReturn = false;
+            string raw = "4r5e,5h1t,5hit,a55,anal,anus,ar5e,arrse,arse,ass,asses,b00bs,b17ch,b1tch,balls,bitch,blow,job,boner,boob,boobs,bum,bunny,butt,c0ck,cawk,chink,cipa,cl1t,clit,clits,cnut,cock,cocks,cok,coon,cox,crap,cum,cums,cunt,cunts,d1ck,damn,dick,dildo,dink,dinks,dirsa,dlck,doosh,duche,dyke,f4nny,fag,faggs,fagot,fags,fanny,fanyy,fcuk,feck,fook,fuck,fucka,fucks,fudge,fuk,fuker,fuks,fux,fux0r,God,hell,heshe,hoar,hoare,hoer,homo,hore,horny,jap,jism,jiz,jizm,jizz,kawk,knob,kock,kum,kums,labia,lust,m0f0,m0fo,mof0,mofo,muff,mutha,n1gga,nazi,nigga,nob,nob,jokey,p0rn,pawn,penis,phuck,phuk,phuks,phuq,piss,poop,porn,porno,prick,pron,pube,pusse,pussi,pussy,hit,semen,sex,sh1t,shag,shit,shite,shits,skank,slut,sluts,smut,spac,spunk,teets,teez,tit,tits,titt,turd,tw4t,twat,twunt,v1gra,vulva,w00se,wang,wank,wanky,whoar,whore,willy,xxx";
+            string[] words = raw.Split(',');
+
+            foreach (string s in words)
+            {
+                if (connectCode.ToLower().Contains(s.ToLower()) || connectCode.ToLower() == s.ToLower())
+                {
+                    toReturn = true;
+                }
+            }
+
+            if (toReturn) Debug.Log("Regenerating connectCode. Bad word was detected: " + connectCode);
+
+            return toReturn;
+        }
+        #endregion
     }
 }

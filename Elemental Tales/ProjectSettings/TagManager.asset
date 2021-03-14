@@ -29,9 +29,9 @@ TagManager:
   - Pushable
   - Fallable
   - Smashable
-  - 
-  - 
-  - 
+  - ObstacleGrass
+  - ObstacleStone
+  - ObstacleWood
   - 
   - 
   - 

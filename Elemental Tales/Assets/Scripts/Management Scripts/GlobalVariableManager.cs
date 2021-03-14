@@ -19,6 +19,32 @@ public static class GlobalVariableManager
     private static float level1Stage1BestTime;
     private static float level1Stage2BestTime;
     private static float level1Stage3BestTime;
+    private static int previousStage;
+    private static int playerDeaths;
+
+    public static int PlayerDeaths
+    {
+        get
+        {
+            return playerDeaths;
+        }
+        set
+        {
+            playerDeaths = value;
+        }
+    }
+
+    public static int PreviousStage
+    {
+        get
+        {
+            return previousStage;
+        }
+        set
+        {
+            previousStage = value;
+        }
+    }
 
     public static bool HasLoaded
     {

@@ -10,7 +10,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 1.0.0
+ *    @version 2.0.1
  *    
  *    Manages players interacting with physical switch objects in the world.
  */
@@ -167,7 +167,7 @@ public class Switch : MonoBehaviourPun
     {
         hintHolder.SetActive(true);
         StartCoroutine("JumpInHintHolder");
-        hintText.text = "<color=#ffffff>Press E to <color=#ffeb04>grab and switch <color=#ffffff>levers!";
+        hintText.text = "<color=#ffffff>Hold E to <color=#ffeb04>grab and switch <color=#ffffff>levers!";
         yield return new WaitForSeconds(2);
         StartCoroutine("FadeHintHolder");
     }

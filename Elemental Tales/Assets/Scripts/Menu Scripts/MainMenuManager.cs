@@ -86,28 +86,34 @@ public class MainMenuManager : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(activeMenu.Equals("mainMenu"))
+            switch (activeMenu)
             {
-                buttonClick.Play();
-                quitGame();
-            } else if(activeMenu.Equals("quitMenu"))
-            {
-                buttonClick.Play();
-                quitCancel();
-            } else if(activeMenu.Equals("startMenu"))
-            {
-                buttonClick.Play();
-                quitStartGame();
-            } else if(activeMenu.Equals("notesMenu"))
-            {
-                buttonClick.Play();
-                closeNotes();
-            } else if(activeMenu.Equals("optionsMenu"))
-            {
-                buttonClick.Play();
-                GetComponent<OptionsManager>().optionsApply();
+                case "mainMenu":
+                    buttonClick.Play();
+                    quitGame();
+                    break;
+
+                case "quitMenu":
+                    buttonClick.Play();
+                    quitCancel();
+                    break;
+
+                case "startMenu":
+                    buttonClick.Play();
+                    quitStartGame();
+                    break;
+
+                case "notesMenu":
+                    buttonClick.Play();
+                    closeNotes();
+                    break;
+
+                case "optionsMenu":
+                    buttonClick.Play();
+                    GetComponent<OptionsManager>().optionsApply();
+                    break;
             }
         }
     }

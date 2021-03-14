@@ -42,6 +42,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     private GameObject playerObject;
 
     [Header("Generic Setup")]
+    public HandleZoneChanges zoneChanger;
     private static bool pausedGame = false;
     [SerializeField] private GameObject pauseMenuHolder;
     public GameObject HUDCanvas;
@@ -96,12 +97,15 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public GameObject end1;
     public GameObject end2;
     public GameObject end3;
+    public GameObject bashHolder;
 
     [Header("Audio Variables")]
     public AudioSource openDoorSound;
     public AudioSource collectGem1Sound;
     public AudioSource hintSound;
-    public AudioSource music;
+    public AudioSource forestMusic;
+    public AudioSource poolsMusic;
+    public AudioSource grottoMusic;
     public AudioSource ambientSound;
     public AudioSource switchPull;
     public AudioSource signpostEnterRange;
@@ -111,6 +115,12 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public AudioSource manaCollector;
     float musicStartVolume;
     float ambientSoundStartVolume;
+
+    [Header("Locational Variables")]
+    public bool inForest = true;
+    public bool inPools;
+    public bool inGrotto;
+    public TMP_Text areaText;
 
     [Header("Player Audio Variables")]
     public AudioSource respawnAudio;
@@ -144,6 +154,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.AutomaticallySyncScene = true;
 
+        zoneChanger = GetComponent<HandleZoneChanges>();
+
         HUDCanvas.SetActive(true);
         pauseMenuHolder.SetActive(false);
         pauseQuitPanel.gameObject.SetActive(false);
@@ -155,7 +167,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
         playerDeathCounter.text = "0";
         percentageTracker.text = "00%";
 
-        musicStartVolume = music.volume;
+        musicStartVolume = forestMusic.volume;
         ambientSoundStartVolume = ambientSound.volume;
 
         HUDBlackPanel.alpha = 0;
@@ -202,7 +214,10 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     [PunRPC] private void SetCurrentStage(int currentStage)
     {
-        if(currentStage == 1)
+        if(currentStage == 0)
+        {
+            bashHolder.SetActive(false);
+        } else if(currentStage == 1)
         {
             blocker1.SetActive(false);
             end1.SetActive(false);
@@ -268,6 +283,10 @@ public class GameMaster : MonoBehaviourPunCallbacks
         lastCheckpoint = newCheckpoint;
     }
 
+    
+
+
+
     /// <summary>
     /// Triggered by the CheckpointRegion script to re-draw the percentage explored text
     /// </summary>
@@ -304,11 +323,11 @@ public class GameMaster : MonoBehaviourPunCallbacks
             yield return new WaitForFixedUpdate();
             HUDPanel.alpha -= .05f;
             HUDBlackPanel.alpha += .05f;
-            music.volume -= musicStartVolume / 20;
+            forestMusic.volume -= musicStartVolume / 20;
             ambientSound.volume -= ambientSoundStartVolume / 20;
         }
         ambientSound.volume = 0;
-        music.volume = 0;
+        forestMusic.volume = 0;
         yield return new WaitForSeconds(.5f);
 
         deathMessage1Panel.gameObject.SetActive(true);
@@ -327,21 +346,21 @@ public class GameMaster : MonoBehaviourPunCallbacks
             while(deathMessage2Panel.alpha < 1)
             {
                 yield return new WaitForFixedUpdate();
-                deathMessage2Panel.alpha += .01f;
+                deathMessage2Panel.alpha += .03f;
             }
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.25f);
             while (deathMessage3Panel.alpha < 1)
             {
                 yield return new WaitForFixedUpdate();
-                deathMessage3Panel.alpha += .01f;
+                deathMessage3Panel.alpha += .03f;
             }
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.25f);
             while (deathMessage4Panel.alpha < 1)
             {
                 yield return new WaitForFixedUpdate();
-                deathMessage4Panel.alpha += .01f;
+                deathMessage4Panel.alpha += .03f;
             }
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.25f);
         } else
         {
             deathMessage1.text = "And here is the darkness again...";
@@ -351,27 +370,27 @@ public class GameMaster : MonoBehaviourPunCallbacks
             while (deathMessage1Panel.alpha < 1)
             {
                 yield return new WaitForFixedUpdate();
-                deathMessage1Panel.alpha += .01f;
+                deathMessage1Panel.alpha += .03f;
             }
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.25f);
             while (deathMessage2Panel.alpha < 1)
             {
                 yield return new WaitForFixedUpdate();
-                deathMessage2Panel.alpha += .01f;
+                deathMessage2Panel.alpha += .03f;
             }
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.25f);
             while (deathMessage3Panel.alpha < 1)
             {
                 yield return new WaitForFixedUpdate();
-                deathMessage3Panel.alpha += .01f;
+                deathMessage3Panel.alpha += .03f;
             }
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.25f);
             while (deathMessage4Panel.alpha < 1)
             {
                 yield return new WaitForFixedUpdate();
-                deathMessage4Panel.alpha += .01f;
+                deathMessage4Panel.alpha += .03f;
             }
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.25f);
         }
         StartCoroutine(FinishRespawnAnimation());
     }
@@ -411,11 +430,11 @@ public class GameMaster : MonoBehaviourPunCallbacks
         {
             yield return new WaitForFixedUpdate();
             HUDWhitePanel.alpha -= .025f;
-            music.volume += musicStartVolume / 40;
+            forestMusic.volume += musicStartVolume / 40;
             ambientSound.volume += ambientSoundStartVolume / 40;
         }
         ambientSound.volume = ambientSoundStartVolume;
-        music.volume = musicStartVolume;
+        forestMusic.volume = musicStartVolume;
         HUDWhitePanel.gameObject.SetActive(false);
     }
 
@@ -617,7 +636,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
         tempCamTextPanel.gameObject.SetActive(true);
         tempCamTextPanel.alpha = 0;
         HUDPanel.alpha = 0;
-        music.volume = 0;
+        forestMusic.volume = 0;
         ambientSound.volume = 0;
         float increaseAmount = .1f;
         while(playerObject == null)
@@ -673,16 +692,16 @@ public class GameMaster : MonoBehaviourPunCallbacks
         {
             yield return new WaitForFixedUpdate();
             tempCamPanel.alpha -= 0.008f;
-            if(music.volume < musicStartVolume)
+            if(forestMusic.volume < musicStartVolume)
             {
-                music.volume += 0.008f * musicStartVolume;
+                forestMusic.volume += 0.008f * musicStartVolume;
             }
             if(ambientSound.volume < ambientSoundStartVolume)
             {
                 ambientSound.volume += 0.008f * ambientSoundStartVolume;
             }
         }
-        music.volume = musicStartVolume;
+        forestMusic.volume = musicStartVolume;
         ambientSound.volume = ambientSoundStartVolume;
         tempCamPanel.gameObject.SetActive(false);
     }

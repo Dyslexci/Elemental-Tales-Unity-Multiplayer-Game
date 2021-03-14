@@ -92,12 +92,11 @@ public class getElement : MonoBehaviourPun
         GameMaster gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
         gameMaster.getPlayer().GetComponent<PlayerInput>().hasControl = false;
 
-        gameMaster.elementalGetStart.Play(0);
-        while(gameMaster.elementalGetStart.isPlaying)
+        gameMaster.elementDialogueStart.Play(0);
+        while(gameMaster.elementDialogueStart.isPlaying)
         {
             yield return new WaitForFixedUpdate();
         }
-        gameMaster.elementDialogueStart.Play(0);
         FindObjectOfType<DialogueManager>().StartDialogue(GetComponent<DialogueTrigger>().dialogue, npcManager, GetComponent<DialogueTrigger>().quest);
         npcManager.isTalking = true;
         gameObject.SetActive(false);

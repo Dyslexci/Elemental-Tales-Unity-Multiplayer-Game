@@ -490,7 +490,7 @@ public class PlayerInputs : MonoBehaviourPun
 
 		if ((controller.collisions.below || currentNumberOfDashes > 0) && elementController.getElement().Equals("Air"))
         {
-			velocity.x = dashSpeed * directionalInput.x;
+			velocity.x = dashSpeed * (facingLeft ? -1 : 1);
 			velocity.y = 0;
 			photonView.RPC("TriggerDashResults", RpcTarget.AllBuffered);
 		}
