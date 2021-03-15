@@ -7,7 +7,7 @@ using TMPro;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.0.0
+ *    @version 2.1.0
  *    
  *    Provides logic for moving the pushable object while a player object is interacting with it. While the player is interacting with it, it inherits the players movement
  *    vectors, performs its own collision checks and combines the two vectors to move.

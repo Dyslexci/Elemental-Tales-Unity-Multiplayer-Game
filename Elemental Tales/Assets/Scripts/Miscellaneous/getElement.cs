@@ -15,12 +15,15 @@ public class getElement : MonoBehaviourPun
 {
     [SerializeField] private string heldElement;
     ElementController elementController;
-    NPCBehaviourTemp npcManager;
+    public NPCBehaviourTemp npcManager;
+    public NPCBehaviourTemp npcManager2;
+    public NPCBehaviourTemp npcManager3;
+    public NPCBehaviourTemp npcManager4;
 
-    private void Start()
-    {
-        npcManager = GetComponent<NPCBehaviourTemp>();
-    }
+    public DialogueTrigger dialogue1;
+    public DialogueTrigger dialogue2;
+    public DialogueTrigger dialogue3;
+    public DialogueTrigger dialogue4;
 
     /// <summary>
     /// Initialises the player object.
@@ -30,7 +33,7 @@ public class getElement : MonoBehaviourPun
         if(elementController == null)
             InitialisePlayer();
 
-        if(npcManager.hasTalked)
+        if(npcManager.hasTalked || npcManager2.hasTalked || npcManager3.hasTalked || npcManager4.hasTalked)
             gameObject.SetActive(false);
     }
 
@@ -97,8 +100,24 @@ public class getElement : MonoBehaviourPun
         {
             yield return new WaitForFixedUpdate();
         }
-        FindObjectOfType<DialogueManager>().StartDialogue(GetComponent<DialogueTrigger>().dialogue, npcManager, GetComponent<DialogueTrigger>().quest);
-        npcManager.isTalking = true;
+
+        if(gameMaster.mapStage == 0)
+        {
+            FindObjectOfType<DialogueManager>().StartDialogue(dialogue1.dialogue, npcManager, dialogue1.quest);
+            npcManager.isTalking = true;
+        } else if(gameMaster.mapStage == 1)
+        {
+            FindObjectOfType<DialogueManager>().StartDialogue(dialogue2.dialogue, npcManager2, dialogue2.quest);
+            npcManager2.isTalking = true;
+        } else if(gameMaster.mapStage == 2)
+        {
+            FindObjectOfType<DialogueManager>().StartDialogue(dialogue3.dialogue, npcManager3, dialogue3.quest);
+            npcManager3.isTalking = true;
+        } else if(gameMaster.mapStage == 3)
+        {
+            FindObjectOfType<DialogueManager>().StartDialogue(dialogue4.dialogue, npcManager4, dialogue4.quest);
+            npcManager4.isTalking = true;
+        }        
         gameObject.SetActive(false);
     }
 }

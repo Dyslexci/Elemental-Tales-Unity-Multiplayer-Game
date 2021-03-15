@@ -1,13 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 1.1.0
+ *    @version 1.0.0
+ *    
+ *    Contains methods for buttons to display various elements in the pause screen.
+ */
 public class PauseMenuManager : MonoBehaviour
 {
     public CanvasGroup skillPopUp;
     public TMP_Text skillPopUpText;
     public TMP_Text skillTitle;
+    public Button restartButton;
 
     bool popUpOpen;
 
@@ -22,6 +32,8 @@ public class PauseMenuManager : MonoBehaviour
     private void Start()
     {
         skillTitle.text = "";
+        if (!PhotonNetwork.IsMasterClient)
+            restartButton.interactable = false;
     }
 
     public void DisplayDoubleJumpPopUp()

@@ -4,6 +4,13 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 2.2.0
+ *    @version 1.2.0
+ *    
+ *    Changes the current zone of the player, swapping music and changing the locator text to read the active location.
+ */
 public class HandleZoneChanges : MonoBehaviour
 {
     public string areaEntering;
@@ -35,6 +42,7 @@ public class HandleZoneChanges : MonoBehaviour
     {
         gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
         areaNameText = gameMaster.areaText;
+        areaNamePanel = gameMaster.areaTextPanel;
         forestMusic = gameMaster.forestMusic;
         poolsMusic = gameMaster.poolsMusic;
         grottoMusic = gameMaster.grottoMusic;
@@ -84,9 +92,13 @@ public class HandleZoneChanges : MonoBehaviour
         Gizmos.DrawWireCube(pos.position, new Vector3(lengthX, lengthY, 1));
     }
 
+    /// <summary>
+    /// Changes the music and text to refer to the new area.
+    /// </summary>
+    /// <param name="areaName"></param>
     public void EnterNewArea(string areaName)
     {
-        StartCoroutine(TransitionZoneText());
+        areaNameText.text = areaNameString;
 
         if (areaName.Equals("Forest"))
         {
@@ -183,23 +195,14 @@ public class HandleZoneChanges : MonoBehaviour
         }
     }
 
-    IEnumerator TransitionZoneText()
-    {
-        areaNamePanel.alpha = 1;
-        while (areaNamePanel.alpha > 0)
-        {
-            yield return new WaitForFixedUpdate();
-            areaNamePanel.alpha -= .05f;
-        }
-        areaNameText.text = areaNameString;
-        while (areaNamePanel.alpha < 1)
-        {
-            yield return new WaitForFixedUpdate();
-            areaNamePanel.alpha += .05f;
-        }
-        areaNamePanel.alpha = 1;
-    }
-
+    /// <summary>
+    /// Abstract method to change from some music, to some other music.
+    /// </summary>
+    /// <param name="fromMusic"></param>
+    /// <param name="toMusic"></param>
+    /// <param name="fromMusicStart"></param>
+    /// <param name="toMusicStart"></param>
+    /// <returns></returns>
     IEnumerator TransitionZones(AudioSource fromMusic, AudioSource toMusic, float fromMusicStart, float toMusicStart)
     {
         toMusic.volume = 0;

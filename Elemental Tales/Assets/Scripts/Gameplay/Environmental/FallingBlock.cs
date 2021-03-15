@@ -6,7 +6,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.2.2
- *    @version 0.0.0
+ *    @version 1.3.4
  *    
  *    Controller for a block which will try to fall on players, before raising back into their start position. Being crushed by the block will kill the player instantly, in either direction.
  */

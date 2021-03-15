@@ -7,7 +7,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.0.0
+ *    @version 1.1.3
  *    
  *    Provides checkpoints for the player to reset to on death.
  */

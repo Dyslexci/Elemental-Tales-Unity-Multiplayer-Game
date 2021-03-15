@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 using UnityEngine.Experimental.Rendering.Universal;
 using TMPro;
@@ -13,7 +14,7 @@ using Photon.Realtime;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 2.2.1
+ *    @version 3.3.2
  *    
  *    Stores global variables, player checkpoints and location for loading and saving, player scores, and etc. Created for all static variables and functions.
  */
@@ -39,9 +40,11 @@ public class GameMaster : MonoBehaviourPunCallbacks
     }
 
     private int collectible1;
+    
     private GameObject playerObject;
 
     [Header("Generic Setup")]
+    public int mapStage = 0;
     public HandleZoneChanges zoneChanger;
     private static bool pausedGame = false;
     [SerializeField] private GameObject pauseMenuHolder;
@@ -53,6 +56,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
     [SerializeField] private Transform spawnPoint2;
     [SerializeField] private GameObject optionsMenuUI;
     public CanvasGroup pauseMenuPanel;
+    public doorLeverInput[] doorArray;
+    SpriteRenderer playerSprite;
 
     [Header("Death Variables")]
     public int localPlayerDeaths;
@@ -62,6 +67,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
     [Header("Collectible Variables")]
     public TMP_Text collectible1Counter;
     public int totalCollectible1;
+    public TMP_Text healthUpgradeCounter;
+    int healthShards = 0;
+    public UnityEngine.UI.Image collectibleImage;
 
     [Header("Canvas Variables")]
     public GameObject playerLeftObject;
@@ -84,6 +92,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     public CanvasGroup pauseQuitPanel;
 
+    public CanvasGroup leverPromptPanel;
+
     [Header("Checkpoint Variables")]
     private Transform lastCheckpoint;
     public float numberOfCheckpointsReached = 0;
@@ -98,6 +108,14 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public GameObject end2;
     public GameObject end3;
     public GameObject bashHolder;
+    public NPCBehaviourTemp NPCStage1;
+    public NPCBehaviourTemp NPCStage2;
+    public NPCBehaviourTemp NPCStage3;
+    public NPCBehaviourTemp NPCStage4;
+    public DialogueTrigger dialogueStage1;
+    public DialogueTrigger dialogueStage2;
+    public DialogueTrigger dialogueStage3;
+    public DialogueTrigger dialogueStage4;
 
     [Header("Audio Variables")]
     public AudioSource openDoorSound;
@@ -121,6 +139,25 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public bool inPools;
     public bool inGrotto;
     public TMP_Text areaText;
+    public CanvasGroup areaTextPanel;
+    public bool mistyGladesCompleted;
+    public bool thornyDepthsCompleted;
+    public bool starlightGrottoCompleted;
+    public bool murkyCavesCompleted;
+    public bool alltreeHollowCompleted;
+
+    [Header("First-Time Variables")]
+    bool hasDisplayedHealthPopup;
+    bool hasDisplayedScorePopup;
+    bool hasDisplayedHealthUpgradePopup;
+    TMP_Text hintText;
+    GameObject hintHolder;
+    CanvasGroup hintPanel;
+    UnityEngine.UI.Image hintImage;
+    public bool hasWalked;
+    public bool hasJumped;
+    public bool hasDoubledJumped;
+    public bool hasWallClimbed;
 
     [Header("Player Audio Variables")]
     public AudioSource respawnAudio;
@@ -180,6 +217,11 @@ public class GameMaster : MonoBehaviourPunCallbacks
         deathMessage3Panel.gameObject.SetActive(false);
         deathMessage4Panel.gameObject.SetActive(false);
 
+        hintText = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getHintText();
+        hintHolder = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().GetHintHolder();
+        hintImage = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getHintContainer();
+        hintPanel = hintHolder.GetComponentInChildren<CanvasGroup>();
+
         collectible1 = 0;
 
         if(playerPrefab == null)
@@ -210,25 +252,31 @@ public class GameMaster : MonoBehaviourPunCallbacks
             this.gameObject.SetActive(true);
             Debug.Log("The game manager was inactive, resetting...");
         }
+
+        CheckLeverPromptState();
     }
 
     [PunRPC] private void SetCurrentStage(int currentStage)
     {
         if(currentStage == 0)
         {
+            mapStage = currentStage;
             bashHolder.SetActive(false);
         } else if(currentStage == 1)
         {
+            mapStage = currentStage;
             blocker1.SetActive(false);
             end1.SetActive(false);
         } else if(currentStage == 2)
         {
+            mapStage = currentStage;
             blocker1.SetActive(false);
             blocker2.SetActive(false);
             end1.SetActive(false);
             end2.SetActive(false);
         } else if(currentStage == 3)
         {
+            mapStage = currentStage;
             blocker1.SetActive(false);
             blocker2.SetActive(false);
             blocker3.SetActive(false);
@@ -258,9 +306,11 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Called by the CharacterControllerRaycast to store the local player prefab in the game manager to allow integration between the player object and unrelated scripts.
     /// </summary>
     /// <param name="player"></param>
-    public void setPlayer(GameObject player)
+    public void setPlayer(GameObject player, SpriteRenderer _playerSprite)
     {
         playerObject = player;
+        playerSprite = _playerSprite;
+        playerSprite.sortingLayerID = 1000;
         playerHasInstantiated = true;
         Debug.Log("GAMEMASTER: Player has been successfully instantiated and assigned to the game master");
     }
@@ -282,10 +332,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
     {
         lastCheckpoint = newCheckpoint;
     }
-
-    
-
-
 
     /// <summary>
     /// Triggered by the CheckpointRegion script to re-draw the percentage explored text
@@ -317,7 +363,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
         HUDBlackPanel.gameObject.SetActive(true);
         deathLight.intensity = 0;
         deathLight.gameObject.SetActive(false);
-        playerObject.SetActive(false);
+        playerObject.GetComponent<PlayerManager>().DespawnPlayer();
+        //playerObject.SetActive(false);
         while (HUDBlackPanel.alpha < 1)
         {
             yield return new WaitForFixedUpdate();
@@ -403,6 +450,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
     {
         deathLight.gameObject.SetActive(true);
         playerObject.transform.SetPositionAndRotation(new Vector3(lastCheckpoint.position.x, lastCheckpoint.position.y, 0f), Quaternion.identity);
+        playerObject.GetComponent<PlayerInputs>().velocity.x = 0;
+        playerObject.GetComponent<PlayerInputs>().velocity.y = 0;
         playerObject.GetComponent<StatController>().resetPlayerAfterDeath();
         while (deathLight.intensity < 1)
         {
@@ -424,7 +473,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
         deathMessage4Panel.gameObject.SetActive(false);
         deathLight.gameObject.SetActive(false);
         HUDPanel.alpha = 1;
-        playerObject.SetActive(true);
+        playerObject.GetComponent<PlayerManager>().RespawnPlayer();
+        //playerObject.SetActive(true);
         respawnAudio.Play(0);
         while (HUDWhitePanel.alpha > 0)
         {
@@ -445,6 +495,12 @@ public class GameMaster : MonoBehaviourPunCallbacks
     {
         collectible1++;
         collectible1Counter.text = collectible1 + "/" + totalCollectible1;
+    }
+
+    public void AddHealthUpgrade()
+    {
+        healthShards++;
+        healthUpgradeCounter.text = healthShards + "/5";
     }
 
     /// <summary>
@@ -560,17 +616,123 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// </summary>
     public void restartLevel()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     /// <summary>
     /// RPC to add 1 to the opposite player deaths.
     /// </summary>
-    [PunRPC]
-    private void AddOppositePlayerDeath()
+    [PunRPC] private void AddOppositePlayerDeath()
     {
         Debug.Log("PUN: AddOppositePlayerDeath() has been called.");
         otherPlayerDeaths++;
+    }
+
+    void CheckLeverPromptState()
+    {
+        int noDoorsPrompting = 0;
+        for (int i = 0; i < doorArray.Length; i++)
+        {
+            if (doorArray[i].displayHint)
+            {
+                noDoorsPrompting++;
+            }
+        }
+
+        if (noDoorsPrompting > 0)
+        {
+            leverPromptPanel.gameObject.SetActive(true);
+        } else
+        {
+            leverPromptPanel.gameObject.SetActive(false);
+        }
+    }
+
+    public void DisplayHealthPopup()
+    {
+        if(!hasDisplayedHealthPopup)
+        {
+            hintText.text = "<color=#ffffff>Bounce on these <color=#ffeb04>Mushrooms <color=#ffffff>to refill your health!";
+            StopCoroutine(JumpInHintHolder());
+            StopCoroutine(WaitHideHint());
+            StopCoroutine(FadeHintHolder());
+            StartCoroutine(WaitHideHint());
+            hasDisplayedHealthPopup = true;
+        }
+    }
+
+    public void DisplayScorePopup()
+    {
+        if(!hasDisplayedScorePopup)
+        {
+            hintText.text = "<color=#ffffff>Collect <color=#ffeb04>Spirit Shards <color=#ffffff>to increase your score!";
+            StopCoroutine(JumpInHintHolder());
+            StopCoroutine(WaitHideHint());
+            StopCoroutine(FadeHintHolder());
+            StartCoroutine(WaitHideHint());
+            hasDisplayedScorePopup = true;
+        }
+    }
+
+    public void DisplayHealthUpgradePopup()
+    {
+        if (!hasDisplayedHealthUpgradePopup)
+        {
+            hintText.text = "<color=#ffffff>Collect <color=#ffeb04>Health Shards <color=#ffffff>to increase your maximum health!";
+            StopCoroutine(JumpInHintHolder());
+            StopCoroutine(WaitHideHint());
+            StopCoroutine(FadeHintHolder());
+            StartCoroutine(WaitHideHint());
+            hasDisplayedHealthUpgradePopup = true;
+        }
+    }
+
+    /// <summary>
+    /// Coroutine displaying the hint to the player.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator WaitHideHint()
+    {
+        hintHolder.SetActive(true);
+        StartCoroutine(JumpInHintHolder());
+        
+        yield return new WaitForSeconds(2);
+        StartCoroutine(FadeHintHolder());
+    }
+
+    /// <summary>
+    /// Coroutine making the hint jump into place.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator JumpInHintHolder()
+    {
+        hintImage.transform.localScale = new Vector3(5, 5, 5);
+
+        while (hintImage.transform.localScale.x > 1)
+        {
+            yield return new WaitForFixedUpdate();
+            hintImage.transform.localScale -= new Vector3(0.5f, 0.5f, 0.5f);
+        }
+        hintImage.transform.localScale = new Vector3(1, 1, 1);
+    }
+
+    /// <summary>
+    /// Coroutine making the hint fade out after it has been on screen enough time.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FadeHintHolder()
+    {
+        while (hintPanel.alpha > 0)
+        {
+            yield return new WaitForFixedUpdate();
+            hintPanel.alpha -= 0.05f;
+        }
+
+        hintHolder.SetActive(false);
+        hintPanel.alpha = 1;
     }
 
     /// <summary>
@@ -671,13 +833,30 @@ public class GameMaster : MonoBehaviourPunCallbacks
         }
         tempCamera.gameObject.SetActive(false);
         mainCam.gameObject.SetActive(true);
-        playerObject.GetComponent<PlayerInput>().hasControl = true;
         while (HUDPanel.alpha < 1)
         {
             yield return new WaitForFixedUpdate();
             HUDPanel.alpha += 0.03f;
         }
         HUDPanel.alpha = 1;
+
+        if(mapStage == 0)
+        {
+            FindObjectOfType<DialogueManager>().StartDialogue(dialogueStage1.dialogue, NPCStage1, dialogueStage1.quest);
+            NPCStage1.isTalking = true;
+        } else if (mapStage == 1)
+        {
+            FindObjectOfType<DialogueManager>().StartDialogue(dialogueStage2.dialogue, NPCStage2, dialogueStage2.quest);
+            NPCStage2.isTalking = true;
+        } else if (mapStage == 2)
+        {
+            FindObjectOfType<DialogueManager>().StartDialogue(dialogueStage3.dialogue, NPCStage3, dialogueStage3.quest);
+            NPCStage3.isTalking = true;
+        } else if (mapStage == 3)
+        {
+            FindObjectOfType<DialogueManager>().StartDialogue(dialogueStage4.dialogue, NPCStage4, dialogueStage4.quest);
+            NPCStage4.isTalking = true;
+        }
     }
 
     /// <summary>

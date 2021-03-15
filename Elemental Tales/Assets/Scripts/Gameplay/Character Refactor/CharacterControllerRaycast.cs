@@ -6,7 +6,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.0.0
+ *    @version 1.1.0
  *    
  *    Controls all movement logic of the player. Takes commands from the PlayerInputs script, and translates the player based on the command and the players current location and activities.
  */
@@ -23,6 +23,7 @@ public class CharacterControllerRaycast : RaycastController
 	public bool isPushable;
 	public bool isFallable;
 	public bool debugEnabled = true;
+	public SpriteRenderer spriteRenderer;
 	
 	/// <summary>
 	/// Overrides the start method found in RaycastController and initialises CameraWork and direction.
@@ -436,7 +437,7 @@ public class CharacterControllerRaycast : RaycastController
 		{
 			if (photonView.IsMine || !PhotonNetwork.IsConnected)
 			{
-				GameObject.Find("Game Manager").GetComponent<GameMaster>().setPlayer(this.gameObject);
+				GameObject.Find("Game Manager").GetComponent<GameMaster>().setPlayer(this.gameObject, spriteRenderer);
 				//Debug.Log("Following player now");
 				_cameraWork.OnStartFollowing();
 			} else

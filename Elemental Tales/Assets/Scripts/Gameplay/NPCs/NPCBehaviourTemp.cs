@@ -8,9 +8,10 @@ using TMPro;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 1.1.0
+ *    @version 1.2.2
  *    
- *    This script drives behaviour for interactible NPCs placed in the gameworld, specifically allowing the player to interact on keypress.
+ *    This script drives behaviour for interactible NPCs placed in the gameworld, specifically allowing the player to interact on keypress. Appended to also allow this to be called
+ *    independently from the player, for scripted moments and conversations.
  */
 
 

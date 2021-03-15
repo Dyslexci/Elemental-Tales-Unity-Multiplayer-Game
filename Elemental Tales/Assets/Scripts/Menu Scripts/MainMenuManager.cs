@@ -4,15 +4,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using Photon.Pun;
 
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 2.0.0
+ *    @version 2.0.1
  *    
  *    Manages the main menu - opening and closing panels and dealing with the actions of each button.
  */
-public class MainMenuManager : MonoBehaviour
+public class MainMenuManager : MonoBehaviourPun
 {
     [Header("Versions")]
     [SerializeField] private string version;
@@ -27,6 +28,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private GameObject startGameScreen;
     public GameObject startBlurPanel;
     public CanvasGroup startFaderPanel;
+    public GameObject startButton;
 
     [Header("Options Screen")]
     [SerializeField] private GameObject optionsScreen;
@@ -52,6 +54,10 @@ public class MainMenuManager : MonoBehaviour
     public AudioSource buttonClick;
     public AudioSource music;
     float musicStartVolume;
+    public CanvasGroup colourPanel1;
+    public CanvasGroup colourPanel2;
+    public Image colourButton1;
+    public Image colourButton2;
 
     string activeMenu = "";
     
@@ -60,6 +66,7 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        GlobalVariableManager.PlayerColour = "FFFFFF";
         startGameScreen.SetActive(false);
         optionsScreen.SetActive(false);
         exitScreen.SetActive(false);
@@ -67,6 +74,11 @@ public class MainMenuManager : MonoBehaviour
         notesMenu.SetActive(false);
         musicStartVolume = music.volume;
         startBlackPanel.alpha = 1;
+        colourPanel1.gameObject.SetActive(false);
+        colourPanel2.gameObject.SetActive(false);
+
+        if (!PhotonNetwork.IsMasterClient)
+            startButton.SetActive(false);
 
         if(!GlobalVariableManager.HasLoaded)
         {
@@ -213,6 +225,152 @@ public class MainMenuManager : MonoBehaviour
     {
         GlobalVariableManager.Level1Stage = 0;
         PlayerPrefs.SetInt("level1Stage", 0);
+    }
+
+    public void OpenColourPanel1()
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            colourPanel1.gameObject.SetActive(true);
+        }
+    }
+
+    public void OpenColourPanel2()
+    {
+        if(!PhotonNetwork.IsMasterClient)
+        {
+            colourPanel2.gameObject.SetActive(true);
+        }
+    }
+
+    public void SetPlayer1White()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        GlobalVariableManager.PlayerColour = "FFFFFF";
+        photonView.RPC("SetPlayer1Colour", RpcTarget.AllBuffered, "FFFFFF");
+        colourPanel1.gameObject.SetActive(false);
+    }
+
+    public void SetPlayer1Orange()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        GlobalVariableManager.PlayerColour = "FFCD81";
+        photonView.RPC("SetPlayer1Colour", RpcTarget.AllBuffered, "FFCD81");
+        colourPanel1.gameObject.SetActive(false);
+    }
+
+    public void SetPlayer1Purple()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        GlobalVariableManager.PlayerColour = "B581FF";
+        photonView.RPC("SetPlayer1Colour", RpcTarget.AllBuffered, "B581FF");
+        colourPanel1.gameObject.SetActive(false);
+    }
+
+    public void SetPlayer1Blue()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        GlobalVariableManager.PlayerColour = "81FAFF";
+        photonView.RPC("SetPlayer1Colour", RpcTarget.AllBuffered, "81FAFF");
+        colourPanel1.gameObject.SetActive(false);
+    }
+
+    public void SetPlayer2White()
+    {
+        if (PhotonNetwork.IsMasterClient)
+            return;
+        GlobalVariableManager.PlayerColour = "FFFFFF";
+        photonView.RPC("SetPlayer2Colour", RpcTarget.AllBuffered, "FFFFFF");
+        colourPanel2.gameObject.SetActive(false);
+    }
+
+    public void SetPlayer2Orange()
+    {
+        if (PhotonNetwork.IsMasterClient)
+            return;
+        GlobalVariableManager.PlayerColour = "FFCD81";
+        photonView.RPC("SetPlayer2Colour", RpcTarget.AllBuffered, "FFCD81");
+        colourPanel2.gameObject.SetActive(false);
+    }
+
+    public void SetPlayer2Purple()
+    {
+        if (PhotonNetwork.IsMasterClient)
+            return;
+        GlobalVariableManager.PlayerColour = "B581FF";
+        photonView.RPC("SetPlayer2Colour", RpcTarget.AllBuffered, "B581FF");
+        colourPanel2.gameObject.SetActive(false);
+    }
+
+    public void SetPlayer2Blue()
+    {
+        if (PhotonNetwork.IsMasterClient)
+            return;
+        GlobalVariableManager.PlayerColour = "81FAFF";
+        photonView.RPC("SetPlayer2Colour", RpcTarget.AllBuffered, "81FAFF");
+        colourPanel2.gameObject.SetActive(false);
+    }
+
+    public void CloseColourPanel1()
+    {
+        colourPanel1.gameObject.SetActive(false);
+    }
+
+    public void CloseColourPanel2()
+    {
+        colourPanel2.gameObject.SetActive(false);
+    }
+
+    [PunRPC] private void SetPlayer1Colour(string hex)
+    {
+        if (hex.Equals("FFFFFF"))
+        {
+            colourButton1.color = new Color(1, 1, 1);
+            return;
+        }
+        if (hex.Equals("FFCD81"))
+        {
+            colourButton1.color = new Color(1, 0.801076f, 0.504717f);
+            return;
+        }
+        if (hex.Equals("B581FF"))
+        {
+            colourButton1.color = new Color(0.7103899f, 0.5058824f, 1);
+            return;
+        }
+        if (hex.Equals("81FAFF"))
+        {
+            colourButton1.color = new Color(0.5058824f, 0.9781956f, 1);
+            return;
+        }
+    }
+
+    [PunRPC] private void SetPlayer2Colour(string hex)
+    {
+        if (hex.Equals("FFFFFF"))
+        {
+            colourButton2.color = new Color(1, 1, 1);
+            return;
+        }
+        if (hex.Equals("FFCD81"))
+        {
+            colourButton2.color = new Color(1, 0.801076f, 0.504717f);
+            return;
+        }
+        if (hex.Equals("B581FF"))
+        {
+            colourButton2.color = new Color(0.7103899f, 0.5058824f, 1);
+            return;
+        }
+        if (hex.Equals("81FAFF"))
+        {
+            colourButton2.color = new Color(0.5058824f, 0.9781956f, 1);
+            return;
+        }
     }
 
     /// <summary>

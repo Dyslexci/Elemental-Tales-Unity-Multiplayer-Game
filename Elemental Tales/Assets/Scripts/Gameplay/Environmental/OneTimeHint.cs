@@ -5,6 +5,13 @@ using UnityEngine.UI;
 using Photon.Pun;
 using TMPro;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 1.2.0
+ *    @version 1.0.0
+ *    
+ *    Displays a hint a single time, for need-to-know information that isn't important enough to be prompted every time.
+ */
 public class OneTimeHint : MonoBehaviourPun
 {
     public string hintText;
@@ -20,7 +27,6 @@ public class OneTimeHint : MonoBehaviourPun
     GameObject hintHolder;
     CanvasGroup panel;
     Image hintImage;
-    bool isDisplayingHint;
 
     private void Start()
     {
@@ -114,7 +120,6 @@ public class OneTimeHint : MonoBehaviourPun
 
         hintHolder.SetActive(false);
         panel.alpha = 1;
-        isDisplayingHint = false;
         Destroy(gameObject);
     }
 }

@@ -23,7 +23,7 @@ public class Switch : MonoBehaviourPun
     [SerializeField] float radius = 1.5f;
     [SerializeField] private LayerMask layer;
     private bool isOn = false;
-    private bool pressedSuccessfully = false;
+    public bool pressedSuccessfully = false;
     private bool playerPresent = false;
     bool otherPlayerPresent;
     private bool playerWasPresent;
@@ -137,6 +137,7 @@ public class Switch : MonoBehaviourPun
     public void setPressedSuccessfully()
     {
         pressedSuccessfully = true;
+        isOn = false;
     }
 
     /// <summary>

@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 2.1.0
+ *    @version 1.0.1
+ *    
+ *    Displays signpost text in the world while the player is nearby.
+ */
 public class SignPostBehaviour : MonoBehaviour
 {
     public CanvasGroup signs;

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 1.0.1
+ *    @version 1.2.1
  *    
  *    This script controls dialogue behaviour for the entire scene, implementing various different dialogue scripts.
  */

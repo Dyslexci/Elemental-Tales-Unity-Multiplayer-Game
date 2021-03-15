@@ -5,7 +5,7 @@ using UnityEngine;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 1.0.0
+ *    @version 2.0.0
  *    
  *    This script sets the player 1 element, changes the hud accordingly, and changes the player controller element variable.
  */

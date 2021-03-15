@@ -11,7 +11,7 @@ using TMPro;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 1.2.1
+ *    @version 1.2.2
  *    
  *    Implements the lobby system and launcer for the PUN2 networking package.
  */
@@ -121,7 +121,7 @@ namespace Com.Team12.ElementalTales
         /// <summary>
         /// This client's version number. Users are separated from each other by gameVersion (which allows you to make breaking changes).
         /// </summary>
-        string gameVersion = "1";
+        string gameVersion = "2.4.0";
         string roomCode;
 
         bool fadeCalled;

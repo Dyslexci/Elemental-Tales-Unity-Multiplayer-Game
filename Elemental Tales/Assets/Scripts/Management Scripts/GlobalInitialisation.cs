@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/** 
+ *    @author Matthew Ahearn
+ *    @since 2.1.0
+ *    @version 1.0.0
+ *    
+ *    Sets up playerpref values and global variable manager.
+ */
 public class GlobalInitialisation : MonoBehaviour
 {
     private void Awake()
@@ -18,8 +25,5 @@ public class GlobalInitialisation : MonoBehaviour
         GlobalVariableManager.Level1Stage = PlayerPrefs.GetInt("level1Stage");
         GlobalVariableManager.Level1BestTime = PlayerPrefs.GetFloat("level1BestTime");
         GlobalVariableManager.Level1TimeHasChanged = false;
-
-        Debug.Log("Current level 1 stage: " + GlobalVariableManager.Level1Stage);
-        Debug.Log("Current level 1 best time: " + GlobalVariableManager.Level1BestTime);
     }
 }

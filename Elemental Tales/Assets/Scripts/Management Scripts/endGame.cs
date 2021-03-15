@@ -10,7 +10,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.0.2
+ *    @version 1.1.2
  *    
  *    Ends the game when the player enters the endgame region.
  */
@@ -68,6 +68,10 @@ public class endGame : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// Triggers the end of the game for both players, loading the endgame stage and setting both players to the new current level, as dictated by the current level.
+    /// </summary>
+    /// <param name="currentStage"></param>
     [PunRPC] private void TriggerEndGame(int currentStage)
     {
         Debug.Log("PUN: TriggerEndGame() has been called.");
@@ -227,6 +231,10 @@ public class endGame : MonoBehaviourPunCallbacks
         EndSession();
     }
 
+    /// <summary>
+    /// Sets the content of the text fields for the end-game cinematic.
+    /// </summary>
+    /// <param name="currentStage"></param>
     void SetTextContents(int currentStage)
     {
         if(currentStage == 0)
@@ -236,7 +244,7 @@ public class endGame : MonoBehaviourPunCallbacks
             endgameText3.text = "Was this enough?";
             endgameText4.text = "Will the next time be enough?";
             endgameTextCallFeel.text = "You feel a call...";
-            endgameTextNextLoc.text = "MOONLIGHT GROTTO";
+            endgameTextNextLoc.text = "THORNY DEPTHS";
         } else if(currentStage == 1)
         {
             endgameTextProphecy1.text = "All of this has happened before";
@@ -270,6 +278,9 @@ public class endGame : MonoBehaviourPunCallbacks
         endgamePanel6.alpha = 0;
     }
 
+    /// <summary>
+    /// Ends the session for both players.
+    /// </summary>
     void EndSession()
     {
         if (PhotonNetwork.IsMasterClient)

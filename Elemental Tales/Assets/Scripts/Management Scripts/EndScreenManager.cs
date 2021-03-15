@@ -11,9 +11,9 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.0.1
+ *    @version 2.1.1
  *    
- *    Causes the player to leave the room, only for use in the post-level screen.
+ *    Displays post-game information and allows the players to continue or quit.
  */
 public class EndScreenManager : MonoBehaviourPunCallbacks
 {

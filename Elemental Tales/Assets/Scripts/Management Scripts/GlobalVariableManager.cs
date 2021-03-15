@@ -4,8 +4,8 @@ using UnityEngine;
 
 /** 
  *    @author Matthew Ahearn
- *    @since 0.0.0
- *    @version 1.0.0
+ *    @since 2.2.0
+ *    @version 1.5.0
  *    
  *    Stores application wide variables which must not be unloaded during this session, but which can be unloaded between application runs.
  */
@@ -21,6 +21,7 @@ public static class GlobalVariableManager
     private static float level1Stage3BestTime;
     private static int previousStage;
     private static int playerDeaths;
+    private static string playerColour;
 
     public static int PlayerDeaths
     {
@@ -125,6 +126,18 @@ public static class GlobalVariableManager
         set
         {
             level1TimeHasChanged = value;
+        }
+    }
+
+    public static string PlayerColour
+    {
+        get
+        {
+            return playerColour;
+        }
+        set
+        {
+            playerColour = value;
         }
     }
 }

@@ -6,7 +6,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 3.0.0
+ *    @version 4.3.1
  *    
  *    Accepts player input and converts it to directions to be sent to the controller class. Sets up the physical simulation parameters of the object.
  */
@@ -110,6 +110,7 @@ public class PlayerInputs : MonoBehaviourPun
 	int wallDirX;
 	bool isHoldingObject;
 	bool facingLeft = true;
+	float jumpTimeAllowance = 0;
 
 	CinemachineFramingTransposer vCam;
 
@@ -145,6 +146,7 @@ public class PlayerInputs : MonoBehaviourPun
     {
 		if (controller.collisions.below)
         {
+			jumpTimeAllowance = Time.time + .25f;
 			currentNumberOfJumps = numberOfJumps;
 			currentNumberOfDashes = numberOfDashes;
 			if(wasJumping)
@@ -270,10 +272,12 @@ public class PlayerInputs : MonoBehaviourPun
 		if (isHoldingObject)
 			return;
 
+		gameMaster.hasJumped = true;
 		currentNumberOfJumps -= 1;
 
 		if (wallSliding) {
 			wallJumpAudio[Random.Range(0, wallJumpAudio.Length)].Play(0);
+			gameMaster.hasWallClimbed = true;
 			if (wallDirX == directionalInput.x) {
 				velocity.x = -wallDirX * wallJumpClimb.x;
 				velocity.y = wallJumpClimb.y;
@@ -288,7 +292,7 @@ public class PlayerInputs : MonoBehaviourPun
 			}
 			isJumping = true;
 		}
-		if (controller.collisions.below || currentNumberOfJumps > 0) {
+		if (controller.collisions.below || currentNumberOfJumps > 0 || Time.time < jumpTimeAllowance) {
 			if(!wallSliding && !isJumping)
             {
 				jumpsAudio[Random.Range(0, jumpsAudio.Length)].Play(0);
@@ -297,6 +301,7 @@ public class PlayerInputs : MonoBehaviourPun
 			if (isJumping)
             {
 				doubleJumpsAudio[Random.Range(0, doubleJumpsAudio.Length)].Play(0);
+				gameMaster.hasDoubledJumped = true;
 			}
 				
 			if (controller.collisions.slidingDownMaxSlope) {
@@ -509,7 +514,7 @@ public class PlayerInputs : MonoBehaviourPun
 		if (!elementController.getElement().Equals("Fire"))
 			return;
 
-		attackStartAudio.Play(0);
+		photonView.RPC("AttackSound", RpcTarget.AllBuffered);
 		//animator.SetTrigger("Attack");
 		for (int i = 0; i < controller.horizontalRayCount; i++)
 		{
@@ -521,11 +526,21 @@ public class PlayerInputs : MonoBehaviourPun
 
 			if(hit)
             {
-				attackEndAudio[Random.Range(0, attackEndAudio.Length)].Play(0);
+				photonView.RPC("AttackHit", RpcTarget.AllBuffered);
 				hit.collider.GetComponent<DestroyableDoor>().damageDoor(40);
 				return;
             }
 		}
+	}
+
+	[PunRPC] private void AttackSound()
+    {
+		attackStartAudio.Play(0);
+	}
+
+	[PunRPC] private void AttackHit()
+    {
+		attackEndAudio[Random.Range(0, attackEndAudio.Length)].Play(0);
 	}
 
 	/// <summary>
@@ -604,6 +619,10 @@ public class PlayerInputs : MonoBehaviourPun
 	/// </summary>
 	void CalculateVelocity() {
 		float targetVelocityX = directionalInput.x * moveSpeed;
+		if(directionalInput.x != 0)
+        {
+			gameMaster.hasWalked = true;
+        }
 		velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
 		velocity.y += gravity * Time.deltaTime;
 	}
