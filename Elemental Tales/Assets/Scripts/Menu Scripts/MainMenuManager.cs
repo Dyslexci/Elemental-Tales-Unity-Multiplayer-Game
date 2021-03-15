@@ -9,7 +9,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 2.0.1
+ *    @version 2.0.2
  *    
  *    Manages the main menu - opening and closing panels and dealing with the actions of each button.
  */
@@ -225,6 +225,10 @@ public class MainMenuManager : MonoBehaviourPun
     {
         GlobalVariableManager.Level1Stage = 0;
         PlayerPrefs.SetInt("level1Stage", 0);
+        PlayerPrefs.DeleteKey("hasWalked");
+        PlayerPrefs.DeleteKey("hasJumped");
+        PlayerPrefs.DeleteKey("hasDoubleJumped");
+        PlayerPrefs.DeleteKey("hasWallJumped");
     }
 
     public void OpenColourPanel1()
