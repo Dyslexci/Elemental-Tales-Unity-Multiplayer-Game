@@ -86,7 +86,7 @@ public class OneTimeHint : MonoBehaviourPun
         hintHolder.SetActive(true);
         StartCoroutine("JumpInHintHolder");
         hintTextObj.text = hintText;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(5);
         StartCoroutine("FadeHintHolder");
     }
 

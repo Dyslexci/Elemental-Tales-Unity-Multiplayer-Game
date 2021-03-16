@@ -96,6 +96,7 @@ public class StatController : MonoBehaviourPun
             inputs.hasControl = false;
             currentHealth = 0;
             isRespawning = true;
+            playerSprite.color = playerColour;
         }
 
         DrawHealthMana();

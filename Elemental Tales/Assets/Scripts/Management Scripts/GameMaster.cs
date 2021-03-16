@@ -258,6 +258,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     [PunRPC] private void SetCurrentStage(int currentStage)
     {
+        GlobalVariableManager.Level1Stage = currentStage;
         if(currentStage == 0)
         {
             mapStage = currentStage;
@@ -697,7 +698,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
         hintHolder.SetActive(true);
         StartCoroutine(JumpInHintHolder());
         
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(3);
         StartCoroutine(FadeHintHolder());
     }
 
