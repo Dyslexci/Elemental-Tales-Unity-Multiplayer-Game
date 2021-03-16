@@ -8389,6 +8389,7 @@ MonoBehaviour:
   isPushable: 0
   isFallable: 0
   debugEnabled: 0
+  spriteRenderer: {fileID: 0}
 --- !u!114 &4422737345570962266
 MonoBehaviour:
   m_ObjectHideFlags: 0

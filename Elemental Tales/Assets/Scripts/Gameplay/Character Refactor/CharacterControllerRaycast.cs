@@ -437,7 +437,7 @@ public class CharacterControllerRaycast : RaycastController
 		{
 			if (photonView.IsMine || !PhotonNetwork.IsConnected)
 			{
-				GameObject.Find("Game Manager").GetComponent<GameMaster>().setPlayer(this.gameObject, spriteRenderer);
+				GameObject.Find("Game Manager").GetComponent<GameMaster>().setPlayer(this.gameObject);
 				//Debug.Log("Following player now");
 				_cameraWork.OnStartFollowing();
 			} else

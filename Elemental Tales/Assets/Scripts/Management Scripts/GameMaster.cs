@@ -306,11 +306,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Called by the CharacterControllerRaycast to store the local player prefab in the game manager to allow integration between the player object and unrelated scripts.
     /// </summary>
     /// <param name="player"></param>
-    public void setPlayer(GameObject player, SpriteRenderer _playerSprite)
+    public void setPlayer(GameObject player)
     {
         playerObject = player;
-        playerSprite = _playerSprite;
-        playerSprite.sortingLayerID = 1000;
         playerHasInstantiated = true;
         Debug.Log("GAMEMASTER: Player has been successfully instantiated and assigned to the game master");
     }

@@ -89,7 +89,7 @@ public class CharacterControllerPlayer1 : MonoBehaviourPunCallbacks
         {
             if (photonView.IsMine)
             {
-                GameObject.Find("Game Manager").GetComponent<GameMaster>().setPlayer(this.gameObject, GetComponent<SpriteRenderer>());
+                GameObject.Find("Game Manager").GetComponent<GameMaster>().setPlayer(this.gameObject);
                 Debug.Log("Following player now");
                 _cameraWork.OnStartFollowing();
             }
