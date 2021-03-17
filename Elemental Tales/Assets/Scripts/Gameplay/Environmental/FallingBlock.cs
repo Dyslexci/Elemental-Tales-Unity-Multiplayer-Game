@@ -6,7 +6,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.2.2
- *    @version 0.0.0
+ *    @version 1.3.4
  *    
  *    Controller for a block which will try to fall on players, before raising back into their start position. Being crushed by the block will kill the player instantly, in either direction.
  */
@@ -20,6 +20,11 @@ public class FallingBlock : RaycastController
     CharacterControllerRaycast controller;
     Vector3 velocity;
     bool isFalling;
+	bool fallMusicPlaying;
+	bool hasHitFloor;
+
+	public AudioSource blockFalling;
+	public AudioSource blockHitFloor;
 
 	List<PassengerMovement> passengerMovement;
 	Dictionary<Transform, CharacterControllerRaycast> passengerDictionary = new Dictionary<Transform, CharacterControllerRaycast>();
@@ -31,28 +36,36 @@ public class FallingBlock : RaycastController
 
     void FixedUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.V))
-        {
-            isFalling = !isFalling;
-        }
-
 		UpdateRaycastOrigins();
 
 		// Perform gravity and collisions check
 		if (isFalling)
         {
             velocity += Vector3.down * gravity * Time.deltaTime;
-            //controller.Move(velocity * Time.deltaTime, false);
+			if(!fallMusicPlaying)
+            {
+				blockFalling.Play(0);
+				fallMusicPlaying = true;
+			}
         }
         if (controller.collisions.below)
         {
             velocity = Vector3.zero;
+			blockFalling.Stop();
+			if (!hasHitFloor)
+            {
+				blockHitFloor.Play(0);
+				blockFalling.Stop();
+				fallMusicPlaying = false;
+				hasHitFloor = true;
+			}
         }
         if(!isFalling)
         {
+			hasHitFloor = false;
             velocity += Vector3.up * raiseSpeed * Time.deltaTime;
-            //controller.Move(velocity * Time.deltaTime, false);
-            if(controller.collisions.above)
+			blockFalling.Stop();
+			if (controller.collisions.above)
             {
                 velocity = Vector3.zero;
             }

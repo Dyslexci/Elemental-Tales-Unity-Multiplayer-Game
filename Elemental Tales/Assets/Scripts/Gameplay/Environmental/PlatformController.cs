@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.0.0
+ *    @version 1.2.6
  *    
  *    Provides logic for platforms the player can jump up through and drop down through, as well as platforms which can move between an indeterminate number of waypoints.
  *    Known issues: When moving horizontally, a player wallclimbing on the platform tends to bounce around uncontrollably. Possibly needs to be fixed by always extending raycasts
@@ -32,6 +32,10 @@ public class PlatformController : RaycastController
 	int fromWaypointIndex;
 	float percentBetweenWaypoints;
 	float nextMoveTime;
+
+	bool isMoving;
+	bool wasMoving;
+	public AudioSource platformAudio;
 
 	List<PassengerMovement> passengerMovement;
 	Dictionary<Transform, CharacterControllerRaycast> passengerDictionary = new Dictionary<Transform, CharacterControllerRaycast>();
@@ -60,9 +64,28 @@ public class PlatformController : RaycastController
 			return;
         }
 
+		wasMoving = isMoving;
+
 		UpdateRaycastOrigins();
 
 		Vector3 velocity = CalculatePlatformMovement();
+
+		if(velocity != new Vector3(0,0,0))
+        {
+			isMoving = true;
+        } else
+        {
+			isMoving = false;
+        }
+
+		if(!wasMoving && isMoving)
+        {
+			platformAudio.Play(0);
+        }
+		if(wasMoving && !isMoving)
+        {
+			platformAudio.Stop();
+        }
 
 		CalculatePassengerMovement(velocity);
 

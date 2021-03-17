@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 1.0.1
+ *    @version 1.2.1
  *    
  *    This script controls dialogue behaviour for the entire scene, implementing various different dialogue scripts.
  */
@@ -24,6 +24,11 @@ public class DialogueManager : MonoBehaviour
     public Animator animator;
 
     public Queue<string> sentences;
+
+    public AudioSource[] typeLetter;
+    public AudioSource openDialogueBox;
+    public AudioSource closeDialogueBox;
+    public AudioSource endSentence;
 
     /// <summary>
     /// Sets up a Queue for the sentences.
@@ -60,6 +65,7 @@ public class DialogueManager : MonoBehaviour
             newQuest = quest;
         canvasObect.SetActive(true);
         animator.SetBool("isOpen", true);
+        openDialogueBox.Play(0);
         nameText.text = dialogue.name;
         sentences.Clear();
         foreach(string sentence in dialogue.sentences)
@@ -104,8 +110,10 @@ public class DialogueManager : MonoBehaviour
                 continue;
             }
             dialogueText.text += letter;
+            typeLetter[Random.Range(0, typeLetter.Length)].Play(0);
             yield return new WaitForFixedUpdate();
         }
+        endSentence.Play(0);
     }
 
     /// <summary>
@@ -121,6 +129,7 @@ public class DialogueManager : MonoBehaviour
             acceptQuest();
         }
         animator.SetBool("isOpen", false);
+        closeDialogueBox.Play(0);
         canvasObect.SetActive(false);
         GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<PlayerInput>().hasControl = true;
     }

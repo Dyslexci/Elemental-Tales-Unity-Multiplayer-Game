@@ -5,7 +5,7 @@ using UnityEngine;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 0.1.0
+ *    @version 1.1.0
  *    
  *    Allows door with one or two assigned inputs to be opened permanently.
  */
@@ -16,6 +16,9 @@ public class doorLeverInput : MonoBehaviour
     [SerializeField] private Switch switch2;
 
     public int switchNumber = 0;
+    public bool displayHint;
+
+    GameMaster gameMaster;
 
     /// <summary>
     /// Initialises the door, determining the number of switches allocated.
@@ -26,6 +29,8 @@ public class doorLeverInput : MonoBehaviour
             switchNumber += 1;
         if (switch2 != null)
             switchNumber += 1;
+
+        gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
     }
 
     /// <summary>
@@ -40,8 +45,10 @@ public class doorLeverInput : MonoBehaviour
         {
             if((switch1 != null && switch1.getLeverState() == true) || (switch2 != null && switch2.getLeverState() == true))
             {
-                this.gameObject.SetActive(false);
-                GameObject.Find("Game Manager").GetComponent<GameMaster>().openDoorSound.Play(0);
+                //this.gameObject.SetActive(false);
+                transform.position = new Vector2(10000, 10000);
+
+                gameMaster.openDoorSound.Play(0);
                 if(switch1 != null)
                 {
                     switch1.setPressedSuccessfully();
@@ -54,10 +61,20 @@ public class doorLeverInput : MonoBehaviour
         {
             if (switch1.getLeverState() == true && switch2.getLeverState() == true)
             {
-                this.gameObject.SetActive(false);
-                GameObject.Find("Game Manager").GetComponent<GameMaster>().openDoorSound.Play(0);
+                displayHint = false;
+                //this.gameObject.SetActive(false);
+                transform.position = new Vector2(10000, 10000);
+                gameMaster.openDoorSound.Play(0);
                 switch1.setPressedSuccessfully();
                 switch2.setPressedSuccessfully();
+            }
+
+            if(switch1.getLeverState() || switch2.getLeverState())
+            {
+                displayHint = true;
+            } else if((!switch1.getLeverState() && !switch2.getLeverState()) || (switch1.pressedSuccessfully && switch2.pressedSuccessfully))
+            {
+                displayHint = false;
             }
         }
     }

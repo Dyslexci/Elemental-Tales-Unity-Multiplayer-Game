@@ -8,7 +8,7 @@ using TMPro;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.3.0
- *    @version 1.0.0
+ *    @version 1.0.1
  *    
  *    Allows object this script is attached to to be disabled when the players have enough keys to pass through.
  */

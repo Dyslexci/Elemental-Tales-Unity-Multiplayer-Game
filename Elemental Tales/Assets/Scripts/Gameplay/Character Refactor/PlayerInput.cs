@@ -6,7 +6,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.1.0
+ *    @version 2.1.0
  *    
  *    Takes input from the player and converts to logic which can be used by controller classes.
  */
@@ -25,6 +25,9 @@ public class PlayerInput : MonoBehaviourPun
 
 	[SerializeField] private float attackRate = 2f;
 	private float nextAttackTime = 0f;
+
+	float dashRate = 3.5f;
+	float nextDashTime = 0f;
 
 	/// <summary>
 	/// Initialises the player inputs script.
@@ -59,12 +62,12 @@ public class PlayerInput : MonoBehaviourPun
 			Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 			player.SetDirectionalInput(directionalInput);
 
-			if (Input.GetKeyDown(KeyCode.Space) && !(directionalInput.y == -1 && player.controller.collisions.isOnPermeable))
+			if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W) ) && !(directionalInput.y == -1 && player.controller.collisions.isOnPermeable))
 			{
 				player.OnJumpInputDown();
 				jumpKeyDown = true;
 			}
-			if (Input.GetKeyUp(KeyCode.Space))
+			if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.W))
 			{
 				player.OnJumpInputUp();
 				jumpKeyDown = false;
@@ -89,9 +92,13 @@ public class PlayerInput : MonoBehaviourPun
             {
 				interactKeyDown = false;
             }
-			if(Input.GetKeyDown(KeyCode.LeftControl))
+			if(Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.Mouse1))
             {
-				player.OnDashInputDown();
+				if(Time.time >= nextDashTime)
+                {
+					player.OnDashInputDown();
+					nextDashTime = Time.time + 1f / dashRate;
+				}
             }
 			if(Input.GetKeyDown(KeyCode.S))
             {
@@ -101,23 +108,7 @@ public class PlayerInput : MonoBehaviourPun
             {
 				player.OnSlingshotInputDown();
             }
-			if(Input.GetKeyDown(KeyCode.W) && player.controller.collisions.below)
-            {
-				player.PanCamUpKeyDown();
-            }
-			if(Input.GetKeyUp(KeyCode.W))
-            {
-				player.PanCamUpKeyUp();
-            }
-			if(Input.GetKeyDown(KeyCode.S) && player.controller.collisions.below)
-            {
-				player.PanCamDownKeyDown();
-            }
-			if(Input.GetKeyUp(KeyCode.S))
-            {
-				player.PanCamDownKeyUp();
-            }
-			if(Input.GetKeyDown(KeyCode.Mouse0))
+			if(Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.LeftControl))
             {
 				if (Time.time >= nextAttackTime)
 				{

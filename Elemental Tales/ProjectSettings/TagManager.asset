@@ -28,10 +28,10 @@ TagManager:
   - Obstacles
   - Pushable
   - Fallable
-  - 
-  - 
-  - 
-  - 
+  - Smashable
+  - ObstacleGrass
+  - ObstacleStone
+  - ObstacleWood
   - 
   - 
   - 

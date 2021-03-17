@@ -1,26 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 /** 
  *    @author Matthew Ahearn
- *    @since 0.0.0
- *    @version 1.0.0
+ *    @since 2.2.1
+ *    @version 1.2.0
  *    
- *    Checks for player performing the stomping action onto the door, and removes the door when this is the case.
+ *    Setup to disable the gameobject when called by the pound ability
  */
 
-public class SlamDoor : MonoBehaviour
+public class SlamDoor : MonoBehaviourPun
 {
+    public AudioSource destroySound;
+
     /// <summary>
-    /// When the player enters the collider, checks to see if they are stomping - if so, delete the object.
+    /// Triggers the RPC disabling the gameobject when called
     /// </summary>
-    /// <param name="collision"></param>
-    private void OnTriggerEnter2D(Collider2D collision)
-    { 
-        if(collision.GetComponent<CharacterControllerPlayer1>().isStomping())
+    public void DestroyDoor()
+    {
+        photonView.RPC("DestroyDoorSlam", RpcTarget.AllBuffered);
+    }
+
+    /// <summary>
+    /// Disables the gameobject for all players
+    /// </summary>
+    [PunRPC] private void DestroyDoorSlam()
+    {
+        StartCoroutine(HandleDestroyedDoor());
+    }
+
+    /// <summary>
+    /// Plays the sound and destroys the door.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator HandleDestroyedDoor()
+    {
+        destroySound.Play(0);
+        while(destroySound.isPlaying)
         {
-            gameObject.SetActive(false);
+            yield return new WaitForFixedUpdate();
         }
+        gameObject.SetActive(false);
     }
 }

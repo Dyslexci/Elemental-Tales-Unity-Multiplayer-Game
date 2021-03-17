@@ -9,7 +9,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 0.1.0
+ *    @version 1.0.0
  *    
  *    Controls the visual collectible counter on the HUD.
  */

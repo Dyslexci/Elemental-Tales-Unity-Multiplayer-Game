@@ -7,7 +7,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.0.0
+ *    @version 1.2.1
  *    
  *    Adds collectible to both players and deletes the associated collectible object when player object collides.
  */
@@ -29,11 +29,8 @@ public class GemCollector : MonoBehaviourPun
                 return;
             if (Time.time - hitLast < hitDelay)
                 return;
-
-            print("Playing gem sound");
-            GameObject.Find("Game Manager").GetComponent<GameMaster>().collectGem1Sound.Play(0);
-            //print("Collected");
             photonView.RPC("deleteGem", RpcTarget.AllBuffered);
+            GameObject.Find("Game Manager").GetComponent<GameMaster>().DisplayScorePopup();
             Debug.Log("PUN: RPC has been sent to delete the collectible and add to the counter.");
             hitLast = Time.time;
             gameObject.SetActive(false);
@@ -46,6 +43,7 @@ public class GemCollector : MonoBehaviourPun
     [PunRPC] private void deleteGem()
     {
         Debug.Log("PUN: deleteGem() has been called via the RPC.");
+        GameObject.Find("Game Manager").GetComponent<GameMaster>().collectGem1Sound.Play(0);
         FindObjectOfType<GameMaster>().addCollectible1();
         this.gameObject.SetActive(false);
     }

@@ -6,7 +6,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 1.0.0
+ *    @version 110.0
  *    
  *    Allows assigned doors to be destroyed.
  */
@@ -15,6 +15,7 @@ public class DestroyableDoor : MonoBehaviourPun
 {
     [SerializeField] private int maxHealth = 100;
     private int currentHealth;
+    public AudioSource destructionSound;
 
     /// <summary>
     /// Sets the current health of the door.
@@ -45,13 +46,22 @@ public class DestroyableDoor : MonoBehaviourPun
     /// RPC triggering damage for all players on network
     /// </summary>
     /// <param name="damage"></param>
-    [PunRPC]
-    private void damageDoorRPC(int damage)
+    [PunRPC] private void damageDoorRPC(int damage)
     {
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
-            destroyDoor();
+            StartCoroutine(DestroyDoor());
         }
+    }
+
+    IEnumerator DestroyDoor()
+    {
+        destructionSound.Play(0);
+        while (destructionSound.isPlaying)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        destroyDoor();
     }
 }

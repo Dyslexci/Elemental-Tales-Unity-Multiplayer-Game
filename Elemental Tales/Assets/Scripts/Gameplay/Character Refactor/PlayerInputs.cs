@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Cinemachine;
+using Photon.Pun;
 
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 3.0.0
+ *    @version 4.3.1
  *    
  *    Accepts player input and converts it to directions to be sent to the controller class. Sets up the physical simulation parameters of the object.
  */
@@ -13,7 +14,7 @@ using Cinemachine;
 [RequireComponent(typeof(CharacterControllerRaycast))]
 [RequireComponent(typeof(StatController))]
 [RequireComponent(typeof(PlayerInput))]
-public class PlayerInputs : MonoBehaviour
+public class PlayerInputs : MonoBehaviourPun
 {
 	[Header("Jump Variables")]
 	public float maxJumpHeight = 4;
@@ -51,6 +52,7 @@ public class PlayerInputs : MonoBehaviour
 	public float smashSpeed = -35f;
 	public GameObject slamParticles;
 	bool isSmashing;
+	public LayerMask smashableLayers;
 
 	[Header("Bash Variables")]
 	[SerializeField] float radius;
@@ -62,6 +64,8 @@ public class PlayerInputs : MonoBehaviour
 	float lastAngle;
 	public float bashPower = 60;
 	GameObject arrow;
+	bool wasNearObject;
+	bool hasPlayedAudio;
 
 	[Header("Attack Variables")]
 	[SerializeField] private Animator animator;
@@ -71,6 +75,8 @@ public class PlayerInputs : MonoBehaviour
 	[SerializeField] private LayerMask enemyLayers;
 
 	public Animator camAnim;
+	public Animator playerAnim;
+	public Transform playerSprite;
 
 	float gravity;
 	public float maxJumpVelocity;
@@ -79,22 +85,21 @@ public class PlayerInputs : MonoBehaviour
 	float velocityXSmoothing;
 
 	[Header("Audio Variables")]
-	AudioSource[] stompStartAudio;
-	AudioSource[] stompFallAudio;
-	AudioSource[] stompLandAudio;
-	AudioSource[] doubleJumpsAudio;
-	AudioSource[] jumpsAudio;
-	AudioSource[] landAudio;
-	AudioSource[] wallclimbStartAudio;
-	AudioSource[] wallJumpAudio;
-	AudioSource[] dashAudio;
-	AudioSource bashStartAudio;
-	AudioSource[] bashEndAudio;
-	AudioSource[] onEnterBashRangeAudio;
-	AudioSource[] lanternOnBashAudio;
-	AudioSource attackStartAudio;
-	AudioSource[] attackEndAudio;
-	AudioSource[] panCameraAudio;
+	public AudioSource[] stompStartAudio;
+	public AudioSource[] stompFallAudio;
+	public AudioSource[] stompLandAudio;
+	public AudioSource[] doubleJumpsAudio;
+	public AudioSource[] jumpsAudio;
+	public AudioSource[] landAudio;
+	public AudioSource[] wallclimbStartAudio;
+	public AudioSource[] wallJumpAudio;
+	public AudioSource[] dashAudio;
+	public AudioSource bashStartAudio;
+	public AudioSource[] bashEndAudio;
+	public AudioSource[] onEnterBashRangeAudio;
+	public AudioSource[] lanternOnBashAudio;
+	public AudioSource attackStartAudio;
+	public AudioSource[] attackEndAudio;
 
 	[HideInInspector]
 	public CharacterControllerRaycast controller;
@@ -104,6 +109,8 @@ public class PlayerInputs : MonoBehaviour
 	bool wallSliding;
 	int wallDirX;
 	bool isHoldingObject;
+	bool facingLeft = true;
+	float jumpTimeAllowance = 0;
 
 	CinemachineFramingTransposer vCam;
 
@@ -122,22 +129,6 @@ public class PlayerInputs : MonoBehaviour
 		elementController = GetComponent<ElementController>();
 		elementControllerHasInstantiated = true;
 		gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
-		stompStartAudio = gameMaster.stompStartAudio;
-		stompLandAudio = gameMaster.stompLandAudio;
-		stompFallAudio = gameMaster.stompFallAudio;
-		doubleJumpsAudio = gameMaster.doubleJumpsAudio;
-		jumpsAudio = gameMaster.jumpsAudio;
-		landAudio = gameMaster.landAudio;
-		wallclimbStartAudio = gameMaster.wallclimbStartAudio;
-		wallJumpAudio = gameMaster.wallJumpAudio;
-		dashAudio = gameMaster.dashAudio;
-		bashStartAudio = gameMaster.bashStartAudio;
-		bashEndAudio = gameMaster.bashEndAudio;
-		onEnterBashRangeAudio = gameMaster.onEnterBashRangeAudio;
-		lanternOnBashAudio = gameMaster.lanternOnBashAudio;
-		attackStartAudio = gameMaster.attackStartAudio;
-		attackEndAudio = gameMaster.attackEndAudio;
-		panCameraAudio = gameMaster.panCameraAudio;
 
 		arrow = gameMaster.arrow;
 		vCam = GameObject.Find("Virtual Camera").GetComponentInChildren<CinemachineFramingTransposer>();
@@ -155,26 +146,27 @@ public class PlayerInputs : MonoBehaviour
     {
 		if (controller.collisions.below)
         {
+			jumpTimeAllowance = Time.time + .25f;
 			currentNumberOfJumps = numberOfJumps;
 			currentNumberOfDashes = numberOfDashes;
 			if(wasJumping)
             {
 				isJumping = false;
-				landAudio[Random.Range(0, landAudio.Length)].Play(0);
+				photonView.RPC("TriggerLand", RpcTarget.AllBuffered);
 			}
 			
 			if(isSmashing)
             {
-				stompLandAudio[Random.Range(0, stompLandAudio.Length)].Play(0);
+				CheckForSmashableObstacle();
+				photonView.RPC("TriggerSmashHitResults", RpcTarget.AllBuffered);
 				isSmashing = false;
 				camAnim.SetTrigger("Trigger");
-				Instantiate(slamParticles, new Vector3(transform.position.x + .0375f, transform.position.y, transform.position.z), Quaternion.identity);
 				GetComponent<PlayerInput>().hasControl = true;
 			}
 			if(isMidBash)
             {
 				isMidBash = false;
-				landAudio[Random.Range(0, landAudio.Length)].Play(0);
+				photonView.RPC("TriggerLand", RpcTarget.AllBuffered);
 			}
 		} 
 
@@ -228,79 +220,48 @@ public class PlayerInputs : MonoBehaviour
 		}
 
 		wasJumping = isJumping;
-	}
 
-	public void PanCamDownKeyDown()
-    {
-		StopCoroutine(PanUpCam());
-		StopCoroutine(ReturnCamToCentreFromPanUp());
-		StopCoroutine(ReturnCamToCentreFromPanDown());
-		StartCoroutine(PanDownCam());
-    }
-
-	public void PanCamDownKeyUp()
-    {
-		StopCoroutine(PanDownCam());
-		StartCoroutine(ReturnCamToCentreFromPanDown());
-    }
-
-	public void PanCamUpKeyDown()
-    {
-		StopCoroutine(PanDownCam());
-		StopCoroutine(ReturnCamToCentreFromPanUp());
-		StopCoroutine(ReturnCamToCentreFromPanDown());
-		StartCoroutine(PanUpCam());
-	}
-
-	public void PanCamUpKeyUp()
-	{
-		StopCoroutine(PanUpCam());
-		StartCoroutine(ReturnCamToCentreFromPanUp());
-	}
-
-	IEnumerator PanDownCam()
-    {
-		panCameraAudio[Random.Range(0, panCameraAudio.Length)].Play(0);
-		while (vCam.m_ScreenY > .25f)
+		if(velocity.x > 0 && facingLeft)
         {
-			yield return new WaitForFixedUpdate();
-			vCam.m_ScreenY -= .005f;
-        }
-    }
-
-	IEnumerator ReturnCamToCentreFromPanDown()
-    {
-		while (vCam.m_ScreenY < .5f)
-        {
-			yield return new WaitForFixedUpdate();
-			vCam.m_ScreenY += .005f;
-        }
-    }
-
-	IEnumerator PanUpCam()
-    {
-		panCameraAudio[Random.Range(0, panCameraAudio.Length)].Play(0);
-		while (vCam.m_ScreenY < .75f)
-        {
-			yield return new WaitForFixedUpdate();
-			vCam.m_ScreenY += .005f;
-        }
-    }
-
-	IEnumerator ReturnCamToCentreFromPanUp()
-    {
-		while (vCam.m_ScreenY > .5f)
-        {
-			yield return new WaitForFixedUpdate();
-			vCam.m_ScreenY -= .005f;
+			photonView.RPC("FlipXRight", RpcTarget.AllBuffered);
+			facingLeft = false;
 		}
+		if(velocity.x < 0 && !facingLeft)
+        {
+			photonView.RPC("FlipXLeft", RpcTarget.AllBuffered);
+			facingLeft = true;
+		}
+		playerAnim.SetFloat("directionX", Mathf.Abs(velocity.x));
+		playerAnim.SetBool("isJumping", isJumping);
+		if(velocity.y < 0)
+        {
+			playerAnim.SetBool("hasReachedJumpZenith", true);
+        } else
+        {
+			playerAnim.SetBool("hasReachedJumpZenith", false);
+		}
+	}
+
+	[PunRPC] private void FlipXRight()
+    {
+		playerSprite.GetComponent<SpriteRenderer>().flipX = true;
+	}
+
+	[PunRPC] private void FlipXLeft()
+    {
+		playerSprite.GetComponent<SpriteRenderer>().flipX = false;
+	}
+
+	[PunRPC] private void TriggerLand()
+	{
+		landAudio[Random.Range(0, landAudio.Length)].Play(0);
 	}
 
 	/// <summary>
 	/// Sets the current player input.
 	/// </summary>
 	/// <param name="input"></param>
-    public void SetDirectionalInput(Vector2 input) {
+	public void SetDirectionalInput(Vector2 input) {
 		directionalInput = input;
 	}
 
@@ -311,10 +272,12 @@ public class PlayerInputs : MonoBehaviour
 		if (isHoldingObject)
 			return;
 
+		gameMaster.hasJumped = true;
 		currentNumberOfJumps -= 1;
 
 		if (wallSliding) {
 			wallJumpAudio[Random.Range(0, wallJumpAudio.Length)].Play(0);
+			gameMaster.hasWallClimbed = true;
 			if (wallDirX == directionalInput.x) {
 				velocity.x = -wallDirX * wallJumpClimb.x;
 				velocity.y = wallJumpClimb.y;
@@ -329,7 +292,7 @@ public class PlayerInputs : MonoBehaviour
 			}
 			isJumping = true;
 		}
-		if (controller.collisions.below || currentNumberOfJumps > 0) {
+		if (controller.collisions.below || currentNumberOfJumps > 0 || Time.time < jumpTimeAllowance) {
 			if(!wallSliding && !isJumping)
             {
 				jumpsAudio[Random.Range(0, jumpsAudio.Length)].Play(0);
@@ -338,6 +301,7 @@ public class PlayerInputs : MonoBehaviour
 			if (isJumping)
             {
 				doubleJumpsAudio[Random.Range(0, doubleJumpsAudio.Length)].Play(0);
+				gameMaster.hasDoubledJumped = true;
 			}
 				
 			if (controller.collisions.slidingDownMaxSlope) {
@@ -380,6 +344,19 @@ public class PlayerInputs : MonoBehaviour
     }
 
 	/// <summary>
+	/// Checks below the player for smashable objects with the intent of destroying them if true
+	/// </summary>
+	void CheckForSmashableObstacle()
+    {
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 2, smashableLayers);
+
+		if(hit)
+        {
+			hit.collider.GetComponent<SlamDoor>().DestroyDoor();
+        }
+	}
+
+	/// <summary>
 	/// Rotates the player in place before smashing them into the ground.
 	/// </summary>
 	/// <returns></returns>
@@ -387,7 +364,7 @@ public class PlayerInputs : MonoBehaviour
     {
 		float currentRot = 0f;
 		Vector3 currentPos = gameObject.transform.position;
-		stompStartAudio[Random.Range(0, stompStartAudio.Length)].Play(0);
+		photonView.RPC("TriggerStartStompResults", RpcTarget.AllBuffered);
 		while (currentRot < 360)
 		{
 			this.gameObject.transform.Rotate(new Vector3(0, 0, 20f), Space.Self);
@@ -397,7 +374,23 @@ public class PlayerInputs : MonoBehaviour
 		}
 
 		velocity.y = smashSpeed;
+		photonView.RPC("TriggerSmashFallResults", RpcTarget.AllBuffered);
+	}
+
+	[PunRPC] private void TriggerStartStompResults()
+    {
+		stompStartAudio[Random.Range(0, stompStartAudio.Length)].Play(0);
+	}
+
+	[PunRPC] private void TriggerSmashFallResults()
+    {
 		stompFallAudio[Random.Range(0, stompFallAudio.Length)].Play(0);
+	}
+
+	[PunRPC] private void TriggerSmashHitResults()
+    {
+		stompLandAudio[Random.Range(0, stompLandAudio.Length)].Play(0);
+		Instantiate(slamParticles, new Vector3(transform.position.x + .0375f, transform.position.y, transform.position.z), Quaternion.identity);
 	}
 
 	/// <summary>
@@ -420,6 +413,7 @@ public class PlayerInputs : MonoBehaviour
 		
 
 		Vector2 currentPos = transform.position;
+		
 
 		RaycastHit2D[] rays = Physics2D.CircleCastAll(transform.position, radius, Vector3.forward);
 		foreach(RaycastHit2D ray in rays)
@@ -428,7 +422,8 @@ public class PlayerInputs : MonoBehaviour
 
 			if(ray.collider.tag == "Bashable")
             {
-				onEnterBashRangeAudio[Random.Range(0, onEnterBashRangeAudio.Length)].Play(0);
+				if(!nearToBashableObj)
+					
 				nearToBashableObj = true;
 				bashableObj = ray.collider.transform.gameObject;
 				break;
@@ -436,10 +431,21 @@ public class PlayerInputs : MonoBehaviour
         }
 		if(nearToBashableObj)
         {
+			if(!wasNearObject)
+            {
+				onEnterBashRangeAudio[Random.Range(0, onEnterBashRangeAudio.Length)].Play(0);
+				wasNearObject = true;
+			}
+				
 			bashableObj.GetComponent<SpriteRenderer>().color = Color.yellow;
 			if(Input.GetKey(KeyCode.Mouse1))
             {
-				bashStartAudio.Play(0);
+				if(!hasPlayedAudio)
+                {
+					bashStartAudio.Play(0);
+					hasPlayedAudio = true;
+				}
+				
 				transform.position = currentPos;
 				bashableObj.transform.localScale = new Vector2(0.6f, 0.6f);
 				arrow.SetActive(true);
@@ -450,7 +456,7 @@ public class PlayerInputs : MonoBehaviour
 				isBashing = true;
             } else if(isChoosingDir && Input.GetKeyUp(KeyCode.Mouse1))
             {
-				bashEndAudio[Random.Range(0, bashEndAudio.Length)].Play(0);
+				photonView.RPC("TriggerBashEnd", RpcTarget.AllBuffered);
 				camAnim.SetTrigger("Trigger");
 				currentNumberOfJumps = numberOfJumps;
 				currentNumberOfDashes = numberOfDashes;
@@ -459,7 +465,7 @@ public class PlayerInputs : MonoBehaviour
 				isBashing = false;
 				isMidBash = true;
 				arrow.SetActive(false);
-
+				hasPlayedAudio = false;
 				transform.position = bashableObj.transform.position;
 				Vector3 direction = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
 				float angle = Mathf.Atan2(direction.y, direction.x);
@@ -470,8 +476,15 @@ public class PlayerInputs : MonoBehaviour
         } else if(bashableObj != null)
         {
 			bashableObj.GetComponent<SpriteRenderer>().color = Color.white;
+			nearToBashableObj = false;
+			wasNearObject = false;
         }
     }
+
+	[PunRPC] private void TriggerBashEnd()
+    {
+		bashEndAudio[Random.Range(0, bashEndAudio.Length)].Play(0);
+	}
 
 	/// <summary>
 	/// Dashes the player in their current direction
@@ -482,9 +495,15 @@ public class PlayerInputs : MonoBehaviour
 
 		if ((controller.collisions.below || currentNumberOfDashes > 0) && elementController.getElement().Equals("Air"))
         {
-			dashAudio[Random.Range(0, dashAudio.Length)].Play(0);
-			velocity.x = dashSpeed * directionalInput.x;
+			velocity.x = dashSpeed * (facingLeft ? -1 : 1);
+			velocity.y = 0;
+			photonView.RPC("TriggerDashResults", RpcTarget.AllBuffered);
 		}
+	}
+
+	[PunRPC] private void TriggerDashResults()
+	{
+		dashAudio[Random.Range(0, dashAudio.Length)].Play(0);
 	}
 
 	/// <summary>
@@ -495,7 +514,7 @@ public class PlayerInputs : MonoBehaviour
 		if (!elementController.getElement().Equals("Fire"))
 			return;
 
-		attackStartAudio.Play(0);
+		photonView.RPC("AttackSound", RpcTarget.AllBuffered);
 		//animator.SetTrigger("Attack");
 		for (int i = 0; i < controller.horizontalRayCount; i++)
 		{
@@ -507,11 +526,21 @@ public class PlayerInputs : MonoBehaviour
 
 			if(hit)
             {
-				attackEndAudio[Random.Range(0, attackEndAudio.Length)].Play(0);
+				photonView.RPC("AttackHit", RpcTarget.AllBuffered);
 				hit.collider.GetComponent<DestroyableDoor>().damageDoor(40);
 				return;
             }
 		}
+	}
+
+	[PunRPC] private void AttackSound()
+    {
+		attackStartAudio.Play(0);
+	}
+
+	[PunRPC] private void AttackHit()
+    {
+		attackEndAudio[Random.Range(0, attackEndAudio.Length)].Play(0);
 	}
 
 	/// <summary>
@@ -590,6 +619,10 @@ public class PlayerInputs : MonoBehaviour
 	/// </summary>
 	void CalculateVelocity() {
 		float targetVelocityX = directionalInput.x * moveSpeed;
+		if(directionalInput.x != 0)
+        {
+			gameMaster.hasWalked = true;
+        }
 		velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
 		velocity.y += gravity * Time.deltaTime;
 	}

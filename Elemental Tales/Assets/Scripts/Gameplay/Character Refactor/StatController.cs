@@ -40,6 +40,9 @@ public class StatController : MonoBehaviourPun
 
     int currentCollectibles1 = 0;
     public bool isRespawning;
+    public SpriteRenderer playerSprite;
+
+    Color playerColour;
 
     /// <summary>
     /// Initialises the statistics and HUD objects for this object.
@@ -54,6 +57,23 @@ public class StatController : MonoBehaviourPun
         inputs = GetComponent<PlayerInput>();
         injuryAudio = gameMaster.injuryAudio;
         deathAudio = gameMaster.deathAudio;
+
+        if (GlobalVariableManager.PlayerColour.Equals("FFFFFF"))
+        {
+            playerColour = new Color(1, 1, 1);
+        }
+        if (GlobalVariableManager.PlayerColour.Equals("FFCD81"))
+        {
+            playerColour = new Color(1, 0.801076f, 0.504717f);
+        }
+        if (GlobalVariableManager.PlayerColour.Equals("B581FF"))
+        {
+            playerColour = new Color(0.7103899f, 0.5058824f, 1);
+        }
+        if (GlobalVariableManager.PlayerColour.Equals("81FAFF"))
+        {
+            playerColour = new Color(0.5058824f, 0.9781956f, 1);
+        }
     }
 
     /// <summary>
@@ -76,6 +96,7 @@ public class StatController : MonoBehaviourPun
             inputs.hasControl = false;
             currentHealth = 0;
             isRespawning = true;
+            playerSprite.color = playerColour;
         }
 
         DrawHealthMana();
@@ -161,7 +182,35 @@ public class StatController : MonoBehaviourPun
             injuryAudio[Random.Range(0, injuryAudio.Length)].Play(0);
             currentHealth -= damage;
             print(damage * -1 + " damage taken. " + currentHealth + " health remaining.");
+
+            if(damage > 0)
+            {
+                GetComponent<PlayerInputs>().OnJumpInputDown();
+                StartCoroutine(WaitToEndJump(GlobalVariableManager.PlayerColour));
+                StartCoroutine(FlashDamagedRed());
+            }
         }
+    }
+
+    IEnumerator WaitToEndJump(string hex)
+    {
+        yield return new WaitForSeconds(.2f);
+        GetComponent<PlayerInputs>().OnJumpInputUp();
+    }
+
+    IEnumerator FlashDamagedRed()
+    {
+        playerSprite.color = Color.red;
+        yield return new WaitForSeconds(.1f);
+        playerSprite.color = playerColour;
+        yield return new WaitForSeconds(.1f);
+        playerSprite.color = Color.red;
+        yield return new WaitForSeconds(.1f);
+        playerSprite.color = playerColour;
+        yield return new WaitForSeconds(.1f);
+        playerSprite.color = Color.red;
+        yield return new WaitForSeconds(.1f);
+        playerSprite.color = playerColour;
     }
 
     /// <summary>
@@ -195,6 +244,17 @@ public class StatController : MonoBehaviourPun
     public void setMana(int mana)
     {
         currentMana = mana;
+    }
+
+    public void IncreaseMaxHealth()
+    {
+        maxHealth += 1;
+        currentHealth = maxHealth;
+    }
+
+    public void IncreaseMaxMana()
+    {
+        maxMana += 1;
     }
 
     /// <summary>

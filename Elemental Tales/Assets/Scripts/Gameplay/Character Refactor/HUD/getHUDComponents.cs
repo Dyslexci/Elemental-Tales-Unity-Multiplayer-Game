@@ -6,8 +6,8 @@ using TMPro;
 
 /** 
  *    @author Matthew Ahearn
- *    @since 0.0.0
- *    @version 0.1.0
+ *    @since 0.3.0
+ *    @version 1.0.0
  *    
  *    Returns the HUD components to any enquiring script, to allow the objects to each interface with the HUD.
  */

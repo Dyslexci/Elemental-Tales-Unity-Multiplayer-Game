@@ -13,7 +13,6 @@ using UnityEngine;
 [System.Serializable]
 public class Quest
 {
-    [SerializeField] private bool isActive;
     [SerializeField] private bool isQuestable;
 
     [SerializeField] private string title;
@@ -27,7 +26,7 @@ public class Quest
 
     public void setActive()
     {
-        isActive = true;
+        
     }
 
     public string getTitle()

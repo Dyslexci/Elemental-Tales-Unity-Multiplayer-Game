@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 0.1.0
+ *    @version 1.0.0
  *    
  *    This script controls the visual element orb on the HUD.
  */
