@@ -62,7 +62,6 @@ public class doorLeverInput : MonoBehaviour
             if (switch1.getLeverState() == true && switch2.getLeverState() == true)
             {
                 displayHint = false;
-                //this.gameObject.SetActive(false);
                 transform.position = new Vector2(10000, 10000);
                 gameMaster.openDoorSound.Play(0);
                 switch1.setPressedSuccessfully();

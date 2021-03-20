@@ -81,7 +81,6 @@ public class getElement : MonoBehaviourPun
     {
         Debug.Log("PUN: addElement() has been called, adding the element to the player.");
         elementController.addElement(heldElement);
-        //FindObjectOfType<DialogueManager>().StartDialogue(GetComponent<DialogueTrigger>().dialogue, npcManager, GetComponent<DialogueTrigger>().quest);
         StartCoroutine(TriggerDialogue());
     }
 

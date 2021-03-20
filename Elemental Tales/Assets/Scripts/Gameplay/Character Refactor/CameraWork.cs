@@ -59,7 +59,6 @@ public class CameraWork : MonoBehaviour
         public void OnStartFollowing()
         {
             vcam = GameObject.Find("Virtual Camera");
-            //isFollowing = true;
             Follow();
         }
 

@@ -136,9 +136,6 @@ namespace Com.Team12.ElementalTales
 
         #region Private Serializable Fields
 
-
-
-
         [Tooltip("The UI panel to let the user enter name, connect and join")]
         [SerializeField] private GameObject controlPanel;
         [Tooltip("The UI panel to inform the user that the connection is in progress")]
@@ -160,7 +157,6 @@ namespace Com.Team12.ElementalTales
         [SerializeField] AudioSource sound;
         [SerializeField] AudioSource startGameSound;
 
-
         #endregion
 
 
@@ -177,14 +173,10 @@ namespace Com.Team12.ElementalTales
             PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = gameVersion;
-            if (PhotonNetwork.IsConnected)
-            {
-                connectedStatusText.text = "Connected to master server: " + PhotonNetwork.ServerAddress;
-            }
-            else
-            {
-                connectedStatusText.text = "Connection to the master server has failed. Do you have an active internet connection?";
-            }
+
+            connectedStatusText.text = PhotonNetwork.IsConnected ? 
+                ("Connected to master server: " + PhotonNetwork.ServerAddress) : 
+                "Connection to the master server has failed. Do you have an active internet connection?";
         }
 
 
@@ -335,6 +327,7 @@ namespace Com.Team12.ElementalTales
                 music.volume -= (0.008f * musicStartVolume);
                 sound.volume -= (0.008f * soundStartVolume);
             }
+
             if (PhotonNetwork.IsMasterClient)
             {
                 PhotonNetwork.LoadLevel(1);

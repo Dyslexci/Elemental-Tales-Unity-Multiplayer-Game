@@ -64,19 +64,21 @@ public class HandleZoneChanges : MonoBehaviour
     }
 
     /// <summary>
+    /// Refactored by Adnan
+    /// Used Enhanced for loop
     /// Checks for the players presence based off Physics2D collider circles and displays the hint if the player has entered the switch collider.
     /// </summary>
     private void checkPresent()
     {
         Collider2D[] colliders = Physics2D.OverlapBoxAll(pos.position, new Vector2(lengthX, lengthY), angle, layer);
-        for (int i = 0; i < colliders.Length; i++)
+
+        foreach (Collider2D c in colliders)
         {
-            if (colliders[i].gameObject.tag == "Player")
+            if (c.gameObject.tag == "Player")
             {
-                if (colliders[i].gameObject.GetPhotonView().IsMine)
+                if (c.gameObject.GetPhotonView().IsMine)
                 {
                     isPresent = true;
-
                     return;
                 }
             }
@@ -92,118 +94,119 @@ public class HandleZoneChanges : MonoBehaviour
         Gizmos.DrawWireCube(pos.position, new Vector3(lengthX, lengthY, 1));
     }
 
-    /// <summary>
-    /// Changes the music and text to refer to the new area.
-    /// </summary>
-    /// <param name="areaName"></param>
-    public void EnterNewArea(string areaName)
-    {
-        areaNameText.text = areaNameString;
 
-        if (areaName.Equals("Forest"))
-        {
-            if (gameMaster.inForest)
-            {
-                gameMaster.inPools = false;
-                gameMaster.inGrotto = false;
-                return;
-            }
-            else if (gameMaster.inPools)
-            {
-                gameMaster.inForest = true;
-                gameMaster.inPools = false;
-                gameMaster.inGrotto = false;
-                StopAllCoroutines();
-                forestMusic.Stop();
-                poolsMusic.volume = poolMusicVolume;
-                grottoMusic.Stop();
-                StartCoroutine(TransitionZones(poolsMusic, forestMusic, poolMusicVolume, forestMusicVolume));
-            }
-            else if (gameMaster.inGrotto)
-            {
-                gameMaster.inForest = true;
-                gameMaster.inPools = false;
-                gameMaster.inGrotto = false;
-                StopAllCoroutines();
-                forestMusic.Stop();
-                poolsMusic.Stop();
-                grottoMusic.volume = grottoMusicVolume;
-                StartCoroutine(TransitionZones(grottoMusic, forestMusic, grottoMusicVolume, forestMusicVolume));
-            }
-        }
-        if (areaName.Equals("Pools"))
-        {
-            if (gameMaster.inPools)
-            {
-                gameMaster.inForest = false;
-                gameMaster.inGrotto = false;
-                return;
-            }
-            else if (gameMaster.inForest)
-            {
-                gameMaster.inPools = true;
-                gameMaster.inForest = false;
-                gameMaster.inGrotto = false;
-                StopAllCoroutines();
-                forestMusic.volume = forestMusicVolume;
-                poolsMusic.Stop();
-                grottoMusic.Stop();
-                StartCoroutine(TransitionZones(forestMusic, poolsMusic, forestMusicVolume, poolMusicVolume));
-            }
-            else if (gameMaster.inGrotto)
-            {
-                gameMaster.inPools = true;
-                gameMaster.inForest = false;
-                gameMaster.inGrotto = false;
-                StopAllCoroutines();
-                forestMusic.Stop();
-                poolsMusic.Stop();
-                grottoMusic.volume = grottoMusicVolume;
-                StartCoroutine(TransitionZones(grottoMusic, poolsMusic, grottoMusicVolume, poolMusicVolume));
-            }
-        }
-        if (areaName.Equals("Grotto"))
-        {
-            if (gameMaster.inGrotto)
-            {
-                gameMaster.inForest = false;
-                gameMaster.inPools = false;
-                return;
-            }
-            else if (gameMaster.inForest)
-            {
-                gameMaster.inGrotto = true;
-                gameMaster.inForest = false;
-                gameMaster.inPools = false;
-                StopAllCoroutines();
-                forestMusic.volume = forestMusicVolume;
-                poolsMusic.Stop();
-                grottoMusic.Stop();
-                StartCoroutine(TransitionZones(forestMusic, grottoMusic, forestMusicVolume, grottoMusicVolume));
-            }
-            else if (gameMaster.inPools)
-            {
-                gameMaster.inGrotto = true;
-                gameMaster.inForest = false;
-                gameMaster.inPools = false;
-                StopAllCoroutines();
-                forestMusic.Stop();
-                poolsMusic.volume = poolMusicVolume;
-                grottoMusic.Stop();
-                StartCoroutine(TransitionZones(poolsMusic, grottoMusic, poolMusicVolume, grottoMusicVolume));
-            }
-        }
-    }
+	/// <summary>
+	/// Changes the music and text to refer to the new area.
+	/// </summary>
+	/// <param name="areaName"></param>
+	public void EnterNewArea(string areaName)
+	{
+		this.areaNameText.text = this.areaNameString;
+		if (areaName.Equals("Forest"))
+		{
+			if (this.gameMaster.inForest)
+			{
+				this.gameMaster.inPools = false;
+				this.gameMaster.inGrotto = false;
+				return;
+			}
+			if (this.gameMaster.inPools)
+			{
+				this.gameMaster.inForest = true;
+				this.gameMaster.inPools = false;
+				this.gameMaster.inGrotto = false;
+				base.StopAllCoroutines();
+				this.forestMusic.Stop();
+				this.poolsMusic.volume = this.poolMusicVolume;
+				this.grottoMusic.Stop();
+				base.StartCoroutine(this.TransitionZones(this.poolsMusic, this.forestMusic, this.poolMusicVolume, this.forestMusicVolume));
+			}
+			else if (this.gameMaster.inGrotto)
+			{
+				this.gameMaster.inForest = true;
+				this.gameMaster.inPools = false;
+				this.gameMaster.inGrotto = false;
+				base.StopAllCoroutines();
+				this.forestMusic.Stop();
+				this.poolsMusic.Stop();
+				this.grottoMusic.volume = this.grottoMusicVolume;
+				base.StartCoroutine(this.TransitionZones(this.grottoMusic, this.forestMusic, this.grottoMusicVolume, this.forestMusicVolume));
+			}
+		}
+		if (areaName.Equals("Pools"))
+		{
+			if (this.gameMaster.inPools)
+			{
+				this.gameMaster.inForest = false;
+				this.gameMaster.inGrotto = false;
+				return;
+			}
+			if (this.gameMaster.inForest)
+			{
+				this.gameMaster.inPools = true;
+				this.gameMaster.inForest = false;
+				this.gameMaster.inGrotto = false;
+				base.StopAllCoroutines();
+				this.forestMusic.volume = this.forestMusicVolume;
+				this.poolsMusic.Stop();
+				this.grottoMusic.Stop();
+				base.StartCoroutine(this.TransitionZones(this.forestMusic, this.poolsMusic, this.forestMusicVolume, this.poolMusicVolume));
+			}
+			else if (this.gameMaster.inGrotto)
+			{
+				this.gameMaster.inPools = true;
+				this.gameMaster.inForest = false;
+				this.gameMaster.inGrotto = false;
+				base.StopAllCoroutines();
+				this.forestMusic.Stop();
+				this.poolsMusic.Stop();
+				this.grottoMusic.volume = this.grottoMusicVolume;
+				base.StartCoroutine(this.TransitionZones(this.grottoMusic, this.poolsMusic, this.grottoMusicVolume, this.poolMusicVolume));
+			}
+		}
+		if (areaName.Equals("Grotto"))
+		{
+			if (this.gameMaster.inGrotto)
+			{
+				this.gameMaster.inForest = false;
+				this.gameMaster.inPools = false;
+				return;
+			}
+			if (this.gameMaster.inForest)
+			{
+				this.gameMaster.inGrotto = true;
+				this.gameMaster.inForest = false;
+				this.gameMaster.inPools = false;
+				base.StopAllCoroutines();
+				this.forestMusic.volume = this.forestMusicVolume;
+				this.poolsMusic.Stop();
+				this.grottoMusic.Stop();
+				base.StartCoroutine(this.TransitionZones(this.forestMusic, this.grottoMusic, this.forestMusicVolume, this.grottoMusicVolume));
+				return;
+			}
+			if (this.gameMaster.inPools)
+			{
+				this.gameMaster.inGrotto = true;
+				this.gameMaster.inForest = false;
+				this.gameMaster.inPools = false;
+				base.StopAllCoroutines();
+				this.forestMusic.Stop();
+				this.poolsMusic.volume = this.poolMusicVolume;
+				this.grottoMusic.Stop();
+				base.StartCoroutine(this.TransitionZones(this.poolsMusic, this.grottoMusic, this.poolMusicVolume, this.grottoMusicVolume));
+			}
+		}
+	}
 
-    /// <summary>
-    /// Abstract method to change from some music, to some other music.
-    /// </summary>
-    /// <param name="fromMusic"></param>
-    /// <param name="toMusic"></param>
-    /// <param name="fromMusicStart"></param>
-    /// <param name="toMusicStart"></param>
-    /// <returns></returns>
-    IEnumerator TransitionZones(AudioSource fromMusic, AudioSource toMusic, float fromMusicStart, float toMusicStart)
+	/// <summary>
+	/// Abstract method to change from some music, to some other music.
+	/// </summary>
+	/// <param name="fromMusic"></param>
+	/// <param name="toMusic"></param>
+	/// <param name="fromMusicStart"></param>
+	/// <param name="toMusicStart"></param>
+	/// <returns></returns>
+	IEnumerator TransitionZones(AudioSource fromMusic, AudioSource toMusic, float fromMusicStart, float toMusicStart)
     {
         toMusic.volume = 0;
         toMusic.Play(0);

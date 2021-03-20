@@ -36,9 +36,7 @@ public class EndScreenManager : MonoBehaviourPunCallbacks
     private void Update()
     {
         if(PhotonNetwork.PlayerList.Length != 2)
-        {
             nextButton.interactable = false;
-        }
     }
 
     void InitialiseEndScreen()
@@ -51,9 +49,7 @@ public class EndScreenManager : MonoBehaviourPunCallbacks
             bestTimeText.text = timePlayingStr;
 
             if (GlobalVariableManager.Level1TimeHasChanged)
-            {
                 DisplayBestTime();
-            }
         }
         else if (GlobalVariableManager.PreviousStage == 1)
         {
@@ -63,9 +59,7 @@ public class EndScreenManager : MonoBehaviourPunCallbacks
             bestTimeText.text = timePlayingStr;
 
             if (GlobalVariableManager.Level1TimeHasChanged)
-            {
                 DisplayBestTime();
-            }
         }
         else if (GlobalVariableManager.PreviousStage == 2)
         {
@@ -75,9 +69,7 @@ public class EndScreenManager : MonoBehaviourPunCallbacks
             bestTimeText.text = timePlayingStr;
 
             if (GlobalVariableManager.Level1TimeHasChanged)
-            {
                 DisplayBestTime();
-            }
         }
         else if (GlobalVariableManager.PreviousStage == 3)
         {
@@ -87,9 +79,7 @@ public class EndScreenManager : MonoBehaviourPunCallbacks
             bestTimeText.text = timePlayingStr;
 
             if (GlobalVariableManager.Level1TimeHasChanged)
-            {
                 DisplayBestTime();
-            }
         }
     }
 
@@ -111,6 +101,7 @@ public class EndScreenManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void exitGame()
     {
+
         if (PhotonNetwork.IsConnectedAndReady)
         {
             PhotonNetwork.LeaveRoom();

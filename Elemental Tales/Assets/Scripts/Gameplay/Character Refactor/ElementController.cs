@@ -50,45 +50,44 @@ public class ElementController : MonoBehaviour
     }
 
     /// <summary>
+    /// Refactored by Adnan
     /// Allows the player to choose the active element
     /// </summary>
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && hasAir)
         {
-            elementChangeAudio[Random.Range(0, elementChangeAudio.Length)].Play(0);
-            currentElement = "Air";
-            controller.currentElement = "Air";
-            elementOrb.setElement("Air");
+            changeElement("Air");
         }
         if (Input.GetKeyDown(KeyCode.Alpha3) && hasEarth)
         {
-            elementChangeAudio[Random.Range(0, elementChangeAudio.Length)].Play(0);
-            currentElement = "Earth";
-            controller.currentElement = "Earth";
-            elementOrb.setElement("Earth");
+            changeElement("Earth");
         }
         if (Input.GetKeyDown(KeyCode.Alpha2) && hasWater)
         {
-            elementChangeAudio[Random.Range(0, elementChangeAudio.Length)].Play(0);
-            currentElement = "Water";
-            controller.currentElement = "Water";
-            elementOrb.setElement("Water");
+            changeElement("Water");
         }
         if (Input.GetKeyDown(KeyCode.Alpha4) && hasFire)
         {
-            elementChangeAudio[Random.Range(0, elementChangeAudio.Length)].Play(0);
-            currentElement = "Fire";
-            controller.currentElement = "Fire";
-            elementOrb.setElement("Fire");
+            changeElement("Fire");
         }
         if(Input.GetKeyDown(KeyCode.Alpha0))
         {
-            elementChangeAudio[Random.Range(0, elementChangeAudio.Length)].Play(0);
-            currentElement = "Empty";
-            controller.currentElement = "Empty";
-            elementOrb.setElement("Empty");
+            changeElement("Empty");
         }
+    }
+
+    /// <summary>
+    /// Refactored by Adnan
+    /// changes element based on param
+    /// </summary>
+    /// <param name="e"></param>
+    private void changeElement(string e)
+    {
+        elementChangeAudio[Random.Range(0, elementChangeAudio.Length)].Play(0);
+        currentElement = e;
+        controller.currentElement = e;
+        elementOrb.setElement(e);
     }
 
     /// <summary>

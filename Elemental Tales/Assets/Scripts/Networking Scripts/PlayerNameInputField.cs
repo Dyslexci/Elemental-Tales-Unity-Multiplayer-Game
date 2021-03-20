@@ -51,7 +51,6 @@ namespace Com.Team12.ElementalTales
                 }
             }
 
-
             PhotonNetwork.NickName = defaultName;
         }
 

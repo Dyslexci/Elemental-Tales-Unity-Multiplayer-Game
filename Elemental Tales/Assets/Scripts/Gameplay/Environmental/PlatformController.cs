@@ -55,14 +55,13 @@ public class PlatformController : RaycastController
 	}
 
 	/// <summary>
+    /// Refactored by Adnan
 	/// Updates raycasting logic and sets velocity based off the current destination/location, as well as moving any passengers
 	/// </summary>
 	void Update()
 	{
 		if(isSwitchable && !switchToggle.getLeverState())
-        {
 			return;
-        }
 
 		wasMoving = isMoving;
 
@@ -70,22 +69,12 @@ public class PlatformController : RaycastController
 
 		Vector3 velocity = CalculatePlatformMovement();
 
-		if(velocity != new Vector3(0,0,0))
-        {
-			isMoving = true;
-        } else
-        {
-			isMoving = false;
-        }
+		isMoving = (velocity != new Vector3(0, 0, 0)) ? true : false;
 
 		if(!wasMoving && isMoving)
-        {
 			platformAudio.Play(0);
-        }
 		if(wasMoving && !isMoving)
-        {
 			platformAudio.Stop();
-        }
 
 		CalculatePassengerMovement(velocity);
 

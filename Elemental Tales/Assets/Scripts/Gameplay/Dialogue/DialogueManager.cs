@@ -142,6 +142,5 @@ public class DialogueManager : MonoBehaviour
         if (newQuest == null)
             return;
         FindObjectOfType<QuestManager>().addQuest(newQuest);
-        newQuest.setActive();
     }
 }

@@ -630,24 +630,23 @@ public class GameMaster : MonoBehaviourPunCallbacks
         otherPlayerDeaths++;
     }
 
+    /// <summary>
+    /// Refactored by Adnan
+    /// used Enhanced for loop
+    /// used ternary operator instead of IF/ELSE
+    /// </summary>
     void CheckLeverPromptState()
     {
         int noDoorsPrompting = 0;
-        for (int i = 0; i < doorArray.Length; i++)
-        {
-            if (doorArray[i].displayHint)
+
+        foreach (doorLeverInput da in doorArray){
+            if (da.displayHint)
             {
                 noDoorsPrompting++;
             }
         }
 
-        if (noDoorsPrompting > 0)
-        {
-            leverPromptPanel.gameObject.SetActive(true);
-        } else
-        {
-            leverPromptPanel.gameObject.SetActive(false);
-        }
+        leverPromptPanel.gameObject.SetActive(noDoorsPrompting > 0 ? true : false);
     }
 
     public void DisplayHealthPopup()

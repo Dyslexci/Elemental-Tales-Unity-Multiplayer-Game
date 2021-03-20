@@ -80,18 +80,20 @@ public class Switch : MonoBehaviourPun
     }
 
     /// <summary>
+    /// Refactored by Adnan
     /// Checks for the players presence based off Physics2D collider circles and displays the hint if the player has entered the switch collider.
     /// </summary>
     private void checkPresent()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(pos.position, radius, layer);
-        for (int i = 0; i < colliders.Length; i++)
+
+        foreach (Collider2D c in colliders)
         {
-            if (colliders[i].gameObject.tag == "Player")
+            if (c.gameObject.tag == "Player")
             {
-                if (colliders[i].gameObject.GetPhotonView().IsMine)
+                if (c.gameObject.GetPhotonView().IsMine)
                 {
-                    playerCollider = colliders[i].gameObject;
+                    playerCollider = c.gameObject;
                     if (isDisplayingHint == false && playerWasPresent == false)
                     {
                         isDisplayingHint = true;
@@ -100,15 +102,14 @@ public class Switch : MonoBehaviourPun
                     }
                     playerPresent = true;
                     return;
-                } 
-                if (!colliders[i].gameObject.GetPhotonView().IsMine)
+                }
+                if (!c.gameObject.GetPhotonView().IsMine)
                 {
                     otherPlayerPresent = true;
                 }
             }
             else
             {
-                //playerPresent = false;
                 playerCollider = null;
             }
         }

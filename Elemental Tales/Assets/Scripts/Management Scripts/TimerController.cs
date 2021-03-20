@@ -61,6 +61,7 @@ public class TimerController : MonoBehaviour
     }
 
     /// <summary>
+    /// Refactored by Adnan
     /// Adds the time since last check to the timer value.
     /// </summary>
     /// <returns></returns>
@@ -71,15 +72,9 @@ public class TimerController : MonoBehaviour
             elapsedTime += Time.deltaTime;
             timePlaying = TimeSpan.FromSeconds(elapsedTime);
             string timePlayingStr = timePlaying.ToString("hh':'mm':'ss");
-            if(isMainGame)
-            {
-                timeCounter.text = timePlayingStr;
-            } else
-            {
-                timeCounter.text = "Time:   " + timePlayingStr;
-            }
-            
-            
+
+            timeCounter.text = isMainGame ? timePlayingStr : ("Time:   " + timePlayingStr);
+
             yield return null;
         }
     }

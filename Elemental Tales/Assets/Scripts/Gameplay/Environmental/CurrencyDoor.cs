@@ -65,6 +65,7 @@ public class CurrencyDoor : MonoBehaviourPun
     }
 
     /// <summary>
+    /// Refactored by Adnan
     /// Coroutine displaying the hint to the player.
     /// </summary>
     /// <returns></returns>
@@ -72,13 +73,13 @@ public class CurrencyDoor : MonoBehaviourPun
     {
         hintHolder.SetActive(true);
         StartCoroutine("JumpInHintHolder");
-        if(GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<StatController>().currentMana >= keyCost)
-        {
-            hintText.text = "<color=#ffffff>Press E to spend <color=#ffeb04>" + keyCost + " Keystones <color=#ffffff>opening the door!";
-        } else
-        {
-            hintText.text = "<color=#ffffff>You need <color=#ffeb04>" + keyCost +" Keystones <color=#ffffff>to open the door!";
-        }
+
+        int currentMana = GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<StatController>().currentMana;
+        string t = ("<color=#ffffff>Press E to spend <color=#ffeb04>" + keyCost + " Keystones <color=#ffffff>opening the door!");
+        string f = ("<color=#ffffff>You need <color=#ffeb04>" + keyCost + " Keystones <color=#ffffff>to open the door!");
+
+        hintText.text = currentMana >= keyCost ? t : f;
+
         yield return new WaitForSeconds(2);
         StartCoroutine("FadeHintHolder");
     }

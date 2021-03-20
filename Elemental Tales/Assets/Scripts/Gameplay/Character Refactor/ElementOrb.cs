@@ -32,27 +32,18 @@ public class ElementOrb : MonoBehaviour
     }
 
     /// <summary>
+    /// Refactored by Adnan
     /// Sets the current element and updates the HUD object respectively.
     /// </summary>
     /// <param name="element"></param>
     public void setElement(string element)
     {
         currentElement = element;
-        if(element.Equals("Earth"))
-        {
-            elementOrb.sprite = EarthOrb;
-        } else if (element.Equals("Water"))
-        {
-            elementOrb.sprite = WaterOrb;
-        } else if (element.Equals("Air"))
-        {
-            elementOrb.sprite = AirOrb;
-        } else if (element.Equals("Fire"))
-        {
-            elementOrb.sprite = FireOrb;
-        } else
-        {
-            elementOrb.sprite = emptyOrb;
-        }
+
+        elementOrb.sprite =
+            element.Equals("Earth") ? EarthOrb :
+            element.Equals("Water") ? WaterOrb :
+            element.Equals("Air") ? AirOrb :
+            element.Equals("Fire") ? FireOrb : emptyOrb;
     }
 }

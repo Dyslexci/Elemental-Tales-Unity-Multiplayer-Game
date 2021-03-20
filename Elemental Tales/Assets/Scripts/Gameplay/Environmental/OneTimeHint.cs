@@ -44,26 +44,22 @@ public class OneTimeHint : MonoBehaviourPun
 
 
     /// <summary>
+    /// Refactored by Adnan
     /// Checks for the players presence based off Physics2D collider circles and displays the hint if the player has entered the switch collider.
     /// </summary>
     private void checkPresent()
     {
         Collider2D[] colliders = Physics2D.OverlapBoxAll(pos.position, new Vector2(lengthX, lengthY), angle, layer);
-        for (int i = 0; i < colliders.Length; i++)
+
+        foreach (Collider2D c in colliders)
         {
-            if (colliders[i].gameObject.tag == "Player")
+            if (c.gameObject.tag == "Player" && c.gameObject.GetPhotonView().IsMine && !hasBeenTriggered)
             {
-                if (colliders[i].gameObject.GetPhotonView().IsMine)
-                {
-                    if (!hasBeenTriggered)
-                    {
-                        Debug.Log("Checkpresent worked");
-                        GameObject.Find("Game Manager").GetComponent<GameMaster>().hintSound.Play(0);
-                        hasBeenTriggered = true;
-                        StartCoroutine(WaitHideHint());
-                    }
-                    return;
-                }
+                Debug.Log("Checkpresent worked");
+                GameObject.Find("Game Manager").GetComponent<GameMaster>().hintSound.Play(0);
+                hasBeenTriggered = true;
+                StartCoroutine(WaitHideHint());
+                break;
             }
         }
     }

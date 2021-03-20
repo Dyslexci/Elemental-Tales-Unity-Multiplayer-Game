@@ -232,44 +232,32 @@ public class endGame : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
+    /// Refactored by Adnan
     /// Sets the content of the text fields for the end-game cinematic.
     /// </summary>
     /// <param name="currentStage"></param>
     void SetTextContents(int currentStage)
     {
-        if(currentStage == 0)
-        {
-            endgameTextProphecy1.text = "All of this has happened before";
-            endgameTextProphecy2.text = "And all of this will happen again";
-            endgameText3.text = "Was this enough?";
-            endgameText4.text = "Will the next time be enough?";
-            endgameTextCallFeel.text = "You feel a call...";
-            endgameTextNextLoc.text = "THORNY DEPTHS";
-        } else if(currentStage == 1)
-        {
-            endgameTextProphecy1.text = "All of this has happened before";
-            endgameTextProphecy2.text = "And all of this will happen again";
-            endgameText3.text = "Was this enough?";
-            endgameText4.text = "Will the next time be enough?";
-            endgameTextCallFeel.text = "You feel a call...";
-            endgameTextNextLoc.text = "MURKY CAVES";
-        } else if(currentStage == 2)
-        {
-            endgameTextProphecy1.text = "All of this has happened before";
-            endgameTextProphecy2.text = "And all of this will happen again";
-            endgameText3.text = "Was this enough?";
-            endgameText4.text = "Will the next time be enough?";
-            endgameTextCallFeel.text = "You feel a call...";
-            endgameTextNextLoc.text = "ALLTREE HOLLOW";
-        } else if(currentStage == 3)
-        {
-            endgameTextProphecy1.text = "All of this has happened before";
-            endgameTextProphecy2.text = "But all of this need not happen again";
-            endgameText3.text = "You could go again...";
-            endgameText4.text = "You could stop now...";
-            endgameTextCallFeel.text = "";
-            endgameTextNextLoc.text = "AGAIN";
-        }
+        string p1 = "All of this has happened before";
+        string p2 = "And all of this will happen again";
+        string cFeel = "Was this enough?";
+        string egt4 = "Will the next time be enough?";
+        string egcf = "You feel a call...";
+        string location = "";
+
+        location = 
+            currentStage == 0 ? "THORNY DEPTHS" :
+            currentStage == 1 ? "MURKY CAVES" :
+            currentStage == 2 ? "ALLTREE HOLLOW" :
+            "AGAIN";
+
+        endgameTextProphecy1.text = p1;
+        endgameTextProphecy2.text = currentStage == 3 ? "But all of this need not happen again" : p2;
+        endgameText3.text = currentStage == 3 ? "You could go again..." : cFeel;
+        endgameText4.text = currentStage == 3 ? "You could stop now..." : egt4;
+        endgameTextCallFeel.text = currentStage == 3 ? "" : egcf;
+        endgameTextNextLoc.text = location;
+
         endgamePanel1.alpha = 0;
         endgamePanel2.alpha = 0;
         endgamePanel3.alpha = 0;

@@ -24,11 +24,6 @@ public class Quest
         return isQuestable;
     }
 
-    public void setActive()
-    {
-        
-    }
-
     public string getTitle()
     {
         return title;

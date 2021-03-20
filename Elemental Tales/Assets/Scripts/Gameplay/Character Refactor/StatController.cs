@@ -111,6 +111,7 @@ public class StatController : MonoBehaviourPun
     }
 
     /// <summary>
+    /// Refactored by Adnan
     /// Draws the heart and mana objects on the HUD, based on current statistics.
     /// </summary>
     void DrawHealthMana()
@@ -119,44 +120,15 @@ public class StatController : MonoBehaviourPun
         {
             for (int i = 0; i < hearts.Length; i++)
             {
-                if (i < currentHealth)
-                {
-                    hearts[i].sprite = fullHeart;
-                }
-                else
-                {
-                    hearts[i].sprite = emptyHeart;
-                }
-
-                if (i < maxHealth)
-                {
-                    hearts[i].enabled = true;
-                }
-                else
-                {
-                    hearts[i].enabled = false;
-                }
+                hearts[i].sprite = i < currentHealth ? fullHeart : emptyHeart;
+                hearts[i].enabled = i < maxHealth ? true : false;
             }
         }
+
         for (int i = 0; i < manas.Length; i++)
         {
-            if (i < currentMana)
-            {
-                manas[i].sprite = fullMana;
-            }
-            else
-            {
-                manas[i].sprite = emptyMana;
-            }
-
-            if (i < maxMana)
-            {
-                manas[i].enabled = true;
-            }
-            else
-            {
-                manas[i].enabled = false;
-            }
+            manas[i].sprite = i < currentMana ? fullMana : emptyMana;
+            manas[i].enabled = i < maxMana ? true : false;
         }
     }
 

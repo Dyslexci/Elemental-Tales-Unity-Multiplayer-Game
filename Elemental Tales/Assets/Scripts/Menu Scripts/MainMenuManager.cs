@@ -234,88 +234,40 @@ public class MainMenuManager : MonoBehaviourPun
     public void OpenColourPanel1()
     {
         if(PhotonNetwork.IsMasterClient)
-        {
             colourPanel1.gameObject.SetActive(true);
-        }
     }
 
     public void OpenColourPanel2()
     {
         if(!PhotonNetwork.IsMasterClient)
-        {
             colourPanel2.gameObject.SetActive(true);
-        }
     }
 
-    public void SetPlayer1White()
+    /// <summary>
+    /// Refactored by Adnan
+    /// changes player 1 colour by passing in the HEX value
+    /// </summary>
+    /// <param name="hex"></param>
+    public void setPlayer1Colour(string hex)
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
-        GlobalVariableManager.PlayerColour = "FFFFFF";
-        photonView.RPC("SetPlayer1Colour", RpcTarget.AllBuffered, "FFFFFF");
+        GlobalVariableManager.PlayerColour = hex;
+        photonView.RPC("SetPlayer1Colour", RpcTarget.AllBuffered, hex);
         colourPanel1.gameObject.SetActive(false);
     }
 
-    public void SetPlayer1Orange()
-    {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        GlobalVariableManager.PlayerColour = "FFCD81";
-        photonView.RPC("SetPlayer1Colour", RpcTarget.AllBuffered, "FFCD81");
-        colourPanel1.gameObject.SetActive(false);
-    }
-
-    public void SetPlayer1Purple()
-    {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        GlobalVariableManager.PlayerColour = "B581FF";
-        photonView.RPC("SetPlayer1Colour", RpcTarget.AllBuffered, "B581FF");
-        colourPanel1.gameObject.SetActive(false);
-    }
-
-    public void SetPlayer1Blue()
-    {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        GlobalVariableManager.PlayerColour = "81FAFF";
-        photonView.RPC("SetPlayer1Colour", RpcTarget.AllBuffered, "81FAFF");
-        colourPanel1.gameObject.SetActive(false);
-    }
-
-    public void SetPlayer2White()
+    /// <summary>
+    /// Refactored by Adnan
+    /// changes player 2 colour by passing in the HEX value
+    /// </summary>
+    /// <param name="hex"></param>
+    public void setPlayer2Colour(string hex)
     {
         if (PhotonNetwork.IsMasterClient)
             return;
-        GlobalVariableManager.PlayerColour = "FFFFFF";
-        photonView.RPC("SetPlayer2Colour", RpcTarget.AllBuffered, "FFFFFF");
-        colourPanel2.gameObject.SetActive(false);
-    }
-
-    public void SetPlayer2Orange()
-    {
-        if (PhotonNetwork.IsMasterClient)
-            return;
-        GlobalVariableManager.PlayerColour = "FFCD81";
-        photonView.RPC("SetPlayer2Colour", RpcTarget.AllBuffered, "FFCD81");
-        colourPanel2.gameObject.SetActive(false);
-    }
-
-    public void SetPlayer2Purple()
-    {
-        if (PhotonNetwork.IsMasterClient)
-            return;
-        GlobalVariableManager.PlayerColour = "B581FF";
-        photonView.RPC("SetPlayer2Colour", RpcTarget.AllBuffered, "B581FF");
-        colourPanel2.gameObject.SetActive(false);
-    }
-
-    public void SetPlayer2Blue()
-    {
-        if (PhotonNetwork.IsMasterClient)
-            return;
-        GlobalVariableManager.PlayerColour = "81FAFF";
-        photonView.RPC("SetPlayer2Colour", RpcTarget.AllBuffered, "81FAFF");
+        GlobalVariableManager.PlayerColour = hex;
+        photonView.RPC("SetPlayer2Colour", RpcTarget.AllBuffered, hex);
         colourPanel2.gameObject.SetActive(false);
     }
 

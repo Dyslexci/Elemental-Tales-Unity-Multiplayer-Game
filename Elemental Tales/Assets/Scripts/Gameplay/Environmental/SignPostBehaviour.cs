@@ -52,20 +52,19 @@ public class SignPostBehaviour : MonoBehaviour
     }
 
     /// <summary>
+    /// Refactored by Adnan
     /// Checks if the local player is within a defined radius of a defined position.
     /// </summary>
     private void checkPresent()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(pos.position, radius, layer);
-        for (int i = 0; i < colliders.Length; i++)
+
+        foreach (Collider2D c in colliders)
         {
-            if (colliders[i].gameObject.tag == "Player")
+            if (c.gameObject.tag == "Player" && c.gameObject.GetPhotonView().IsMine)
             {
-                if (colliders[i].gameObject.GetPhotonView().IsMine)
-                {
-                    playerPresent = true;
-                    return;
-                }
+                playerPresent = true;
+                break;
             }
         }
     }

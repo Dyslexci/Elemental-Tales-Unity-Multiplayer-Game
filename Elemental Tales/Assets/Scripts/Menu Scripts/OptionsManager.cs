@@ -150,19 +150,12 @@ public class OptionsManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Refactored by Adnan
     /// Toggles the application VSync.
     /// </summary>
     public void toggleVSync()
     {
-        if(vsync)
-        {
-
-            vsync = false;
-        } else
-        {
-
-            vsync = true;
-        }
+        vsync = !vsync;
     }
 
     /// <summary>
