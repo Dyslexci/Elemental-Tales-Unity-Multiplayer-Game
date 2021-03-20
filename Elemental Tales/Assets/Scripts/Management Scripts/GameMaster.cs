@@ -14,7 +14,7 @@ using Photon.Realtime;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 3.3.2
+ *    @version 3.3.3
  *    
  *    Stores global variables, player checkpoints and location for loading and saving, player scores, and etc. Created for all static variables and functions.
  */
@@ -639,8 +639,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
     {
         int noDoorsPrompting = 0;
 
-        foreach (doorLeverInput da in doorArray){
-            if (da.displayHint)
+        foreach (doorLeverInput door in doorArray){
+            if (door.displayHint)
             {
                 noDoorsPrompting++;
             }

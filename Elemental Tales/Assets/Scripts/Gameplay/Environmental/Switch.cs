@@ -10,7 +10,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 2.0.1
+ *    @version 2.0.2
  *    
  *    Manages players interacting with physical switch objects in the world.
  */

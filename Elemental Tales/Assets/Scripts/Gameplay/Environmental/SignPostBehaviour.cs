@@ -6,7 +6,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 2.1.0
- *    @version 1.0.1
+ *    @version 1.0.2
  *    
  *    Displays signpost text in the world while the player is nearby.
  */

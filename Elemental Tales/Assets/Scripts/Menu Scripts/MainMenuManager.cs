@@ -9,7 +9,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 2.0.2
+ *    @version 2.0.3
  *    
  *    Manages the main menu - opening and closing panels and dealing with the actions of each button.
  */

@@ -8,7 +8,7 @@ using TMPro;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.0.0
+ *    @version 1.0.1
  *    
  *    Provides a timer for the duration the local player has been in the game, and tracks this time on the pause menu.
  */

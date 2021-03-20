@@ -8,7 +8,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.1.0
- *    @version 1.0.0
+ *    @version 1.0.1
  *    
  *    Contains methods for buttons to display various elements in the pause screen.
  */

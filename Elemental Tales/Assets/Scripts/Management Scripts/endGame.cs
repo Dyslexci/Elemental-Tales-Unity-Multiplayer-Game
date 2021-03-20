@@ -10,7 +10,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.1.2
+ *    @version 1.1.4
  *    
  *    Ends the game when the player enters the endgame region.
  */

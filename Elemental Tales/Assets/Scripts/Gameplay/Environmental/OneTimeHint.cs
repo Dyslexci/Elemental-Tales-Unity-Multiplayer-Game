@@ -8,7 +8,7 @@ using TMPro;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.2.0
- *    @version 1.0.0
+ *    @version 1.0.1
  *    
  *    Displays a hint a single time, for need-to-know information that isn't important enough to be prompted every time.
  */

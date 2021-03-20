@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.4.0
- *    @version 1.2.1
+ *    @version 1.2.2
  *    
  *    Manages the options menu, setting the various option states.
  */

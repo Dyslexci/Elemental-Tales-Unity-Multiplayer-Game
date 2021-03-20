@@ -7,7 +7,7 @@ using TMPro;
 /** 
  *    @author Matthew Ahearn
  *    @since 2.2.0
- *    @version 1.2.0
+ *    @version 1.2.1
  *    
  *    Changes the current zone of the player, swapping music and changing the locator text to read the active location.
  */

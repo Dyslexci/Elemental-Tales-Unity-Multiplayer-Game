@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.2.6
+ *    @version 1.2.7
  *    
  *    Provides logic for platforms the player can jump up through and drop down through, as well as platforms which can move between an indeterminate number of waypoints.
  *    Known issues: When moving horizontally, a player wallclimbing on the platform tends to bounce around uncontrollably. Possibly needs to be fixed by always extending raycasts
