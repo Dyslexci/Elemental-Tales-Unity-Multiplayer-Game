@@ -13,89 +13,108 @@ using TMPro;
  */
 public class HandleZoneChanges : MonoBehaviour
 {
-    public string areaEntering;
-    public string areaNameString;
+	public string areaEntering;
+	public string areaNameString;
 
-    public AudioSource forestMusic;
-    public AudioSource poolsMusic;
-    public AudioSource grottoMusic;
+	public AudioSource forestMusic;
+	public AudioSource poolsMusic;
+	public AudioSource grottoMusic;
 
-    [SerializeField] Transform pos;
-    [SerializeField] float lengthX = 1.5f;
-    [SerializeField] float lengthY = 1.5f;
-    [SerializeField] private LayerMask layer;
-    public float angle;
+	[SerializeField] Transform pos;
+	[SerializeField] float lengthX = 1.5f;
+	[SerializeField] float lengthY = 1.5f;
+	[SerializeField] private LayerMask layer;
+	public float angle;
 
-    TMP_Text areaNameText;
-    CanvasGroup areaNamePanel;
+	TMP_Text areaNameText;
+	CanvasGroup areaNamePanel;
 
-    bool isPresent;
-    bool wasPresent;
+	bool isPresent;
+	bool wasPresent;
 
-    float forestMusicVolume;
-    float poolMusicVolume;
-    float grottoMusicVolume;
+	float forestMusicVolume;
+	float poolMusicVolume;
+	float grottoMusicVolume;
 
-    GameMaster gameMaster;
+	GameMaster gameMaster;
 
-    private void Start()
-    {
-        gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
-        areaNameText = gameMaster.areaText;
-        areaNamePanel = gameMaster.areaTextPanel;
-        forestMusic = gameMaster.forestMusic;
-        poolsMusic = gameMaster.poolsMusic;
-        grottoMusic = gameMaster.grottoMusic;
-        forestMusicVolume = forestMusic.volume;
-        poolMusicVolume = poolsMusic.volume;
-        grottoMusicVolume = grottoMusic.volume;
-    }
+	private void Start()
+	{
+		gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
+		areaNameText = gameMaster.areaText;
+		areaNamePanel = gameMaster.areaTextPanel;
+		forestMusic = gameMaster.forestMusic;
+		poolsMusic = gameMaster.poolsMusic;
+		grottoMusic = gameMaster.grottoMusic;
+		forestMusicVolume = forestMusic.volume;
+		poolMusicVolume = poolsMusic.volume;
+		grottoMusicVolume = grottoMusic.volume;
+	}
 
-    private void FixedUpdate()
-    {
-        wasPresent = isPresent;
-        isPresent = false;
-        checkPresent();
+	private void FixedUpdate()
+	{
+		wasPresent = isPresent;
+		isPresent = false;
+		checkPresent();
 
-        if(isPresent && !wasPresent)
-        {
-            EnterNewArea(areaEntering);
-        }
-    }
+		if (isPresent && !wasPresent)
+		{
+			EnterNewArea(areaEntering);
+		}
+	}
 
-    /// <summary>
+	/// <summary>
+	/// Refactored by Adnan
+	/// Used Enhanced for loop
+	/// Checks for the players presence based off Physics2D collider circles and displays the hint if the player has entered the switch collider.
+	/// </summary>
+	private void checkPresent()
+	{
+		Collider2D[] colliders = Physics2D.OverlapBoxAll(pos.position, new Vector2(lengthX, lengthY), angle, layer);
+
+		foreach (Collider2D c in colliders)
+		{
+			if (c.gameObject.tag == "Player")
+			{
+				if (c.gameObject.GetPhotonView().IsMine)
+				{
+					isPresent = true;
+					return;
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Draws a cisual representation of the switch collider in the editor.
+	/// </summary>
+	private void OnDrawGizmosSelected()
+	{
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireCube(pos.position, new Vector3(lengthX, lengthY, 1));
+	}
+
+	/// <summary>
     /// Refactored by Adnan
-    /// Used Enhanced for loop
-    /// Checks for the players presence based off Physics2D collider circles and displays the hint if the player has entered the switch collider.
+    /// initialises area and checks weather to start/stop coroutine
     /// </summary>
-    private void checkPresent()
-    {
-        Collider2D[] colliders = Physics2D.OverlapBoxAll(pos.position, new Vector2(lengthX, lengthY), angle, layer);
+    /// <param name="inF"></param>
+    /// <param name="inG"></param>
+    /// <param name="inP"></param>
+    /// <param name="stopCo"></param>
+	private void switchArea(bool inF, bool inG, bool inP, bool stopCo)
+	{
+		gameMaster.inForest = inF;
+		gameMaster.inGrotto = inG;
+		gameMaster.inPools = inP;
 
-        foreach (Collider2D c in colliders)
-        {
-            if (c.gameObject.tag == "Player")
-            {
-                if (c.gameObject.GetPhotonView().IsMine)
-                {
-                    isPresent = true;
-                    return;
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Draws a cisual representation of the switch collider in the editor.
-    /// </summary>
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(pos.position, new Vector3(lengthX, lengthY, 1));
-    }
+        if (stopCo)
+			StopAllCoroutines();
+	}
 
 
 	/// <summary>
+    /// Refactored by Adnan
 	/// Changes the music and text to refer to the new area.
 	/// </summary>
 	/// <param name="areaName"></param>
@@ -106,16 +125,12 @@ public class HandleZoneChanges : MonoBehaviour
 		{
 			if (gameMaster.inForest)
 			{
-				gameMaster.inPools = false;
-				gameMaster.inGrotto = false;
+				switchArea(true, false, false, false);
 				return;
 			}
 			if (gameMaster.inPools)
 			{
-				gameMaster.inForest = true;
-				gameMaster.inPools = false;
-				gameMaster.inGrotto = false;
-				StopAllCoroutines();
+				switchArea(true, false, false, true);
 				forestMusic.Stop();
 				poolsMusic.volume = poolMusicVolume;
 				grottoMusic.Stop();
@@ -123,10 +138,7 @@ public class HandleZoneChanges : MonoBehaviour
 			}
 			else if (gameMaster.inGrotto)
 			{
-				gameMaster.inForest = true;
-				gameMaster.inPools = false;
-				gameMaster.inGrotto = false;
-				StopAllCoroutines();
+				switchArea(true, false, false, true);
 				forestMusic.Stop();
 				poolsMusic.Stop();
 				grottoMusic.volume = grottoMusicVolume;
@@ -137,16 +149,12 @@ public class HandleZoneChanges : MonoBehaviour
 		{
 			if (gameMaster.inPools)
 			{
-				gameMaster.inForest = false;
-				gameMaster.inGrotto = false;
+				switchArea(false, false, true, false);
 				return;
 			}
 			if (gameMaster.inForest)
 			{
-				gameMaster.inPools = true;
-				gameMaster.inForest = false;
-				gameMaster.inGrotto = false;
-				StopAllCoroutines();
+				switchArea(false, false, true, true);
 				forestMusic.volume = forestMusicVolume;
 				poolsMusic.Stop();
 				grottoMusic.Stop();
@@ -154,10 +162,7 @@ public class HandleZoneChanges : MonoBehaviour
 			}
 			else if (gameMaster.inGrotto)
 			{
-				gameMaster.inPools = true;
-				gameMaster.inForest = false;
-				gameMaster.inGrotto = false;
-				StopAllCoroutines();
+				switchArea(false, false, true, true);
 				forestMusic.Stop();
 				poolsMusic.Stop();
 				grottoMusic.volume = grottoMusicVolume;
@@ -168,16 +173,12 @@ public class HandleZoneChanges : MonoBehaviour
 		{
 			if (gameMaster.inGrotto)
 			{
-				gameMaster.inForest = false;
-				gameMaster.inPools = false;
+				switchArea(false, true, false, false);
 				return;
 			}
 			if (gameMaster.inForest)
 			{
-				gameMaster.inGrotto = true;
-				gameMaster.inForest = false;
-				gameMaster.inPools = false;
-				StopAllCoroutines();
+				switchArea(false, true, false, true);
 				forestMusic.volume = forestMusicVolume;
 				poolsMusic.Stop();
 				grottoMusic.Stop();
@@ -186,10 +187,7 @@ public class HandleZoneChanges : MonoBehaviour
 			}
 			if (gameMaster.inPools)
 			{
-				gameMaster.inGrotto = true;
-				gameMaster.inForest = false;
-				gameMaster.inPools = false;
-				StopAllCoroutines();
+				switchArea(false, true, false, true);
 				forestMusic.Stop();
 				poolsMusic.volume = poolMusicVolume;
 				grottoMusic.Stop();
