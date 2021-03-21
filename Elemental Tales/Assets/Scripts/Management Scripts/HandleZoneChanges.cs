@@ -122,7 +122,6 @@ public class HandleZoneChanges : MonoBehaviour
 	public void EnterNewArea(string areaName)
 	{
 		areaNameText.text = areaNameString;
-		DiscordRP.setRP("In " + areaNameString);
 		if (areaName.Equals("Forest"))
 		{
 			if (gameMaster.inForest)

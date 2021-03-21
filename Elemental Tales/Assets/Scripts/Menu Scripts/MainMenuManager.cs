@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using Photon.Pun;
-//using DiscordPresence;
 
 /** 
  *    @author Matthew Ahearn
@@ -67,9 +66,6 @@ public class MainMenuManager : MonoBehaviourPun
     /// </summary>
     private void Start()
     {
-
-        DiscordRP.setRP("Main Menu");
-
         GlobalVariableManager.PlayerColour = "FFFFFF";
         startGameScreen.SetActive(false);
         optionsScreen.SetActive(false);
@@ -443,5 +439,4 @@ public class MainMenuManager : MonoBehaviourPun
         }
         Application.Quit();
     }
-
 }
