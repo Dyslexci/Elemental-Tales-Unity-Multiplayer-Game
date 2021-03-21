@@ -40,7 +40,6 @@ public class HandleZoneChanges : MonoBehaviour
 
 	private void Start()
 	{
-		DiscordRP.setRP("In Misty Glades");
 		gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
 		areaNameText = gameMaster.areaText;
 		areaNamePanel = gameMaster.areaTextPanel;
@@ -50,6 +49,7 @@ public class HandleZoneChanges : MonoBehaviour
 		forestMusicVolume = forestMusic.volume;
 		poolMusicVolume = poolsMusic.volume;
 		grottoMusicVolume = grottoMusic.volume;
+		DiscordRP.setRP("In Misty Glades");
 	}
 
 	private void FixedUpdate()
