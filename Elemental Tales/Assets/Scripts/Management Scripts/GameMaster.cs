@@ -40,6 +40,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     }
 
     private int collectible1;
+    SafeFloat score;
     
     private GameObject playerObject;
 
@@ -183,6 +184,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
+        score = new SafeFloat(0);
 
         zoneChanger = GetComponent<HandleZoneChanges>();
 
@@ -480,8 +482,12 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// </summary>
     public void addCollectible1()
     {
-        collectible1++;
-        collectible1Counter.text = collectible1 + "/" + totalCollectible1;
+        SafeFloat addScore = new SafeFloat(1);
+        score += addScore;
+        collectible1Counter.text = score + "/" + totalCollectible1;
+
+        //collectible1++;
+        //collectible1Counter.text = collectible1 + "/" + totalCollectible1;
     }
 
     public void AddHealthUpgrade()
@@ -494,9 +500,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Returns the total collectible1 count.
     /// </summary>
     /// <returns></returns>
-    public int getCollectible1()
+    public SafeFloat getCollectible1()
     {
-        return collectible1;
+        return score;
     }
 
     /// <summary>

@@ -20,15 +20,15 @@ public class StatController : MonoBehaviourPun
 
     [Header("Health Variables")]
     private Image[] hearts;
-    public int maxHealth = 3;
-    [SerializeField] private int currentHealth;
+    public float maxHealth = 3;
+    SafeFloat currentHealth;
     [SerializeField] private Sprite fullHeart;
     [SerializeField] private Sprite emptyHeart;
 
     [Header("Mana Variables")]
     private Image[] manas;
-    public int maxMana = 3;
-    public int currentMana;
+    public float maxMana = 3;
+    public SafeFloat currentMana;
     [SerializeField] private Sprite fullMana;
     [SerializeField] private Sprite emptyMana;
 
@@ -49,8 +49,8 @@ public class StatController : MonoBehaviourPun
     /// </summary>
     void Start()
     {
-        currentHealth = maxHealth;
-        currentMana = maxMana;
+        currentHealth = new SafeFloat(maxHealth);
+        currentMana = new SafeFloat(maxMana);
         hearts = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getHearts();
         manas = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getManas();
         gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
@@ -88,13 +88,13 @@ public class StatController : MonoBehaviourPun
 
         checkStats();
 
-        if (currentHealth <= 0 && !isRespawning)
+        if (currentHealth.GetValue() <= 0 && !isRespawning)
         {
             deathAudio[Random.Range(0, deathAudio.Length)].Play(0);
             Debug.Log("Player has died.");
             gameMaster.respawn();
             inputs.hasControl = false;
-            currentHealth = 0;
+            currentHealth = new SafeFloat(0);
             isRespawning = true;
             playerSprite.color = playerColour;
         }
@@ -120,14 +120,14 @@ public class StatController : MonoBehaviourPun
         {
             for (int i = 0; i < hearts.Length; i++)
             {
-                hearts[i].sprite = i < currentHealth ? fullHeart : emptyHeart;
+                hearts[i].sprite = i < currentHealth.GetValue() ? fullHeart : emptyHeart;
                 hearts[i].enabled = i < maxHealth ? true : false;
             }
         }
 
         for (int i = 0; i < manas.Length; i++)
         {
-            manas[i].sprite = i < currentMana ? fullMana : emptyMana;
+            manas[i].sprite = i < currentMana.GetValue() ? fullMana : emptyMana;
             manas[i].enabled = i < maxMana ? true : false;
         }
     }
@@ -138,7 +138,7 @@ public class StatController : MonoBehaviourPun
     public void resetPlayerAfterDeath()
     {
         isRespawning = false;
-        currentHealth = 2;
+        currentHealth = new SafeFloat(2);
         Debug.Log("Player has respawned, new health is: " + currentHealth);
         inputs.hasControl = true;
     }
@@ -147,15 +147,15 @@ public class StatController : MonoBehaviourPun
     /// Causes 1 damage to this object.
     /// </summary>
     /// <param name="damage"></param>
-    public void DamageHealth(int damage)
+    public void DamageHealth(int _damage)
     {
-        if(currentHealth != 0)
+        if(currentHealth.GetValue() != 0)
         {
+            SafeFloat damage = new SafeFloat(_damage);
             injuryAudio[Random.Range(0, injuryAudio.Length)].Play(0);
             currentHealth -= damage;
-            print(damage * -1 + " damage taken. " + currentHealth + " health remaining.");
 
-            if(damage > 0)
+            if(damage.GetValue() > 0)
             {
                 GetComponent<PlayerInputs>().OnJumpInputDown();
                 StartCoroutine(WaitToEndJump(GlobalVariableManager.PlayerColour));
@@ -190,9 +190,10 @@ public class StatController : MonoBehaviourPun
     /// </summary>
     /// <param name="damage"></param>
     /// <returns></returns>
-    public bool DamageMana(int damage)
+    public bool DamageMana(int _damage)
     {
-        if(currentMana != 0)
+        SafeFloat damage = new SafeFloat(_damage);
+        if(currentMana.GetValue() != 0)
         {
             currentMana -= damage;
             return true;
@@ -206,7 +207,7 @@ public class StatController : MonoBehaviourPun
     /// <param name="health"></param>
     public void setHealth(int health)
     {
-        currentHealth = health;
+        currentHealth = new SafeFloat(health);
     }
 
     /// <summary>
@@ -215,13 +216,13 @@ public class StatController : MonoBehaviourPun
     /// <param name="mana"></param>
     public void setMana(int mana)
     {
-        currentMana = mana;
+        currentMana = new SafeFloat(mana);
     }
 
     public void IncreaseMaxHealth()
     {
         maxHealth += 1;
-        currentHealth = maxHealth;
+        currentHealth = new SafeFloat(maxHealth);
     }
 
     public void IncreaseMaxMana()
@@ -243,13 +244,13 @@ public class StatController : MonoBehaviourPun
     /// </summary>
     private void checkStats()
     {
-        if (currentHealth > maxHealth)
+        if (currentHealth.GetValue() > maxHealth)
         {
-            currentHealth = maxHealth;
+            currentHealth = new SafeFloat(maxHealth);
         }
-        if (currentMana > maxMana)
+        if (currentMana.GetValue() > maxMana)
         {
-            currentMana = maxMana;
+            currentMana = new SafeFloat(maxMana);
         }
     }
 }

@@ -51,7 +51,7 @@ public class CurrencyDoor : MonoBehaviourPun
 
         checkPresent();
 
-        if(playerPresent && Input.GetKeyDown(KeyCode.E) && GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<StatController>().currentMana >= keyCost)
+        if(playerPresent && Input.GetKeyDown(KeyCode.E) && GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<StatController>().currentMana.GetValue() >= keyCost)
         {
             GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<StatController>().DamageMana(keyCost);
             StopCoroutine(WaitHideHint());
@@ -74,7 +74,7 @@ public class CurrencyDoor : MonoBehaviourPun
         hintHolder.SetActive(true);
         StartCoroutine("JumpInHintHolder");
 
-        int currentMana = GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<StatController>().currentMana;
+        float currentMana = GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<StatController>().currentMana.GetValue();
         string t = ("<color=#ffffff>Press E to spend <color=#ffeb04>" + keyCost + " Keystones <color=#ffffff>opening the door!");
         string f = ("<color=#ffffff>You need <color=#ffeb04>" + keyCost + " Keystones <color=#ffffff>to open the door!");
 

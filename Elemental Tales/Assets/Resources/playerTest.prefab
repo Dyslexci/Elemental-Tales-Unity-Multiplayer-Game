@@ -8456,11 +8456,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentElement: 
   maxHealth: 3
-  currentHealth: 3
   fullHeart: {fileID: 21300000, guid: 7c6f59bfe2bfab341ba3dced82f61866, type: 3}
   emptyHeart: {fileID: 21300000, guid: 4326fd8d6c7ec4d42a7851397070ecfa, type: 3}
   maxMana: 3
-  currentMana: 3
   fullMana: {fileID: 21300000, guid: 8bd80d10d246c8b42bd5bd7b19e68a9e, type: 3}
   emptyMana: {fileID: 21300000, guid: 85bb992552a351146aab705bb8f7fbf9, type: 3}
   isRespawning: 0

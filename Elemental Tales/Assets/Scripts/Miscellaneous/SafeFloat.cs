@@ -37,4 +37,9 @@ public struct SafeFloat
     {
         return new SafeFloat(f1.GetValue() + f2.GetValue());
     }
+
+    public static SafeFloat operator -(SafeFloat f1, SafeFloat f2)
+    {
+        return new SafeFloat(f1.GetValue() - f2.GetValue());
+    }
 }
