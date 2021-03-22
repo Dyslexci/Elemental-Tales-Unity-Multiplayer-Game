@@ -7,7 +7,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.0.0
- *    @version 1.0.1
+ *    @version 1.0.2
  *    
  *    Controls the players mana and health visual representations on the HUD, as well as handling collectibles.
  */

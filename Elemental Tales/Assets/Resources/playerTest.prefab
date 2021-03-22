@@ -8442,6 +8442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followOnStart: 0
+  playerSprite: {fileID: 7730910760987679135}
 --- !u!114 &4422737345570962271
 MonoBehaviour:
   m_ObjectHideFlags: 0

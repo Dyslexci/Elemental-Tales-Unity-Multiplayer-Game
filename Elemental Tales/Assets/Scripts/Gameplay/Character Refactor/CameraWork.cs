@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Cinemachine;
+using Photon.Pun;
 
 /** 
  *    @author Matthew Ahearn
@@ -9,7 +10,7 @@ using Cinemachine;
  *    Controls who the camera follows.
  */
 
-public class CameraWork : MonoBehaviour
+public class CameraWork : MonoBehaviourPun
     {
         #region Private Fields
 
@@ -26,24 +27,39 @@ public class CameraWork : MonoBehaviour
         Vector3 cameraOffset = Vector3.zero;
 
 
-        #endregion
+    #endregion
+
+    #region Public Fields
+
+    public SpriteRenderer playerSprite;
+
+    #endregion
 
 
-        #region MonoBehaviour Callbacks
+    #region MonoBehaviour Callbacks
 
 
-        /// <summary>
-        /// MonoBehaviour method called on GameObject by Unity during initialization phase
-        /// </summary>
-        void Start()
+    /// <summary>
+    /// MonoBehaviour method called on GameObject by Unity during initialization phase
+    /// </summary>
+    void Start()
+    {
+        if (followOnStart)
         {
-            
-            // Start following the target if wanted.
-            if (followOnStart)
-            {
-                OnStartFollowing();
-            }
+            OnStartFollowing();
         }
+
+        try
+        {
+            if (photonView.IsMine)
+                playerSprite.sortingOrder = 2000;
+        } catch
+        {
+            Debug.LogWarning("CameraWork: photonView and playerSprite not yet initialised. Cause is unknown, but it does not affect gameplay. Ignore.");
+            return;
+        }
+        
+    }
 
 
         #endregion

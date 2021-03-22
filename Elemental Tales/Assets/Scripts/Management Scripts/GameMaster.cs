@@ -1,10 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 using UnityEngine.Experimental.Rendering.Universal;
 using TMPro;
 
@@ -14,7 +10,7 @@ using Photon.Realtime;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 3.3.4
+ *    @version 3.3.5
  *    
  *    Stores global variables, player checkpoints and location for loading and saving, player scores, and etc. Created for all static variables and functions.
  */
@@ -39,7 +35,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
         StartCoroutine(WaitHidePlayerLeft(otherPlayer));
     }
 
-    private int collectible1;
     SafeFloat score;
     
     private GameObject playerObject;
@@ -211,8 +206,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
         deathMessage2Panel.gameObject.SetActive(false);
         deathMessage3Panel.gameObject.SetActive(false);
         deathMessage4Panel.gameObject.SetActive(false);
-
-        collectible1 = 0;
 
         if(playerPrefab == null)
         {
@@ -485,9 +478,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
         SafeFloat addScore = new SafeFloat(1);
         score += addScore;
         collectible1Counter.text = score + "/" + totalCollectible1;
-
-        //collectible1++;
-        //collectible1Counter.text = collectible1 + "/" + totalCollectible1;
     }
 
     public void AddHealthUpgrade()
