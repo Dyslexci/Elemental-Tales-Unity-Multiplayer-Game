@@ -6,7 +6,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 2.0.0
- *    @version 1.0.0
+ *    @version 1.0.1
  *    
  *    Allows the player to refill health when jumping on this object.
  */
@@ -32,7 +32,7 @@ public class HealthRefiller : MonoBehaviour
 
             Instantiate(healthExplodePrefab, transform.position, transform.rotation);
             beenPopped = true;
-            GameObject.Find("Game Manager").GetComponent<GameMaster>().DisplayHealthPopup();
+            GameObject.Find("Game Manager").GetComponent<GameMaster>().DisplayOneTimeHintPopup("HealthRefill");
             collision.GetComponent<StatController>().DamageHealth(-2);
             GameObject.Find("Game Manager").GetComponent<GameMaster>().healthRefillCollect.Play(0);
             collision.GetComponent<PlayerInputs>().OnJumpInputDown();

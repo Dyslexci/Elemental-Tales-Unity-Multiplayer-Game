@@ -8,12 +8,14 @@ using TMPro;
 /** 
  *    @author Matthew Ahearn
  *    @since 1.2.0
- *    @version 1.0.1
+ *    @version 1.0.2
  *    
  *    Displays a hint a single time, for need-to-know information that isn't important enough to be prompted every time.
  */
-public class OneTimeHint : MonoBehaviourPun
+public class OneTimeHint : CheckPresentController
 {
+    UIHintController hintController;
+
     public string hintText;
     bool hasBeenTriggered;
 
@@ -30,6 +32,8 @@ public class OneTimeHint : MonoBehaviourPun
 
     private void Start()
     {
+        hintController = GameObject.Find("Game Manager").GetComponent<UIHintController>();
+
         hintTextObj = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getHintText();
         hintHolder = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().GetHintHolder();
         hintImage = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getHintContainer();
@@ -39,29 +43,11 @@ public class OneTimeHint : MonoBehaviourPun
     private void FixedUpdate()
     {
         if(!hasBeenTriggered)
-            checkPresent();
-    }
-
-
-    /// <summary>
-    /// Refactored by Adnan
-    /// Checks for the players presence based off Physics2D collider circles and displays the hint if the player has entered the switch collider.
-    /// </summary>
-    private void checkPresent()
-    {
-        Collider2D[] colliders = Physics2D.OverlapBoxAll(pos.position, new Vector2(lengthX, lengthY), angle, layer);
-
-        foreach (Collider2D c in colliders)
-        {
-            if (c.gameObject.tag == "Player" && c.gameObject.GetPhotonView().IsMine && !hasBeenTriggered)
+            if(CheckPresentBox(pos, lengthX, lengthY, angle, layer))
             {
-                Debug.Log("Checkpresent worked");
-                GameObject.Find("Game Manager").GetComponent<GameMaster>().hintSound.Play(0);
                 hasBeenTriggered = true;
-                StartCoroutine(WaitHideHint());
-                break;
+                hintController.StartHintDisplay(hintText, 5);
             }
-        }
     }
 
     /// <summary>
@@ -71,51 +57,5 @@ public class OneTimeHint : MonoBehaviourPun
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(pos.position, new Vector3(lengthX, lengthY, 1));
-    }
-
-    /// <summary>
-    /// Coroutine displaying the hint to the player.
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator WaitHideHint()
-    {
-        hintHolder.SetActive(true);
-        StartCoroutine("JumpInHintHolder");
-        hintTextObj.text = hintText;
-        yield return new WaitForSeconds(5);
-        StartCoroutine("FadeHintHolder");
-    }
-
-    /// <summary>
-    /// Coroutine making the hint jump into place.
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator JumpInHintHolder()
-    {
-        hintImage.transform.localScale = new Vector3(5, 5, 5);
-
-        while (hintImage.transform.localScale.x > 1)
-        {
-            yield return new WaitForFixedUpdate();
-            hintImage.transform.localScale -= new Vector3(0.5f, 0.5f, 0.5f);
-        }
-        hintImage.transform.localScale = new Vector3(1, 1, 1);
-    }
-
-    /// <summary>
-    /// Coroutine making the hint fade out after it has been on screen enough time.
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator FadeHintHolder()
-    {
-        while (panel.alpha > 0)
-        {
-            yield return new WaitForFixedUpdate();
-            panel.alpha -= 0.05f;
-        }
-
-        hintHolder.SetActive(false);
-        panel.alpha = 1;
-        Destroy(gameObject);
     }
 }

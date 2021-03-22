@@ -7,7 +7,7 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 2.3.0
- *    @version 1.0.0
+ *    @version 1.0.1
  *    
  *    Adds permanent health to the player.
  */
@@ -30,7 +30,7 @@ public class HealthUpgrader : MonoBehaviourPun
             if (Time.time - hitLast < hitDelay)
                 return;
             photonView.RPC("DeleteHealthUpgrade", RpcTarget.AllBuffered);
-            GameObject.Find("Game Manager").GetComponent<GameMaster>().DisplayHealthUpgradePopup();
+            GameObject.Find("Game Manager").GetComponent<GameMaster>().DisplayOneTimeHintPopup("HealthUpgrade");
             hitLast = Time.time;
             gameObject.SetActive(false);
         }

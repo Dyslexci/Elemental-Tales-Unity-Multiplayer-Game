@@ -6,11 +6,11 @@ using Photon.Pun;
 /** 
  *    @author Matthew Ahearn
  *    @since 2.1.0
- *    @version 1.0.2
+ *    @version 1.0.3
  *    
  *    Displays signpost text in the world while the player is nearby.
  */
-public class SignPostBehaviour : MonoBehaviour
+public class SignPostBehaviour : CheckPresentController
 {
     public CanvasGroup signs;
     [SerializeField] Transform pos;
@@ -34,38 +34,18 @@ public class SignPostBehaviour : MonoBehaviour
     private void FixedUpdate()
     {
         playerWasPresent = playerPresent;
-        playerPresent = false;
-
-        checkPresent();
+        playerPresent = CheckPresentCircle(pos, radius, layer);
 
         if (playerPresent && !playerWasPresent)
         {
-            StopCoroutine(FadeOutSigns());
+            StopAllCoroutines();
             StartCoroutine(FadeInSigns());
         }
 
         if(!playerPresent && playerWasPresent)
         {
-            StopCoroutine(FadeInSigns());
+            StopAllCoroutines();
             StartCoroutine(FadeOutSigns());
-        }
-    }
-
-    /// <summary>
-    /// Refactored by Adnan
-    /// Checks if the local player is within a defined radius of a defined position.
-    /// </summary>
-    private void checkPresent()
-    {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(pos.position, radius, layer);
-
-        foreach (Collider2D c in colliders)
-        {
-            if (c.gameObject.tag == "Player" && c.gameObject.GetPhotonView().IsMine)
-            {
-                playerPresent = true;
-                break;
-            }
         }
     }
 

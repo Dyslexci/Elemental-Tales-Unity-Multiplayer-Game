@@ -7,11 +7,11 @@ using TMPro;
 /** 
  *    @author Matthew Ahearn
  *    @since 2.2.0
- *    @version 1.2.1
+ *    @version 1.2.2
  *    
  *    Changes the current zone of the player, swapping music and changing the locator text to read the active location.
  */
-public class HandleZoneChanges : MonoBehaviour
+public class HandleZoneChanges : CheckPresentController
 {
 	public string areaEntering;
 	public string areaNameString;
@@ -54,34 +54,11 @@ public class HandleZoneChanges : MonoBehaviour
 	private void FixedUpdate()
 	{
 		wasPresent = isPresent;
-		isPresent = false;
-		checkPresent();
+		isPresent = CheckPresentBox(pos, lengthX, lengthY, angle, layer);
 
 		if (isPresent && !wasPresent)
 		{
 			EnterNewArea(areaEntering);
-		}
-	}
-
-	/// <summary>
-	/// Refactored by Adnan
-	/// Used Enhanced for loop
-	/// Checks for the players presence based off Physics2D collider circles and displays the hint if the player has entered the switch collider.
-	/// </summary>
-	private void checkPresent()
-	{
-		Collider2D[] colliders = Physics2D.OverlapBoxAll(pos.position, new Vector2(lengthX, lengthY), angle, layer);
-
-		foreach (Collider2D c in colliders)
-		{
-			if (c.gameObject.tag == "Player")
-			{
-				if (c.gameObject.GetPhotonView().IsMine)
-				{
-					isPresent = true;
-					return;
-				}
-			}
 		}
 	}
 

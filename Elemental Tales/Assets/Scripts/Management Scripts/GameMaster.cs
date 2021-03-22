@@ -14,7 +14,7 @@ using Photon.Realtime;
 /** 
  *    @author Matthew Ahearn
  *    @since 0.0.0
- *    @version 3.3.3
+ *    @version 3.3.4
  *    
  *    Stores global variables, player checkpoints and location for loading and saving, player scores, and etc. Created for all static variables and functions.
  */
@@ -57,7 +57,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject optionsMenuUI;
     public CanvasGroup pauseMenuPanel;
     public doorLeverInput[] doorArray;
-    SpriteRenderer playerSprite;
 
     [Header("Death Variables")]
     public int localPlayerDeaths;
@@ -150,10 +149,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
     bool hasDisplayedHealthPopup;
     bool hasDisplayedScorePopup;
     bool hasDisplayedHealthUpgradePopup;
-    TMP_Text hintText;
-    GameObject hintHolder;
-    CanvasGroup hintPanel;
-    UnityEngine.UI.Image hintImage;
     public bool hasWalked;
     public bool hasJumped;
     public bool hasDoubledJumped;
@@ -167,8 +162,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public AudioSource[] panCameraAudio;
     public AudioSource elementalGetStart;
     public AudioSource elementDialogueStart;
-
-    float playedTime;
 
     TimerController timer;
 
@@ -216,11 +209,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
         deathMessage2Panel.gameObject.SetActive(false);
         deathMessage3Panel.gameObject.SetActive(false);
         deathMessage4Panel.gameObject.SetActive(false);
-
-        hintText = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getHintText();
-        hintHolder = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().GetHintHolder();
-        hintImage = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getHintContainer();
-        hintPanel = hintHolder.GetComponentInChildren<CanvasGroup>();
 
         collectible1 = 0;
 
@@ -649,88 +637,21 @@ public class GameMaster : MonoBehaviourPunCallbacks
         leverPromptPanel.gameObject.SetActive(noDoorsPrompting > 0 ? true : false);
     }
 
-    public void DisplayHealthPopup()
+    public void DisplayOneTimeHintPopup(string hintType)
     {
-        if(!hasDisplayedHealthPopup)
+        if(hintType.Equals("Score") && !hasDisplayedScorePopup)
         {
-            hintText.text = "<color=#ffffff>Bounce on these <color=#ffeb04>Mushrooms <color=#ffffff>to refill your health!";
-            StopCoroutine(JumpInHintHolder());
-            StopCoroutine(WaitHideHint());
-            StopCoroutine(FadeHintHolder());
-            StartCoroutine(WaitHideHint());
+            GameObject.Find("Game Manager").GetComponent<UIHintController>().StartHintDisplay("<color=#ffffff>Collect <color=#ffeb04>Spirit Shards <color=#ffffff>to increase your score!", 3);
+            hasDisplayedScorePopup = true;
+        } else if(hintType.Equals("HealthUpgrade") && !hasDisplayedHealthUpgradePopup)
+        {
+            GameObject.Find("Game Manager").GetComponent<UIHintController>().StartHintDisplay("<color=#ffffff>Collect <color=#ffeb04>Health Shards <color=#ffffff>to increase your maximum health!", 3);
+            hasDisplayedHealthUpgradePopup = true;
+        } else if(hintType.Equals("HealthRefill") && !hasDisplayedHealthPopup)
+        {
+            GameObject.Find("Game Manager").GetComponent<UIHintController>().StartHintDisplay("<color=#ffffff>Bounce on these <color=#ffeb04>Mushrooms <color=#ffffff>to refill your health!", 3);
             hasDisplayedHealthPopup = true;
         }
-    }
-
-    public void DisplayScorePopup()
-    {
-        if(!hasDisplayedScorePopup)
-        {
-            hintText.text = "<color=#ffffff>Collect <color=#ffeb04>Spirit Shards <color=#ffffff>to increase your score!";
-            StopCoroutine(JumpInHintHolder());
-            StopCoroutine(WaitHideHint());
-            StopCoroutine(FadeHintHolder());
-            StartCoroutine(WaitHideHint());
-            hasDisplayedScorePopup = true;
-        }
-    }
-
-    public void DisplayHealthUpgradePopup()
-    {
-        if (!hasDisplayedHealthUpgradePopup)
-        {
-            hintText.text = "<color=#ffffff>Collect <color=#ffeb04>Health Shards <color=#ffffff>to increase your maximum health!";
-            StopCoroutine(JumpInHintHolder());
-            StopCoroutine(WaitHideHint());
-            StopCoroutine(FadeHintHolder());
-            StartCoroutine(WaitHideHint());
-            hasDisplayedHealthUpgradePopup = true;
-        }
-    }
-
-    /// <summary>
-    /// Coroutine displaying the hint to the player.
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator WaitHideHint()
-    {
-        hintHolder.SetActive(true);
-        StartCoroutine(JumpInHintHolder());
-        
-        yield return new WaitForSeconds(3);
-        StartCoroutine(FadeHintHolder());
-    }
-
-    /// <summary>
-    /// Coroutine making the hint jump into place.
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator JumpInHintHolder()
-    {
-        hintImage.transform.localScale = new Vector3(5, 5, 5);
-
-        while (hintImage.transform.localScale.x > 1)
-        {
-            yield return new WaitForFixedUpdate();
-            hintImage.transform.localScale -= new Vector3(0.5f, 0.5f, 0.5f);
-        }
-        hintImage.transform.localScale = new Vector3(1, 1, 1);
-    }
-
-    /// <summary>
-    /// Coroutine making the hint fade out after it has been on screen enough time.
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator FadeHintHolder()
-    {
-        while (hintPanel.alpha > 0)
-        {
-            yield return new WaitForFixedUpdate();
-            hintPanel.alpha -= 0.05f;
-        }
-
-        hintHolder.SetActive(false);
-        hintPanel.alpha = 1;
     }
 
     /// <summary>
