@@ -8262,7 +8262,7 @@ MonoBehaviour:
   radius: 3
   bashableObj: {fileID: 0}
   bashPower: 45
-  animator: {fileID: 0}
+  attackParticles: {fileID: 103688, guid: 61d06c6d35a503b47a23c676bb289e02, type: 3}
   attackPoint: {fileID: 0}
   attackRange: 0.5
   enemyLayers:
@@ -8462,6 +8462,7 @@ MonoBehaviour:
   maxMana: 3
   fullMana: {fileID: 21300000, guid: 8bd80d10d246c8b42bd5bd7b19e68a9e, type: 3}
   emptyMana: {fileID: 21300000, guid: 85bb992552a351146aab705bb8f7fbf9, type: 3}
+  camAnim: {fileID: 0}
   isRespawning: 0
   playerSprite: {fileID: 7730910760987679135}
 --- !u!114 &4422737345570962270

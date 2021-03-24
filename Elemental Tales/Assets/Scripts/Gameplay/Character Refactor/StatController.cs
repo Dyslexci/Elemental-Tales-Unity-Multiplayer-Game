@@ -37,8 +37,8 @@ public class StatController : MonoBehaviourPun
 
     AudioSource[] injuryAudio;
     AudioSource[] deathAudio;
+    public Animator camAnim;
 
-    int currentCollectibles1 = 0;
     public bool isRespawning;
     public SpriteRenderer playerSprite;
 
@@ -49,6 +49,7 @@ public class StatController : MonoBehaviourPun
     /// </summary>
     void Start()
     {
+        camAnim = GameObject.Find("Virtual Camera").GetComponentInChildren<Animator>();
         currentHealth = new SafeFloat(maxHealth);
         currentMana = new SafeFloat(maxMana);
         hearts = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>().getHearts();
@@ -103,14 +104,6 @@ public class StatController : MonoBehaviourPun
     }
 
     /// <summary>
-    /// Adds 1 to the collectible1 counter.
-    /// </summary>
-    public void addCollectible1()
-    {
-        currentCollectibles1++;
-    }
-
-    /// <summary>
     /// Refactored by Adnan
     /// Draws the heart and mana objects on the HUD, based on current statistics.
     /// </summary>
@@ -154,8 +147,9 @@ public class StatController : MonoBehaviourPun
             SafeFloat damage = new SafeFloat(_damage);
             injuryAudio[Random.Range(0, injuryAudio.Length)].Play(0);
             currentHealth -= damage;
+            camAnim.SetTrigger("Trigger");
 
-            if(damage.GetValue() > 0)
+            if (damage.GetValue() > 0)
             {
                 GetComponent<PlayerInputs>().OnJumpInputDown();
                 StartCoroutine(WaitToEndJump(GlobalVariableManager.PlayerColour));

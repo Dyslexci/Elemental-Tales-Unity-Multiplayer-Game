@@ -68,7 +68,7 @@ public class PlayerInputs : MonoBehaviourPun
 	bool hasPlayedAudio;
 
 	[Header("Attack Variables")]
-	[SerializeField] private Animator animator;
+	public GameObject attackParticles;
 
 	[SerializeField] private Transform attackPoint;
 	[SerializeField] private float attackRange = 0.5f;
@@ -515,7 +515,7 @@ public class PlayerInputs : MonoBehaviourPun
 			return;
 
 		photonView.RPC("AttackSound", RpcTarget.AllBuffered);
-		//animator.SetTrigger("Attack");
+		
 		for (int i = 0; i < controller.horizontalRayCount; i++)
 		{
 			Vector2 rayOrigin = (controller.collisions.faceDir == -1) ? controller.raycastOrigins.bottomLeft : controller.raycastOrigins.bottomRight;
@@ -536,6 +536,8 @@ public class PlayerInputs : MonoBehaviourPun
 	[PunRPC] private void AttackSound()
     {
 		attackStartAudio.Play(0);
+		float attackPos = (facingLeft ? -1.6f : 1.6f);
+		Instantiate(attackParticles, new Vector3(transform.position.x + attackPos, transform.position.y, transform.position.z), Quaternion.identity);
 	}
 
 	[PunRPC] private void AttackHit()
