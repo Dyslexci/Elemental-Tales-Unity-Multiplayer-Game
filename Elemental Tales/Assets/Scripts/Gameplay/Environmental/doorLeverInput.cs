@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 1.1.0
- *    
+ *
  *    Allows door with one or two assigned inputs to be opened permanently.
  */
 
@@ -18,7 +16,7 @@ public class doorLeverInput : MonoBehaviour
     public int switchNumber = 0;
     public bool displayHint;
 
-    GameMaster gameMaster;
+    private GameMaster gameMaster;
 
     /// <summary>
     /// Initialises the door, determining the number of switches allocated.
@@ -36,45 +34,57 @@ public class doorLeverInput : MonoBehaviour
     /// <summary>
     /// Determines if enough switches are held down to trigger its end state, opening the door permanently if so.
     /// </summary>
-    void Update()
+    private void Update()
     {
         if (switchNumber == 0)
             return;
 
-        if(switchNumber == 1)
+        if (switchNumber == 1)
         {
-            if((switch1 != null && switch1.getLeverState() == true) || (switch2 != null && switch2.getLeverState() == true))
-            {
-                //this.gameObject.SetActive(false);
-                transform.position = new Vector2(10000, 10000);
+            CheckForOneSwitch();
+        }
+        else if (switchNumber == 2)
+        {
+            CheckForTwoSwitches();
+        }
+    }
 
-                gameMaster.openDoorSound.Play(0);
-                if(switch1 != null)
-                {
-                    switch1.setPressedSuccessfully();
-                } else if (switch2 != null)
-                {
-                    switch2.setPressedSuccessfully();
-                }
-            }
-        } else if (switchNumber == 2)
+    private void CheckForOneSwitch()
+    {
+        if ((switch1 != null && switch1.getLeverState()) || (switch2 != null && switch2.getLeverState()))
         {
-            if (switch1.getLeverState() == true && switch2.getLeverState() == true)
+            transform.position = new Vector2(10000, 10000);
+
+            gameMaster.openDoorSound.Play(0);
+            if (switch1 != null)
             {
-                displayHint = false;
-                transform.position = new Vector2(10000, 10000);
-                gameMaster.openDoorSound.Play(0);
                 switch1.setPressedSuccessfully();
+            }
+            else if (switch2 != null)
+            {
                 switch2.setPressedSuccessfully();
             }
+        }
+    }
 
-            if(switch1.getLeverState() || switch2.getLeverState())
-            {
-                displayHint = true;
-            } else if((!switch1.getLeverState() && !switch2.getLeverState()) || (switch1.pressedSuccessfully && switch2.pressedSuccessfully))
-            {
-                displayHint = false;
-            }
+    private void CheckForTwoSwitches()
+    {
+        if (switch1.getLeverState() && switch2.getLeverState())
+        {
+            displayHint = false;
+            transform.position = new Vector2(10000, 10000);
+            gameMaster.openDoorSound.Play(0);
+            switch1.setPressedSuccessfully();
+            switch2.setPressedSuccessfully();
+        }
+
+        if (switch1.getLeverState() || switch2.getLeverState())
+        {
+            displayHint = true;
+        }
+        else if ((!switch1.getLeverState() && !switch2.getLeverState()) || (switch1.pressedSuccessfully && switch2.pressedSuccessfully))
+        {
+            displayHint = false;
         }
     }
 }

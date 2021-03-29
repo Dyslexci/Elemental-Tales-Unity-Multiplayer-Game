@@ -1,18 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.4.0
  *    @version 1.2.2
- *    
+ *
  *    Manages the options menu, setting the various option states.
  */
+
 public class OptionsManager : MonoBehaviour
 {
     [SerializeField] private GameObject menuScreen;
@@ -22,8 +21,8 @@ public class OptionsManager : MonoBehaviour
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private GameObject settingsTab;
     [SerializeField] private GameObject controlsTab;
-    [SerializeField] Button settingsButton;
-    [SerializeField] Button controlsButton;
+    [SerializeField] private Button settingsButton;
+    [SerializeField] private Button controlsButton;
     public Slider musicSlider;
     public Slider soundSlider;
 
@@ -38,17 +37,17 @@ public class OptionsManager : MonoBehaviour
     private bool vsync = false;
     private bool fullscreenEnabled = true;
 
-    float startingMusicVolume;
-    float startingSoundVolume;
-    bool startingVsync;
-    bool startingFullscreen;
+    private float startingMusicVolume;
+    private float startingSoundVolume;
+    private bool startingVsync;
+    private bool startingFullscreen;
 
     /// <summary>
     /// Sets the default options.
     /// </summary>
     private void Start()
     {
-        if(!PlayerPrefs.HasKey("hasLoadedOnce"))
+        if (!PlayerPrefs.HasKey("hasLoadedOnce"))
         {
             PlayerPrefs.SetFloat("currentMusicVolume", 1);
             PlayerPrefs.SetFloat("currentSoundVolume", 1);
@@ -66,7 +65,7 @@ public class OptionsManager : MonoBehaviour
         {
             toggleFullscreen();
         }
-        if(PlayerPrefs.GetInt("vSyncEnabled") == 0)
+        if (PlayerPrefs.GetInt("vSyncEnabled") == 0)
         {
             toggleVSync();
         }
@@ -82,7 +81,7 @@ public class OptionsManager : MonoBehaviour
         resolutionsTemp = new List<Resolution>();
 
         //resolutions = Screen.resolutions;
-        foreach(Resolution res in Screen.resolutions)
+        foreach (Resolution res in Screen.resolutions)
         {
             if (res.refreshRate >= 59.0f && res.refreshRate <= 60.0f)
                 resolutionsTemp.Add(res);
@@ -244,7 +243,8 @@ public class OptionsManager : MonoBehaviour
         try
         {
             settingsTab.SetActive(true);
-        } catch
+        }
+        catch
         {
             Debug.LogWarning("Warning: OptionsManager has failed to initialise the settingsTab variable. This message should only play during debugging and testing, and is safe to ignore." +
                 " If this message shows when the project is due in, please contact Matt.");
@@ -252,7 +252,8 @@ public class OptionsManager : MonoBehaviour
         try
         {
             controlsTab.SetActive(false);
-        } catch
+        }
+        catch
         {
             Debug.LogWarning("Warning: OptionsManager has failed to initialise the controlsTab variable. This message should only play during debugging and testing, and is safe to ignore." +
                 " If this message shows when the project is due in, please contact Matt.");

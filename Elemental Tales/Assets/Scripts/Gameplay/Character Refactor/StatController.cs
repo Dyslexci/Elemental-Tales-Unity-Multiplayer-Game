@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 1.0.0
  *    @version 1.0.2
- *    
+ *
  *    Controls the players mana and health visual representations on the HUD, as well as handling collectibles.
  */
 
@@ -20,34 +19,36 @@ public class StatController : MonoBehaviourPun
 
     [Header("Health Variables")]
     private Image[] hearts;
+
     public float maxHealth = 3;
-    SafeFloat currentHealth;
+    private SafeFloat currentHealth;
     [SerializeField] private Sprite fullHeart;
     [SerializeField] private Sprite emptyHeart;
 
     [Header("Mana Variables")]
     private Image[] manas;
+
     public float maxMana = 3;
     public SafeFloat currentMana;
     [SerializeField] private Sprite fullMana;
     [SerializeField] private Sprite emptyMana;
 
-    PlayerInput inputs;
-    GameMaster gameMaster;
+    private PlayerInput inputs;
+    private GameMaster gameMaster;
 
-    AudioSource[] injuryAudio;
-    AudioSource[] deathAudio;
+    private AudioSource[] injuryAudio;
+    private AudioSource[] deathAudio;
     public Animator camAnim;
 
     public bool isRespawning;
     public SpriteRenderer playerSprite;
 
-    Color playerColour;
+    private Color playerColour;
 
     /// <summary>
     /// Initialises the statistics and HUD objects for this object.
     /// </summary>
-    void Start()
+    private void Start()
     {
         camAnim = GameObject.Find("Virtual Camera").GetComponentInChildren<Animator>();
         currentHealth = new SafeFloat(maxHealth);
@@ -80,15 +81,18 @@ public class StatController : MonoBehaviourPun
     /// <summary>
     /// Updates the health/mana, the drawing of the health/mana objects on the HUD, and deals with respawning.
     /// </summary>
-    void Update()
+    private void Update()
     {
-
-        // Health script code
         if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
             return;
 
         checkStats();
+        CheckForDeath();
+        DrawHealthMana();
+    }
 
+    private void CheckForDeath()
+    {
         if (currentHealth.GetValue() <= 0 && !isRespawning)
         {
             deathAudio[Random.Range(0, deathAudio.Length)].Play(0);
@@ -99,15 +103,13 @@ public class StatController : MonoBehaviourPun
             isRespawning = true;
             playerSprite.color = playerColour;
         }
-
-        DrawHealthMana();
     }
 
     /// <summary>
     /// Refactored by Adnan
     /// Draws the heart and mana objects on the HUD, based on current statistics.
     /// </summary>
-    void DrawHealthMana()
+    private void DrawHealthMana()
     {
         if (!isRespawning)
         {
@@ -142,7 +144,7 @@ public class StatController : MonoBehaviourPun
     /// <param name="damage"></param>
     public void DamageHealth(int _damage)
     {
-        if(currentHealth.GetValue() != 0)
+        if (currentHealth.GetValue() != 0)
         {
             SafeFloat damage = new SafeFloat(_damage);
             injuryAudio[Random.Range(0, injuryAudio.Length)].Play(0);
@@ -158,13 +160,13 @@ public class StatController : MonoBehaviourPun
         }
     }
 
-    IEnumerator WaitToEndJump(string hex)
+    private IEnumerator WaitToEndJump(string hex)
     {
         yield return new WaitForSeconds(.2f);
         GetComponent<PlayerInputs>().OnJumpInputUp();
     }
 
-    IEnumerator FlashDamagedRed()
+    private IEnumerator FlashDamagedRed()
     {
         playerSprite.color = Color.red;
         yield return new WaitForSeconds(.1f);
@@ -187,7 +189,7 @@ public class StatController : MonoBehaviourPun
     public bool DamageMana(int _damage)
     {
         SafeFloat damage = new SafeFloat(_damage);
-        if(currentMana.GetValue() != 0)
+        if (currentMana.GetValue() != 0)
         {
             currentMana -= damage;
             return true;

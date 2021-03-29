@@ -1,15 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-/** 
+/**
  *    @author Alan Zucconi
+ *    @author Matthew Ahearn
  *    @since 2.3.0
  *    @version 1.0.1
- *    
- *    Unused example of a 'safe float', where the float is stored in memory and cannot be modified by something like cheat engine. Would be used for protection. 
- *    Unused since we had no real reason for it - including for Security guys example.
+ *
+ *    Safe Float type declaration, where the float is stored in memory and cannot be modified by something like cheat engine. Would be used for protection.
  */
+
 public struct SafeFloat
 {
     private float offset;

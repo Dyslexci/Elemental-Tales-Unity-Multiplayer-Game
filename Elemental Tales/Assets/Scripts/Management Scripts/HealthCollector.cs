@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
 using UnityEngine;
 
-using Photon.Pun;
-
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 2.0.0
  *    @version 1.0.0
- *    
+ *
  *    Adds Mana to both players and deletes the associated collectible object when player object collides.
  */
 
@@ -16,7 +13,7 @@ public class HealthCollector : MonoBehaviourPun
 {
     private double hitLast = 0;
     private double hitDelay = 0.2;
-    StatController playerController;
+    private StatController playerController;
 
     /// <summary>
     /// On player object collision, add the collectible to the collectible counter and remove the collectible object from the game.
@@ -44,7 +41,8 @@ public class HealthCollector : MonoBehaviourPun
     /// <summary>
     /// Sends an RPC to delete the collectible and add a collectible to the counter for both players.
     /// </summary>
-    [PunRPC] private void AddHealth()
+    [PunRPC]
+    private void AddHealth()
     {
         Debug.Log("PUN: deleteGem() has been called via the RPC.");
         playerController = FindObjectOfType<GameMaster>().getPlayer().GetComponent<StatController>();

@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
 using UnityEngine;
 
-using Photon.Pun;
-
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 1.2.1
- *    
+ *
  *    Checks for the players presence, and applies (optionally elemental) damage to the player when they are present.
  */
 
@@ -26,7 +23,7 @@ public class TerrainDamage : MonoBehaviourPun
     /// <param name="collision"></param>
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player")
         {
             if (Time.time - hitLast < hitDelay | (collision.gameObject.GetPhotonView().IsMine == false && PhotonNetwork.IsConnected == true))
             {

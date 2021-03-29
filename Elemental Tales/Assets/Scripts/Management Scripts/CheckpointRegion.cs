@@ -1,20 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
 using UnityEngine;
 
-using Photon.Pun;
-
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 1.0.0
  *    @version 1.1.3
- *    
+ *
  *    Provides checkpoints for the player to reset to on death.
  */
 
 public class CheckpointRegion : MonoBehaviourPun
 {
-    bool hasBeenTriggered;
+    private bool hasBeenTriggered;
 
     /// <summary>
     /// When a player enters the checkpoint collider, update their latest checkpoint to this checkpoint.
@@ -35,7 +32,7 @@ public class CheckpointRegion : MonoBehaviourPun
                 GameObject.Find("Game Manager").GetComponent<GameMaster>().numberOfCheckpointsReached += 1;
                 GameObject.Find("Game Manager").GetComponent<GameMaster>().AddPercentageExplored();
             }
-            
+
             GameObject.Find("Game Manager").GetComponent<GameMaster>().setCheckpoint(this.gameObject.GetComponentsInChildren<Transform>()[0]);
             Debug.Log("Checkpoint has been set to " + this.gameObject.name);
         }

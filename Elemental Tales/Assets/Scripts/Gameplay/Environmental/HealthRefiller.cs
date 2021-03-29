@@ -1,18 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
+using System.Collections;
 using UnityEngine;
-using Photon.Pun;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 2.0.0
  *    @version 1.0.1
- *    
+ *
  *    Allows the player to refill health when jumping on this object.
  */
+
 public class HealthRefiller : MonoBehaviour
 {
-    bool beenPopped;
+    private bool beenPopped;
     public SpriteRenderer capImage;
     public GameObject healthExplodePrefab;
 
@@ -25,7 +25,7 @@ public class HealthRefiller : MonoBehaviour
         if (beenPopped)
             return;
 
-        if(collision.tag == "Player")
+        if (collision.tag == "Player")
         {
             if (collision.gameObject.GetPhotonView().IsMine == false && PhotonNetwork.IsConnected == true)
                 return;
@@ -48,7 +48,7 @@ public class HealthRefiller : MonoBehaviour
     /// </summary>
     /// <param name="player"></param>
     /// <returns></returns>
-    IEnumerator WaitToEndJump(PlayerInputs player)
+    private IEnumerator WaitToEndJump(PlayerInputs player)
     {
         yield return new WaitForSeconds(.4f);
         player.OnJumpInputUp();
@@ -58,7 +58,7 @@ public class HealthRefiller : MonoBehaviour
     /// Respawns this object after 5 minutes realtime.
     /// </summary>
     /// <returns></returns>
-    IEnumerator WaitToRespawn()
+    private IEnumerator WaitToRespawn()
     {
         yield return new WaitForSeconds(300);
         beenPopped = false;

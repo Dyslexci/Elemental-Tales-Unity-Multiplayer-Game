@@ -1,197 +1,201 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 1.2.2
  *    @version 1.3.4
- *    
+ *
  *    Controller for a block which will try to fall on players, before raising back into their start position. Being crushed by the block will kill the player instantly, in either direction.
  */
+
 [RequireComponent(typeof(CharacterControllerRaycast))]
 public class FallingBlock : RaycastController
 {
-	public LayerMask passengerMask;
+    public LayerMask passengerMask;
 
-	public float gravity = 40;
+    public float gravity = 40;
     public float raiseSpeed = 12;
-    CharacterControllerRaycast controller;
-    Vector3 velocity;
-    bool isFalling;
-	bool fallMusicPlaying;
-	bool hasHitFloor;
+    private CharacterControllerRaycast controller;
+    private Vector3 velocity;
+    private bool isFalling;
+    private bool fallMusicPlaying;
+    private bool hasHitFloor;
 
-	public AudioSource blockFalling;
-	public AudioSource blockHitFloor;
+    public AudioSource blockFalling;
+    public AudioSource blockHitFloor;
 
-	List<PassengerMovement> passengerMovement;
-	Dictionary<Transform, CharacterControllerRaycast> passengerDictionary = new Dictionary<Transform, CharacterControllerRaycast>();
+    private List<PassengerMovement> passengerMovement;
+    private Dictionary<Transform, CharacterControllerRaycast> passengerDictionary = new Dictionary<Transform, CharacterControllerRaycast>();
 
-	public override void Start()
+    public override void Start()
     {
         controller = GetComponent<CharacterControllerRaycast>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-		UpdateRaycastOrigins();
+        UpdateRaycastOrigins();
+        GravityAndCollisionsCheck();
+        CalculatePassengerMovement(velocity * Time.deltaTime);
+        MovePassengers(true);
+        controller.Move(velocity * Time.deltaTime, false);
+        MovePassengers(false);
+    }
 
-		// Perform gravity and collisions check
-		if (isFalling)
+    private void GravityAndCollisionsCheck()
+    {
+        if (isFalling)
         {
             velocity += Vector3.down * gravity * Time.deltaTime;
-			if(!fallMusicPlaying)
+            if (!fallMusicPlaying)
             {
-				blockFalling.Play(0);
-				fallMusicPlaying = true;
-			}
+                blockFalling.Play(0);
+                fallMusicPlaying = true;
+            }
         }
         if (controller.collisions.below)
         {
             velocity = Vector3.zero;
-			blockFalling.Stop();
-			if (!hasHitFloor)
+            blockFalling.Stop();
+            if (!hasHitFloor)
             {
-				blockHitFloor.Play(0);
-				blockFalling.Stop();
-				fallMusicPlaying = false;
-				hasHitFloor = true;
-			}
+                blockHitFloor.Play(0);
+                blockFalling.Stop();
+                fallMusicPlaying = false;
+                hasHitFloor = true;
+            }
         }
-        if(!isFalling)
+        if (!isFalling)
         {
-			hasHitFloor = false;
+            hasHitFloor = false;
             velocity += Vector3.up * raiseSpeed * Time.deltaTime;
-			blockFalling.Stop();
-			if (controller.collisions.above)
+            blockFalling.Stop();
+            if (controller.collisions.above)
             {
                 velocity = Vector3.zero;
             }
         }
-
-		CalculatePassengerMovement(velocity * Time.deltaTime);
-		MovePassengers(true);
-		controller.Move(velocity * Time.deltaTime, false);
-		MovePassengers(false);
-	}
+    }
 
     public void TriggerFalling()
     {
-		photonView.RPC("TriggerBlockFall", RpcTarget.AllBuffered);
-	}
-
-	[PunRPC] private void TriggerBlockFall()
-	{
-		StartCoroutine(WaitToResetBlock());
-	}
-
-	IEnumerator WaitToResetBlock()
-    {
-		isFalling = true;
-		while(!controller.collisions.below)
-        {
-			yield return new WaitForFixedUpdate();
-        }
-		yield return new WaitForSeconds(1.5f);
-		isFalling = false;
+        photonView.RPC("TriggerBlockFall", RpcTarget.AllBuffered);
     }
 
-	void MovePassengers(bool beforeMovePlatform)
-	{
-		foreach (PassengerMovement passenger in passengerMovement)
-		{
-			if (!passengerDictionary.ContainsKey(passenger.transform))
-			{
-				passengerDictionary.Add(passenger.transform, passenger.transform.GetComponent<CharacterControllerRaycast>());
-			}
+    [PunRPC]
+    private void TriggerBlockFall()
+    {
+        StartCoroutine(WaitToResetBlock());
+    }
 
-			if (passenger.moveBeforePlatform == beforeMovePlatform)
-			{
-				passengerDictionary[passenger.transform].Move(passenger.velocity, passenger.standingOnPlatform);
-			}
-		}
-	}
+    private IEnumerator WaitToResetBlock()
+    {
+        isFalling = true;
+        while (!controller.collisions.below)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        yield return new WaitForSeconds(1.5f);
+        isFalling = false;
+    }
 
-	/// <summary>
-	/// Logic for calculating how the passengers should move based off the movement of the platform
-	/// </summary>
-	/// <param name="velocity"></param>
-	void CalculatePassengerMovement(Vector3 velocity)
-	{
-		HashSet<Transform> movedPassengers = new HashSet<Transform>();
-		passengerMovement = new List<PassengerMovement>();
+    private void MovePassengers(bool beforeMovePlatform)
+    {
+        foreach (PassengerMovement passenger in passengerMovement)
+        {
+            if (!passengerDictionary.ContainsKey(passenger.transform))
+            {
+                passengerDictionary.Add(passenger.transform, passenger.transform.GetComponent<CharacterControllerRaycast>());
+            }
 
-		float directionX = Mathf.Sign(velocity.x);
-		float directionY = Mathf.Sign(velocity.y);
+            if (passenger.moveBeforePlatform == beforeMovePlatform)
+            {
+                passengerDictionary[passenger.transform].Move(passenger.velocity, passenger.standingOnPlatform);
+            }
+        }
+    }
 
-		// Vertically moving platform
-		if (velocity.y != 0)
-		{
-			float rayLength = Mathf.Abs(velocity.y) + skinWidth;
+    /// <summary>
+    /// Logic for calculating how the passengers should move based off the movement of the platform
+    /// </summary>
+    /// <param name="velocity"></param>
+    private void CalculatePassengerMovement(Vector3 velocity)
+    {
+        HashSet<Transform> movedPassengers = new HashSet<Transform>();
+        passengerMovement = new List<PassengerMovement>();
 
-			for (int i = 0; i < verticalRayCount; i++)
-			{
-				Vector2 rayOrigin = (directionY == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
-				rayOrigin += Vector2.right * (verticalRaySpacing * i);
-				RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, passengerMask);
+        float directionX = Mathf.Sign(velocity.x);
+        float directionY = Mathf.Sign(velocity.y);
 
-				if (hit && hit.distance != 0)
-				{
-					if (!movedPassengers.Contains(hit.transform))
-					{
-						movedPassengers.Add(hit.transform);
-						float pushX = (directionY == 1) ? velocity.x : 0;
-						float pushY = velocity.y - (hit.distance - skinWidth) * directionY;
+        // Vertically moving platform
+        if (velocity.y != 0)
+        {
+            float rayLength = Mathf.Abs(velocity.y) + skinWidth;
 
-						passengerMovement.Add(new PassengerMovement(hit.transform, new Vector3(pushX, pushY), directionY == 1, true));
-					}
-				}
-			}
-		}
+            for (int i = 0; i < verticalRayCount; i++)
+            {
+                Vector2 rayOrigin = (directionY == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
+                rayOrigin += Vector2.right * (verticalRaySpacing * i);
+                RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, passengerMask);
 
-		// Passenger on top of a horizontally or downward moving platform
-		if (directionY == -1 || velocity.y == 0 && velocity.x != 0)
-		{
-			float rayLength = skinWidth * 2;
+                if (hit && hit.distance != 0)
+                {
+                    if (!movedPassengers.Contains(hit.transform))
+                    {
+                        movedPassengers.Add(hit.transform);
+                        float pushX = (directionY == 1) ? velocity.x : 0;
+                        float pushY = velocity.y - (hit.distance - skinWidth) * directionY;
 
-			for (int i = 0; i < verticalRayCount; i++)
-			{
-				Vector2 rayOrigin = raycastOrigins.topLeft + Vector2.right * (verticalRaySpacing * i);
-				RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up, rayLength, passengerMask);
+                        passengerMovement.Add(new PassengerMovement(hit.transform, new Vector3(pushX, pushY), directionY == 1, true));
+                    }
+                }
+            }
+        }
 
-				if (hit && hit.distance != 0)
-				{
-					if (!movedPassengers.Contains(hit.transform))
-					{
-						movedPassengers.Add(hit.transform);
-						float pushX = velocity.x;
-						float pushY = velocity.y;
+        // Passenger on top of a horizontally or downward moving platform
+        if (directionY == -1 || velocity.y == 0 && velocity.x != 0)
+        {
+            float rayLength = skinWidth * 2;
 
-						passengerMovement.Add(new PassengerMovement(hit.transform, new Vector3(pushX, pushY), true, false));
-					}
-				}
-			}
-		}
-	}
+            for (int i = 0; i < verticalRayCount; i++)
+            {
+                Vector2 rayOrigin = raycastOrigins.topLeft + Vector2.right * (verticalRaySpacing * i);
+                RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up, rayLength, passengerMask);
 
-	/// <summary>
-	/// Contains variables for the movement of the passengers standing on the platform.
-	/// </summary>
-	struct PassengerMovement
-	{
-		public Transform transform;
-		public Vector3 velocity;
-		public bool standingOnPlatform;
-		public bool moveBeforePlatform;
+                if (hit && hit.distance != 0)
+                {
+                    if (!movedPassengers.Contains(hit.transform))
+                    {
+                        movedPassengers.Add(hit.transform);
+                        float pushX = velocity.x;
+                        float pushY = velocity.y;
 
-		public PassengerMovement(Transform _transform, Vector3 _velocity, bool _standingOnPlatform, bool _moveBeforePlatform)
-		{
-			transform = _transform;
-			velocity = _velocity;
-			standingOnPlatform = _standingOnPlatform;
-			moveBeforePlatform = _moveBeforePlatform;
-		}
-	}
+                        passengerMovement.Add(new PassengerMovement(hit.transform, new Vector3(pushX, pushY), true, false));
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Contains variables for the movement of the passengers standing on the platform.
+    /// </summary>
+    private struct PassengerMovement
+    {
+        public Transform transform;
+        public Vector3 velocity;
+        public bool standingOnPlatform;
+        public bool moveBeforePlatform;
+
+        public PassengerMovement(Transform _transform, Vector3 _velocity, bool _standingOnPlatform, bool _moveBeforePlatform)
+        {
+            transform = _transform;
+            velocity = _velocity;
+            standingOnPlatform = _standingOnPlatform;
+            moveBeforePlatform = _moveBeforePlatform;
+        }
+    }
 }

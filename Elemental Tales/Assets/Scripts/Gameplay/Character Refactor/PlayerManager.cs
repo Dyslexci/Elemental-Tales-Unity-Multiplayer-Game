@@ -1,15 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
 using UnityEngine;
-using Photon.Pun;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 2.3.0
  *    @version 1.0.0
- *    
+ *
  *    Manages various player processes which don't belong in other player scripts.
  */
+
 public class PlayerManager : MonoBehaviourPun
 {
     public GameObject player;
@@ -19,7 +18,7 @@ public class PlayerManager : MonoBehaviourPun
     {
         player = gameObject;
 
-        if(photonView.IsMine)
+        if (photonView.IsMine)
             photonView.RPC("SetPlayerColour", RpcTarget.AllBuffered, GlobalVariableManager.PlayerColour);
     }
 
@@ -42,7 +41,8 @@ public class PlayerManager : MonoBehaviourPun
     /// <summary>
     /// Sets the player object to inactive for all players.
     /// </summary>
-    [PunRPC] private void DespawnPlayerModel()
+    [PunRPC]
+    private void DespawnPlayerModel()
     {
         player.SetActive(false);
     }
@@ -50,7 +50,8 @@ public class PlayerManager : MonoBehaviourPun
     /// <summary>
     /// Sets the player object to active for all players.
     /// </summary>
-    [PunRPC] private void RespawnPlayerModel()
+    [PunRPC]
+    private void RespawnPlayerModel()
     {
         player.SetActive(true);
     }
@@ -59,13 +60,14 @@ public class PlayerManager : MonoBehaviourPun
     /// Sets the player colour to the chosen colour for each player.
     /// </summary>
     /// <param name="hex"></param>
-    [PunRPC] private void SetPlayerColour(string hex)
+    [PunRPC]
+    private void SetPlayerColour(string hex)
     {
-        if(hex.Equals("FFFFFF"))
+        if (hex.Equals("FFFFFF"))
         {
             return;
         }
-        if(hex.Equals("FFCD81"))
+        if (hex.Equals("FFCD81"))
         {
             playerSprite.color = new Color(1, 0.801076f, 0.504717f);
             return;

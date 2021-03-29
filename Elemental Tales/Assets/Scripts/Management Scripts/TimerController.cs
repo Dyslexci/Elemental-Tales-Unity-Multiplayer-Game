@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 1.0.0
  *    @version 1.0.1
- *    
+ *
  *    Provides a timer for the duration the local player has been in the game, and tracks this time on the pause menu.
  */
+
 public class TimerController : MonoBehaviour
 {
     public static TimerController instance;
 
     public TMP_Text timeCounter;
 
-    TimeSpan timePlaying;
-    bool timerGoing;
+    private TimeSpan timePlaying;
+    private bool timerGoing;
     public bool isMainGame = true;
 
     public float elapsedTime;
@@ -35,7 +34,7 @@ public class TimerController : MonoBehaviour
     /// <summary>
     /// Sets the timer initial value and disables the timer on object start.
     /// </summary>
-    void Start()
+    private void Start()
     {
         timeCounter.text = "00:00:00";
         timerGoing = false;
@@ -65,9 +64,9 @@ public class TimerController : MonoBehaviour
     /// Adds the time since last check to the timer value.
     /// </summary>
     /// <returns></returns>
-    IEnumerator UpdateTimer()
+    private IEnumerator UpdateTimer()
     {
-        while(timerGoing)
+        while (timerGoing)
         {
             elapsedTime += Time.deltaTime;
             timePlaying = TimeSpan.FromSeconds(elapsedTime);

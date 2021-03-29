@@ -1,16 +1,15 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
-using Photon.Realtime;
-using System.Collections;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 0.1.0
- *    
+ *
  *    Allows the player to input a name, limited to 12 characters.
  */
+
 namespace Com.Team12.ElementalTales
 {
     /// <summary>
@@ -21,22 +20,19 @@ namespace Com.Team12.ElementalTales
     {
         #region Private Constants
 
-
         // Store the PlayerPref Key to avoid typos
-        const string playerNamePrefKey = "PlayerName";
-        [SerializeField] InputField playerNameInputField;
+        private const string playerNamePrefKey = "PlayerName";
 
+        [SerializeField] private InputField playerNameInputField;
 
-        #endregion
-
+        #endregion Private Constants
 
         #region MonoBehaviour CallBacks
-
 
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity during initialization phase.
         /// </summary>
-        void Start()
+        private void Start()
         {
             playerNameInputField.characterLimit = 12;
 
@@ -54,12 +50,9 @@ namespace Com.Team12.ElementalTales
             PhotonNetwork.NickName = defaultName;
         }
 
-
-        #endregion
-
+        #endregion MonoBehaviour CallBacks
 
         #region Public Methods
-
 
         /// <summary>
         /// Sets the name of the player, and save it in the PlayerPrefs for future sessions.
@@ -75,10 +68,9 @@ namespace Com.Team12.ElementalTales
             }
             PhotonNetwork.NickName = value;
 
-
             PlayerPrefs.SetString(playerNamePrefKey, value);
         }
 
-        #endregion
+        #endregion Public Methods
     }
 }

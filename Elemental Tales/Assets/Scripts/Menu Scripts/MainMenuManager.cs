@@ -1,66 +1,72 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
+using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
-using Photon.Pun;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 2.0.3
- *    
+ *
  *    Manages the main menu - opening and closing panels and dealing with the actions of each button.
  */
+
 public class MainMenuManager : MonoBehaviourPun
 {
     [Header("Versions")]
     [SerializeField] private string version;
+
     [SerializeField] private TMP_Text versionText;
 
     [Header("Main Screen")]
     [SerializeField] private GameObject menuScreen;
+
     public GameObject menuBlurPanel;
     public CanvasGroup menuFaderPanel;
 
     [Header("Start Game Screen")]
     [SerializeField] private GameObject startGameScreen;
+
     public GameObject startBlurPanel;
     public CanvasGroup startFaderPanel;
     public GameObject startButton;
 
     [Header("Options Screen")]
     [SerializeField] private GameObject optionsScreen;
+
     public GameObject optionsBlurPanel;
     public CanvasGroup optionsFaderPanel;
 
     [Header("Exit Screen")]
     [SerializeField] private GameObject exitScreen;
+
     public GameObject exitBlurPanel;
     public CanvasGroup exitFaderPanel;
 
     [Header("Notes Screen")]
     [SerializeField] private GameObject notesMenu;
+
     public GameObject notesBlurPanel;
     public CanvasGroup NotesFaderPanel;
 
     [Header("Misc")]
-    [SerializeField] Camera mainCam;
+    [SerializeField] private Camera mainCam;
+
     public CanvasGroup startBlackPanel;
     public TMP_Text startText;
     public CanvasGroup startTextPanel;
     public CanvasGroup mainButtonsPanel;
     public AudioSource buttonClick;
     public AudioSource music;
-    float musicStartVolume;
+    private float musicStartVolume;
     public CanvasGroup colourPanel1;
     public CanvasGroup colourPanel2;
     public Image colourButton1;
     public Image colourButton2;
 
-    string activeMenu = "";
-    
+    private string activeMenu = "";
+
     /// <summary>
     /// Sets the main menu to its default starting state.
     /// </summary>
@@ -80,12 +86,13 @@ public class MainMenuManager : MonoBehaviourPun
         if (!PhotonNetwork.IsMasterClient)
             startButton.SetActive(false);
 
-        if(!GlobalVariableManager.HasLoaded)
+        if (!GlobalVariableManager.HasLoaded)
         {
             startBlackPanel.gameObject.SetActive(true);
             StartCoroutine(FadeStartText());
             GlobalVariableManager.HasLoaded = true;
-        } else
+        }
+        else
         {
             startBlackPanel.gameObject.SetActive(true);
             StartCoroutine(FadeIntoMenuAlt());
@@ -93,40 +100,45 @@ public class MainMenuManager : MonoBehaviourPun
 
         mainCam.transform.position = new Vector3(mainCam.transform.position.x, 20.8f, mainCam.transform.position.z);
 
-        versionText.text = "v"+version;
+        versionText.text = "v" + version;
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            switch (activeMenu)
-            {
-                case "mainMenu":
-                    buttonClick.Play();
-                    quitGame();
-                    break;
+            ChangeActiveMenu();
+        }
+    }
 
-                case "quitMenu":
-                    buttonClick.Play();
-                    quitCancel();
-                    break;
+    private void ChangeActiveMenu()
+    {
+        switch (activeMenu)
+        {
+            case "mainMenu":
+                buttonClick.Play();
+                quitGame();
+                break;
 
-                case "startMenu":
-                    buttonClick.Play();
-                    quitStartGame();
-                    break;
+            case "quitMenu":
+                buttonClick.Play();
+                quitCancel();
+                break;
 
-                case "notesMenu":
-                    buttonClick.Play();
-                    closeNotes();
-                    break;
+            case "startMenu":
+                buttonClick.Play();
+                quitStartGame();
+                break;
 
-                case "optionsMenu":
-                    buttonClick.Play();
-                    GetComponent<OptionsManager>().optionsApply();
-                    break;
-            }
+            case "notesMenu":
+                buttonClick.Play();
+                closeNotes();
+                break;
+
+            case "optionsMenu":
+                buttonClick.Play();
+                GetComponent<OptionsManager>().optionsApply();
+                break;
         }
     }
 
@@ -233,13 +245,13 @@ public class MainMenuManager : MonoBehaviourPun
 
     public void OpenColourPanel1()
     {
-        if(PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
             colourPanel1.gameObject.SetActive(true);
     }
 
     public void OpenColourPanel2()
     {
-        if(!PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient)
             colourPanel2.gameObject.SetActive(true);
     }
 
@@ -281,7 +293,8 @@ public class MainMenuManager : MonoBehaviourPun
         colourPanel2.gameObject.SetActive(false);
     }
 
-    [PunRPC] private void SetPlayer1Colour(string hex)
+    [PunRPC]
+    private void SetPlayer1Colour(string hex)
     {
         if (hex.Equals("FFFFFF"))
         {
@@ -305,7 +318,8 @@ public class MainMenuManager : MonoBehaviourPun
         }
     }
 
-    [PunRPC] private void SetPlayer2Colour(string hex)
+    [PunRPC]
+    private void SetPlayer2Colour(string hex)
     {
         if (hex.Equals("FFFFFF"))
         {
@@ -335,7 +349,7 @@ public class MainMenuManager : MonoBehaviourPun
     /// <param name="panel"></param>
     /// <param name="panelBlur"></param>
     /// <returns></returns>
-    IEnumerator FadeInPanel(CanvasGroup panel, GameObject panelBlur)
+    private IEnumerator FadeInPanel(CanvasGroup panel, GameObject panelBlur)
     {
         panelBlur.SetActive(false);
         panel.gameObject.SetActive(true);
@@ -358,7 +372,7 @@ public class MainMenuManager : MonoBehaviourPun
     /// <param name="fromPanel"></param>
     /// <param name="toPanel"></param>
     /// <returns></returns>
-    IEnumerator FadeOutPanel(CanvasGroup panel, GameObject panelBlur, GameObject fromPanel, GameObject toPanel)
+    private IEnumerator FadeOutPanel(CanvasGroup panel, GameObject panelBlur, GameObject fromPanel, GameObject toPanel)
     {
         panelBlur.SetActive(false);
         panel.gameObject.SetActive(true);
@@ -377,7 +391,7 @@ public class MainMenuManager : MonoBehaviourPun
     /// Starts off the first launch of the game by fading in and out text and panels, to create a smooth intro splash screen.
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadeStartText()
+    private IEnumerator FadeStartText()
     {
         startTextPanel.gameObject.SetActive(true);
         startBlackPanel.gameObject.SetActive(true);
@@ -391,7 +405,7 @@ public class MainMenuManager : MonoBehaviourPun
             startTextPanel.alpha += 0.01f;
         }
         yield return new WaitForSeconds(1.5f);
-        while(startBlackPanel.alpha > 0)
+        while (startBlackPanel.alpha > 0)
         {
             yield return new WaitForFixedUpdate();
             startBlackPanel.alpha -= 0.01f;
@@ -400,7 +414,7 @@ public class MainMenuManager : MonoBehaviourPun
         startBlackPanel.gameObject.SetActive(false);
         startTextPanel.gameObject.SetActive(false);
         yield return new WaitForSeconds(0.3f);
-        while(mainButtonsPanel.alpha < 1f)
+        while (mainButtonsPanel.alpha < 1f)
         {
             yield return new WaitForFixedUpdate();
             mainButtonsPanel.alpha += 0.03f;
@@ -412,10 +426,10 @@ public class MainMenuManager : MonoBehaviourPun
     /// When the player has already been through the intro splash screen, this simply fades the main menu in from black.
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadeIntoMenuAlt()
+    private IEnumerator FadeIntoMenuAlt()
     {
         startBlackPanel.alpha = 1;
-        while(startBlackPanel.alpha > 0)
+        while (startBlackPanel.alpha > 0)
         {
             yield return new WaitForFixedUpdate();
             startBlackPanel.alpha -= 0.01f;
@@ -427,11 +441,11 @@ public class MainMenuManager : MonoBehaviourPun
     /// Fades to black and then closes the application.
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadeToApplicationClose()
+    private IEnumerator FadeToApplicationClose()
     {
         startBlackPanel.alpha = 0;
         startBlackPanel.gameObject.SetActive(true);
-        while(startBlackPanel.alpha < 1)
+        while (startBlackPanel.alpha < 1)
         {
             yield return new WaitForFixedUpdate();
             startBlackPanel.alpha += 0.01f;

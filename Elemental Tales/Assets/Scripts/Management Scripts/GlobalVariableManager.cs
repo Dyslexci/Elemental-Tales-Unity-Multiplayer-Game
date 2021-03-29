@@ -1,12 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/** 
+﻿/**
  *    @author Matthew Ahearn
  *    @since 2.2.0
  *    @version 1.5.0
- *    
+ *
  *    Stores application wide variables which must not be unloaded during this session, but which can be unloaded between application runs.
  */
 
@@ -94,6 +90,7 @@ public static class GlobalVariableManager
             level1Stage1BestTime = value;
         }
     }
+
     public static float Level1Stage2BestTime
     {
         get
@@ -105,6 +102,7 @@ public static class GlobalVariableManager
             level1Stage2BestTime = value;
         }
     }
+
     public static float Level1Stage3BestTime
     {
         get

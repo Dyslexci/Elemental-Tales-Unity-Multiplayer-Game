@@ -1,23 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-using Photon.Pun;
-
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 1.0.0
- *    
+ *
  *    Controls the visual collectible counter on the HUD.
  */
 
 public class Collectible1Counter : MonoBehaviour
 {
     [SerializeField] private GameObject collectible1Holder;
-    SafeFloat noCollectibles1;
+    private SafeFloat noCollectibles1;
     [SerializeField] private TMP_Text collectible1Number;
 
     /// <summary>
@@ -34,13 +29,19 @@ public class Collectible1Counter : MonoBehaviour
     /// <summary>
     /// Updates the HUD objects with current data.
     /// </summary>
-    void Update()
+    private void Update()
+    {
+        UpdateCollectibleCounter();
+    }
+
+    private void UpdateCollectibleCounter()
     {
         noCollectibles1 = FindObjectOfType<GameMaster>().getCollectible1();
         if (noCollectibles1.ToString().Equals("0"))
         {
-            collectible1Holder.SetActive(false);;
-        } else
+            collectible1Holder.SetActive(false); ;
+        }
+        else
         {
             collectible1Holder.SetActive(true);
             collectible1Number.text = noCollectibles1.ToString();

@@ -1,27 +1,27 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 2.4.0
  *    @version 1.0.0
- *    
+ *
  *    Handles displaying the main hint on the top of the UI.
  */
+
 public class UIHintController : MonoBehaviour
 {
-    getHUDComponents HUDComponents;
+    private getHUDComponents HUDComponents;
 
-    TMP_Text hintText;
-    GameObject hintHolder;
-    CanvasGroup panel;
-    Image hintImage;
+    private TMP_Text hintText;
+    private GameObject hintHolder;
+    private CanvasGroup panel;
+    private Image hintImage;
     public bool isDisplayingHint;
 
-    void Start()
+    private void Start()
     {
         HUDComponents = GameObject.Find("PlayerHUDObject").GetComponent<getHUDComponents>();
 
@@ -48,7 +48,7 @@ public class UIHintController : MonoBehaviour
     /// <param name="textString"></param>
     /// <param name="displayTime"></param>
     /// <returns></returns>
-    IEnumerator WaitHideHint(string textString, int displayTime)
+    private IEnumerator WaitHideHint(string textString, int displayTime)
     {
         hintHolder.SetActive(true);
         StartCoroutine("JumpInHintHolder");
@@ -61,7 +61,7 @@ public class UIHintController : MonoBehaviour
     /// Coroutine making the hint jump into place.
     /// </summary>
     /// <returns></returns>
-    IEnumerator JumpInHintHolder()
+    private IEnumerator JumpInHintHolder()
     {
         hintImage.transform.localScale = new Vector3(5, 5, 5);
 
@@ -77,7 +77,7 @@ public class UIHintController : MonoBehaviour
     /// Coroutine making the hint fade out after it has been on screen enough time.
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadeHintHolder()
+    private IEnumerator FadeHintHolder()
     {
         while (panel.alpha > 0)
         {

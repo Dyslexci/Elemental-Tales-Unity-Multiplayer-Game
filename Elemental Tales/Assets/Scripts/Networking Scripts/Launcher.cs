@@ -1,18 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using Photon.Pun;
+﻿using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using TMPro;
+using UnityEngine;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 1.2.2
- *    
+ *
  *    Implements the lobby system and launcer for the PUN2 networking package.
  */
 
@@ -21,7 +17,6 @@ namespace Com.Team12.ElementalTales
     public class Launcher : MonoBehaviourPunCallbacks
     {
         #region MonoBehaviourPunCallbacks Callbacks
-
 
         /// <summary>
         /// Method called when the client disconnects from the online host server
@@ -86,7 +81,6 @@ namespace Com.Team12.ElementalTales
         public override void OnCreatedRoom()
         {
             lobbyPlayer1Text.text = PhotonNetwork.NickName;
-
         }
 
         /// <summary>
@@ -112,36 +106,37 @@ namespace Com.Team12.ElementalTales
             lobbyPlayer2Text.text = "Empty";
         }
 
-
-        #endregion
-
+        #endregion MonoBehaviourPunCallbacks Callbacks
 
         #region Private Fields
 
         /// <summary>
         /// This client's version number. Users are separated from each other by gameVersion (which allows you to make breaking changes).
         /// </summary>
-        string gameVersion = "2.4.0";
-        string roomCode;
+        private string gameVersion = "2.4.0";
 
-        bool fadeCalled;
-        float musicStartVolume;
-        float soundStartVolume;
+        private string roomCode;
 
-        const string chars = "ABCDEFGHJKLMNOPQRSTUVWXYZ023456789";
+        private bool fadeCalled;
+        private float musicStartVolume;
+        private float soundStartVolume;
+
+        private const string chars = "ABCDEFGHJKLMNOPQRSTUVWXYZ023456789";
         private string connectCode;
 
-        #endregion
-
+        #endregion Private Fields
 
         #region Private Serializable Fields
 
         [Tooltip("The UI panel to let the user enter name, connect and join")]
         [SerializeField] private GameObject controlPanel;
+
         [Tooltip("The UI panel to inform the user that the connection is in progress")]
         [SerializeField] private GameObject progressPanel;
+
         [Tooltip("The UI panel to display lobby information")]
         [SerializeField] private GameObject lobbyPanel;
+
         [SerializeField] private TMP_Text codeText;
         [SerializeField] private TMP_Text connectedStatusText;
         [SerializeField] private TMP_Text lobbyTitleText;
@@ -150,23 +145,21 @@ namespace Com.Team12.ElementalTales
         [SerializeField] private GameObject invalidCodeText;
         [SerializeField] private GameObject StartGameButton;
         [SerializeField] private TMP_InputField codeInputField;
-        [SerializeField] CanvasGroup fadeOutPanel;
-        [SerializeField] GameObject canvasHolder;
-        [SerializeField] Camera mainCam;
-        [SerializeField] AudioSource music;
-        [SerializeField] AudioSource sound;
-        [SerializeField] AudioSource startGameSound;
+        [SerializeField] private CanvasGroup fadeOutPanel;
+        [SerializeField] private GameObject canvasHolder;
+        [SerializeField] private Camera mainCam;
+        [SerializeField] private AudioSource music;
+        [SerializeField] private AudioSource sound;
+        [SerializeField] private AudioSource startGameSound;
 
-        #endregion
-
+        #endregion Private Serializable Fields
 
         #region MonoBehaviour CallBacks
-
 
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity during early initialization phase.
         /// </summary>
-        void Awake()
+        private void Awake()
         {
             // #Critical
             // this makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients in the same room sync their level automatically
@@ -174,16 +167,15 @@ namespace Com.Team12.ElementalTales
             PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = gameVersion;
 
-            connectedStatusText.text = PhotonNetwork.IsConnected ? 
-                ("Connected to master server: " + PhotonNetwork.ServerAddress) : 
+            connectedStatusText.text = PhotonNetwork.IsConnected ?
+                ("Connected to master server: " + PhotonNetwork.ServerAddress) :
                 "Connection to the master server has failed. Do you have an active internet connection?";
         }
-
 
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity during initialization phase.
         /// </summary>
-        void Start()
+        private void Start()
         {
             progressPanel.SetActive(false);
             controlPanel.SetActive(true);
@@ -198,12 +190,9 @@ namespace Com.Team12.ElementalTales
             soundStartVolume = sound.volume;
         }
 
-
-        #endregion
-
+        #endregion MonoBehaviour CallBacks
 
         #region Public Methods
-
 
         /// <summary>
         /// Start the connection process.
@@ -293,7 +282,7 @@ namespace Com.Team12.ElementalTales
         /// Pans the camera up to the given position, and then starts the fadeout.
         /// </summary>
         /// <returns></returns>
-        IEnumerator PanCameraUp()
+        private IEnumerator PanCameraUp()
         {
             float increaseAmount = 0.5f;
             fadeOutPanel.gameObject.SetActive(true);
@@ -317,7 +306,7 @@ namespace Com.Team12.ElementalTales
         /// Fades the camera to black and then waits to call the next scene.
         /// </summary>
         /// <returns></returns>
-        IEnumerator FadeCameraToStartGame()
+        private IEnumerator FadeCameraToStartGame()
         {
             fadeCalled = true;
             while (fadeOutPanel.alpha < 1)
@@ -339,9 +328,7 @@ namespace Com.Team12.ElementalTales
             }
         }
 
-
-        #endregion
-
+        #endregion Public Methods
 
         #region Private Methods
 
@@ -367,6 +354,7 @@ namespace Com.Team12.ElementalTales
 
             return toReturn;
         }
-        #endregion
+
+        #endregion Private Methods
     }
 }

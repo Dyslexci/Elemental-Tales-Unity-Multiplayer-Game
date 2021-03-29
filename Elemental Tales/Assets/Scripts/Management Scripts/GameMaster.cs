@@ -1,17 +1,16 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Experimental.Rendering.Universal;
-using TMPro;
-
-using Photon.Pun;
+﻿using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 3.3.5
- *    
+ *
  *    Stores global variables, player checkpoints and location for loading and saving, player scores, and etc. Created for all static variables and functions.
  */
 
@@ -35,18 +34,21 @@ public class GameMaster : MonoBehaviourPunCallbacks
         StartCoroutine(WaitHidePlayerLeft(otherPlayer));
     }
 
-    SafeFloat score;
-    
+    private SafeFloat score;
+
     private GameObject playerObject;
 
     [Header("Generic Setup")]
     public int mapStage = 0;
+
     public HandleZoneChanges zoneChanger;
     private static bool pausedGame = false;
     [SerializeField] private GameObject pauseMenuHolder;
     public GameObject HUDCanvas;
+
     [Tooltip("The prefab to use for representing the player")]
     public GameObject playerPrefab;
+
     public GameObject arrow;
     [SerializeField] private Transform spawnPoint1;
     [SerializeField] private Transform spawnPoint2;
@@ -56,18 +58,21 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     [Header("Death Variables")]
     public int localPlayerDeaths;
+
     public TMP_Text playerDeathCounter;
     public int otherPlayerDeaths;
 
     [Header("Collectible Variables")]
     public TMP_Text collectible1Counter;
+
     public int totalCollectible1;
     public TMP_Text healthUpgradeCounter;
-    int healthShards = 0;
+    private int healthShards = 0;
     public UnityEngine.UI.Image collectibleImage;
 
     [Header("Canvas Variables")]
     public GameObject playerLeftObject;
+
     public TMP_Text playerLeftText;
     public CanvasGroup panel;
     public CanvasGroup fadeToBlackPanel;
@@ -91,12 +96,14 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     [Header("Checkpoint Variables")]
     private Transform lastCheckpoint;
+
     public float numberOfCheckpointsReached = 0;
     public float totalCheckpoints;
     public TMP_Text percentageTracker;
 
     [Header("Game Repetition Variables")]
     public GameObject blocker1;
+
     public GameObject blocker2;
     public GameObject blocker3;
     public GameObject end1;
@@ -114,6 +121,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     [Header("Audio Variables")]
     public AudioSource openDoorSound;
+
     public AudioSource collectGem1Sound;
     public AudioSource hintSound;
     public AudioSource forestMusic;
@@ -126,11 +134,12 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public AudioSource healthRefillCollect;
     public AudioSource healthCollector;
     public AudioSource manaCollector;
-    float musicStartVolume;
-    float ambientSoundStartVolume;
+    private float musicStartVolume;
+    private float ambientSoundStartVolume;
 
     [Header("Locational Variables")]
     public bool inForest = true;
+
     public bool inPools;
     public bool inGrotto;
     public TMP_Text areaText;
@@ -142,9 +151,10 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public bool alltreeHollowCompleted;
 
     [Header("First-Time Variables")]
-    bool hasDisplayedHealthPopup;
-    bool hasDisplayedScorePopup;
-    bool hasDisplayedHealthUpgradePopup;
+    private bool hasDisplayedHealthPopup;
+
+    private bool hasDisplayedScorePopup;
+    private bool hasDisplayedHealthUpgradePopup;
     public bool hasWalked;
     public bool hasJumped;
     public bool hasDoubledJumped;
@@ -152,6 +162,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     [Header("Player Audio Variables")]
     public AudioSource respawnAudio;
+
     public AudioSource[] deathAudio;
     public AudioSource[] injuryAudio;
     public AudioSource[] elementChangeAudio;
@@ -159,24 +170,23 @@ public class GameMaster : MonoBehaviourPunCallbacks
     public AudioSource elementalGetStart;
     public AudioSource elementDialogueStart;
 
-    TimerController timer;
+    private TimerController timer;
 
     [Header("Camera Variables")]
-    float tempCameraStartPos = 101.8f;
+    private float tempCameraStartPos = 101.8f;
+
     public Camera tempCamera;
     public Camera mainCam;
     public CanvasGroup tempCamPanel;
     public CanvasGroup HUDPanel;
     public CanvasGroup tempCamTextPanel;
 
-    
-
     public bool playerHasInstantiated = false;
 
     /// <summary>
     /// Initialises various game states and instantiates the player prefabs, allocating one to the local player and one to the other player.
     /// </summary>
-    void Start()
+    private void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
         score = new SafeFloat(0);
@@ -207,16 +217,18 @@ public class GameMaster : MonoBehaviourPunCallbacks
         deathMessage3Panel.gameObject.SetActive(false);
         deathMessage4Panel.gameObject.SetActive(false);
 
-        if(playerPrefab == null)
+        if (playerPrefab == null)
         {
             Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
-        } else
+        }
+        else
         {
-            if(PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.IsMasterClient)
             {
                 PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(spawnPoint1.position.x, spawnPoint1.position.y, 0f), Quaternion.identity, 0);
                 lastCheckpoint = spawnPoint1;
-            } else
+            }
+            else
             {
                 PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(spawnPoint2.position.x, spawnPoint2.position.y, 0f), Quaternion.identity, 0);
                 lastCheckpoint = spawnPoint2;
@@ -224,13 +236,13 @@ public class GameMaster : MonoBehaviourPunCallbacks
         }
         StartCoroutine(StartSceneCinematic());
 
-        if(PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
             photonView.RPC("SetCurrentStage", RpcTarget.AllBuffered, GlobalVariableManager.Level1Stage);
     }
 
     private void Update()
     {
-        if(!this.gameObject.activeSelf)
+        if (!this.gameObject.activeSelf)
         {
             this.gameObject.SetActive(true);
             Debug.Log("The game manager was inactive, resetting...");
@@ -239,26 +251,30 @@ public class GameMaster : MonoBehaviourPunCallbacks
         CheckLeverPromptState();
     }
 
-    [PunRPC] private void SetCurrentStage(int currentStage)
+    [PunRPC]
+    private void SetCurrentStage(int currentStage)
     {
         GlobalVariableManager.Level1Stage = currentStage;
-        if(currentStage == 0)
+        if (currentStage == 0)
         {
             mapStage = currentStage;
             bashHolder.SetActive(false);
-        } else if(currentStage == 1)
+        }
+        else if (currentStage == 1)
         {
             mapStage = currentStage;
             blocker1.SetActive(false);
             end1.SetActive(false);
-        } else if(currentStage == 2)
+        }
+        else if (currentStage == 2)
         {
             mapStage = currentStage;
             blocker1.SetActive(false);
             blocker2.SetActive(false);
             end1.SetActive(false);
             end2.SetActive(false);
-        } else if(currentStage == 3)
+        }
+        else if (currentStage == 3)
         {
             mapStage = currentStage;
             blocker1.SetActive(false);
@@ -339,7 +355,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Fades in parts of the death screen one after the other to display text, the death counter, etc
     /// </summary>
     /// <returns></returns>
-    IEnumerator RespawnAnimation()
+    private IEnumerator RespawnAnimation()
     {
         HUDBlackPanel.alpha = 0;
         HUDBlackPanel.gameObject.SetActive(true);
@@ -372,7 +388,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
             deathMessage2.text = "So this is how it ends...";
             deathMessage3.text = "You only wish your partner could be here, with you";
             deathMessage4.text = "What?";
-            while(deathMessage2Panel.alpha < 1)
+            while (deathMessage2Panel.alpha < 1)
             {
                 yield return new WaitForFixedUpdate();
                 deathMessage2Panel.alpha += .03f;
@@ -390,7 +406,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
                 deathMessage4Panel.alpha += .03f;
             }
             yield return new WaitForSeconds(.25f);
-        } else
+        }
+        else
         {
             deathMessage1.text = "And here is the darkness again...";
             deathMessage2.text = "How many times, now?";
@@ -428,7 +445,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Begins fading out various parts of the death screen to smoothly return to the game
     /// </summary>
     /// <returns></returns>
-    IEnumerator FinishRespawnAnimation()
+    private IEnumerator FinishRespawnAnimation()
     {
         deathLight.gameObject.SetActive(true);
         playerObject.transform.SetPositionAndRotation(new Vector3(lastCheckpoint.position.x, lastCheckpoint.position.y, 0f), Quaternion.identity);
@@ -508,7 +525,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// <summary>
     /// Pauses the game.
     /// </summary>
-    void Pause()
+    private void Pause()
     {
         playerObject.GetComponent<PlayerInput>().hasControl = false;
         GetComponent<PauseMenuManager>().skillTitle.text = "";
@@ -521,7 +538,6 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// </summary>
     public void optionsMenu()
     {
-        
         optionsMenuUI.gameObject.SetActive(true);
         pauseMenuPanel.gameObject.SetActive(false);
     }
@@ -544,7 +560,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Fades in the quit confirmation screen
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadePauseQuitPanelIn()
+    private IEnumerator FadePauseQuitPanelIn()
     {
         pauseQuitPanel.alpha = 0;
         pauseQuitPanel.gameObject.SetActive(true);
@@ -583,7 +599,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Fades out the quit confirmation screen
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadePauseQuitPanelOut()
+    private IEnumerator FadePauseQuitPanelOut()
     {
         pauseQuitPanel.alpha = 1;
         while (pauseQuitPanel.alpha > 0)
@@ -608,7 +624,8 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// <summary>
     /// RPC to add 1 to the opposite player deaths.
     /// </summary>
-    [PunRPC] private void AddOppositePlayerDeath()
+    [PunRPC]
+    private void AddOppositePlayerDeath()
     {
         Debug.Log("PUN: AddOppositePlayerDeath() has been called.");
         otherPlayerDeaths++;
@@ -619,11 +636,12 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// used Enhanced for loop
     /// used ternary operator instead of IF/ELSE
     /// </summary>
-    void CheckLeverPromptState()
+    private void CheckLeverPromptState()
     {
         int noDoorsPrompting = 0;
 
-        foreach (doorLeverInput door in doorArray){
+        foreach (doorLeverInput door in doorArray)
+        {
             if (door.displayHint)
             {
                 noDoorsPrompting++;
@@ -635,15 +653,17 @@ public class GameMaster : MonoBehaviourPunCallbacks
 
     public void DisplayOneTimeHintPopup(string hintType)
     {
-        if(hintType.Equals("Score") && !hasDisplayedScorePopup)
+        if (hintType.Equals("Score") && !hasDisplayedScorePopup)
         {
             GameObject.Find("Game Manager").GetComponent<UIHintController>().StartHintDisplay("<color=#ffffff>Collect <color=#ffeb04>Spirit Shards <color=#ffffff>to increase your score!", 3);
             hasDisplayedScorePopup = true;
-        } else if(hintType.Equals("HealthUpgrade") && !hasDisplayedHealthUpgradePopup)
+        }
+        else if (hintType.Equals("HealthUpgrade") && !hasDisplayedHealthUpgradePopup)
         {
             GameObject.Find("Game Manager").GetComponent<UIHintController>().StartHintDisplay("<color=#ffffff>Collect <color=#ffeb04>Health Shards <color=#ffffff>to increase your maximum health!", 3);
             hasDisplayedHealthUpgradePopup = true;
-        } else if(hintType.Equals("HealthRefill") && !hasDisplayedHealthPopup)
+        }
+        else if (hintType.Equals("HealthRefill") && !hasDisplayedHealthPopup)
         {
             GameObject.Find("Game Manager").GetComponent<UIHintController>().StartHintDisplay("<color=#ffffff>Bounce on these <color=#ffeb04>Mushrooms <color=#ffffff>to refill your health!", 3);
             hasDisplayedHealthPopup = true;
@@ -655,7 +675,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// </summary>
     /// <param name="otherPlayer"></param>
     /// <returns></returns>
-    IEnumerator WaitHidePlayerLeft(Player otherPlayer)
+    private IEnumerator WaitHidePlayerLeft(Player otherPlayer)
     {
         playerLeftObject.SetActive(true);
         playerLeftText.text = "<color=#ffeb04>" + otherPlayer.NickName + " <color=#ffffff>has left the game";
@@ -667,7 +687,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Fades out the leaving tooltip.
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadePanel()
+    private IEnumerator FadePanel()
     {
         while (panel.alpha > 0)
         {
@@ -683,11 +703,11 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Fades the HUD to black and then exits the game.
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadeToBlackQuit()
+    private IEnumerator FadeToBlackQuit()
     {
         fadeToBlackPanel.alpha = 0;
         fadeToBlackPanel.gameObject.SetActive(true);
-        while(fadeToBlackPanel.alpha < 1)
+        while (fadeToBlackPanel.alpha < 1)
         {
             yield return new WaitForEndOfFrame();
             fadeToBlackPanel.alpha += 0.05f;
@@ -706,7 +726,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Pans the temporary camera down from the starting position to the players position and fades in the HUD.
     /// </summary>
     /// <returns></returns>
-    IEnumerator StartSceneCinematic()
+    private IEnumerator StartSceneCinematic()
     {
         mainCam.gameObject.SetActive(false);
         tempCamera.gameObject.SetActive(true);
@@ -716,12 +736,12 @@ public class GameMaster : MonoBehaviourPunCallbacks
         forestMusic.volume = 0;
         ambientSound.volume = 0;
         float increaseAmount = .1f;
-        while(playerObject == null)
+        while (playerObject == null)
         {
             yield return new WaitForFixedUpdate();
         }
         playerObject.GetComponent<PlayerInput>().hasControl = false;
-        while(tempCamTextPanel.alpha < 1)
+        while (tempCamTextPanel.alpha < 1)
         {
             yield return new WaitForFixedUpdate();
             tempCamTextPanel.alpha += 0.03f;
@@ -729,7 +749,7 @@ public class GameMaster : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(0.5f);
         StartCoroutine(FadeInFromBlack());
         tempCamera.transform.position = new Vector3(playerObject.transform.position.x, tempCameraStartPos, -10);
-        while(tempCamera.transform.position.y > playerObject.transform.position.y)
+        while (tempCamera.transform.position.y > playerObject.transform.position.y)
         {
             yield return new WaitForFixedUpdate();
             tempCamera.transform.position = new Vector3(tempCamera.transform.position.x, tempCamera.transform.position.y - increaseAmount, tempCamera.transform.position.z);
@@ -737,10 +757,10 @@ public class GameMaster : MonoBehaviourPunCallbacks
             {
                 increaseAmount += 0.005f;
             }
-            if(tempCamera.transform.position.y < playerObject.transform.position.y + 19f && increaseAmount > 0.01f)
+            if (tempCamera.transform.position.y < playerObject.transform.position.y + 19f && increaseAmount > 0.01f)
             {
                 increaseAmount -= 0.005f;
-                if(tempCamTextPanel.alpha == 1)
+                if (tempCamTextPanel.alpha == 1)
                 {
                     StartCoroutine(FadeOutTempTextPanel());
                 }
@@ -755,19 +775,22 @@ public class GameMaster : MonoBehaviourPunCallbacks
         }
         HUDPanel.alpha = 1;
 
-        if(mapStage == 0)
+        if (mapStage == 0)
         {
             FindObjectOfType<DialogueManager>().StartDialogue(dialogueStage1.dialogue, NPCStage1, dialogueStage1.quest);
             NPCStage1.isTalking = true;
-        } else if (mapStage == 1)
+        }
+        else if (mapStage == 1)
         {
             FindObjectOfType<DialogueManager>().StartDialogue(dialogueStage2.dialogue, NPCStage2, dialogueStage2.quest);
             NPCStage2.isTalking = true;
-        } else if (mapStage == 2)
+        }
+        else if (mapStage == 2)
         {
             FindObjectOfType<DialogueManager>().StartDialogue(dialogueStage3.dialogue, NPCStage3, dialogueStage3.quest);
             NPCStage3.isTalking = true;
-        } else if (mapStage == 3)
+        }
+        else if (mapStage == 3)
         {
             FindObjectOfType<DialogueManager>().StartDialogue(dialogueStage4.dialogue, NPCStage4, dialogueStage4.quest);
             NPCStage4.isTalking = true;
@@ -778,19 +801,19 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Fades the camera in from a black screen, and the music/global sound effects from silence to the default volume.
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadeInFromBlack()
+    private IEnumerator FadeInFromBlack()
     {
         tempCamPanel.alpha = 1;
         tempCamPanel.gameObject.SetActive(true);
-        while(tempCamPanel.alpha > 0)
+        while (tempCamPanel.alpha > 0)
         {
             yield return new WaitForFixedUpdate();
             tempCamPanel.alpha -= 0.008f;
-            if(forestMusic.volume < musicStartVolume)
+            if (forestMusic.volume < musicStartVolume)
             {
                 forestMusic.volume += 0.008f * musicStartVolume;
             }
-            if(ambientSound.volume < ambientSoundStartVolume)
+            if (ambientSound.volume < ambientSoundStartVolume)
             {
                 ambientSound.volume += 0.008f * ambientSoundStartVolume;
             }
@@ -804,9 +827,9 @@ public class GameMaster : MonoBehaviourPunCallbacks
     /// Fades out the text at the top of the screen during the intro cinematic, displaying the name of the level.
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadeOutTempTextPanel()
+    private IEnumerator FadeOutTempTextPanel()
     {
-        while(tempCamTextPanel.alpha > 0)
+        while (tempCamTextPanel.alpha > 0)
         {
             yield return new WaitForFixedUpdate();
             tempCamTextPanel.alpha -= 0.03f;

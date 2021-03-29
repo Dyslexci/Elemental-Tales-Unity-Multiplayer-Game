@@ -1,26 +1,25 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 2.0.1
- *    
+ *
  *    This script sets the player 1 element, changes the hud accordingly, and changes the player controller element variable.
  */
 
 [RequireComponent(typeof(ElementOrb))]
 public class ElementController : MonoBehaviour
 {
-    string currentElement;
-    ElementOrb elementOrb;
-    StatController controller;
+    private string currentElement;
+    private ElementOrb elementOrb;
+    private StatController controller;
     public bool hasAir;
     public bool hasFire;
     public bool hasEarth;
     public bool hasWater;
-    AudioSource[] elementChangeAudio;
+    private AudioSource[] elementChangeAudio;
 
     /// <summary>
     /// Sets the start conditions where possible
@@ -40,7 +39,7 @@ public class ElementController : MonoBehaviour
     /// Delays setting the start conditions for the elements, as sometimes the player spawning is delayed by a frame
     /// </summary>
     /// <returns></returns>
-    IEnumerator delaySetElements()
+    private IEnumerator delaySetElements()
     {
         yield return new WaitForSeconds(1);
         currentElement = "Empty";
@@ -54,6 +53,11 @@ public class ElementController : MonoBehaviour
     /// Allows the player to choose the active element
     /// </summary>
     private void Update()
+    {
+        CheckForElementChange();
+    }
+
+    private void CheckForElementChange()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && hasAir)
         {
@@ -71,7 +75,7 @@ public class ElementController : MonoBehaviour
         {
             changeElement("Fire");
         }
-        if(Input.GetKeyDown(KeyCode.Alpha0))
+        if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             changeElement("Empty");
         }
@@ -105,16 +109,19 @@ public class ElementController : MonoBehaviour
     /// <param name="element"></param>
     public void addElement(string element)
     {
-        if(element.Equals("Air"))
+        if (element.Equals("Air"))
         {
             hasAir = true;
-        } else if(element.Equals("Earth"))
+        }
+        else if (element.Equals("Earth"))
         {
             hasEarth = true;
-        } else if(element.Equals("Water"))
+        }
+        else if (element.Equals("Water"))
         {
             hasWater = true;
-        } else if(element.Equals("Fire"))
+        }
+        else if (element.Equals("Fire"))
         {
             hasFire = true;
         }

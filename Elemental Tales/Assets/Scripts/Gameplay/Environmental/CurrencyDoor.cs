@@ -1,31 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Photon.Pun;
-using UnityEngine.UI;
+﻿using Photon.Pun;
+using System.Collections;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 1.3.0
  *    @version 1.0.2
- *    
+ *
  *    Allows object this script is attached to to be disabled when the players have enough keys to pass through.
  */
 
 public class CurrencyDoor : MonoBehaviourPun
 {
-    [SerializeField] Transform pos;
-    [SerializeField] float radius = 1.5f;
+    [SerializeField] private Transform pos;
+    [SerializeField] private float radius = 1.5f;
     [SerializeField] private LayerMask layer;
 
     public int keyCost;
 
-    TMP_Text hintText;
-    GameObject hintHolder;
-    CanvasGroup panel;
-    Image hintImage;
-    bool isDisplayingHint;
+    private TMP_Text hintText;
+    private GameObject hintHolder;
+    private CanvasGroup panel;
+    private Image hintImage;
+    private bool isDisplayingHint;
 
     private bool playerPresent = false;
     private bool playerWasPresent;
@@ -48,10 +47,13 @@ public class CurrencyDoor : MonoBehaviourPun
     {
         playerWasPresent = playerPresent;
         playerPresent = false;
-
         checkPresent();
+        CheckForPlayerInteraction();
+    }
 
-        if(playerPresent && Input.GetKeyDown(KeyCode.E) && GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<StatController>().currentMana.GetValue() >= keyCost)
+    private void CheckForPlayerInteraction()
+    {
+        if (playerPresent && Input.GetKeyDown(KeyCode.E) && GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<StatController>().currentMana.GetValue() >= keyCost)
         {
             GameObject.Find("Game Manager").GetComponent<GameMaster>().getPlayer().GetComponent<StatController>().DamageMana(keyCost);
             StopCoroutine(WaitHideHint());
@@ -69,7 +71,7 @@ public class CurrencyDoor : MonoBehaviourPun
     /// Coroutine displaying the hint to the player.
     /// </summary>
     /// <returns></returns>
-    IEnumerator WaitHideHint()
+    private IEnumerator WaitHideHint()
     {
         hintHolder.SetActive(true);
         StartCoroutine("JumpInHintHolder");
@@ -88,7 +90,7 @@ public class CurrencyDoor : MonoBehaviourPun
     /// Coroutine making the hint jump into place.
     /// </summary>
     /// <returns></returns>
-    IEnumerator JumpInHintHolder()
+    private IEnumerator JumpInHintHolder()
     {
         hintImage.transform.localScale = new Vector3(5, 5, 5);
 
@@ -104,7 +106,7 @@ public class CurrencyDoor : MonoBehaviourPun
     /// Coroutine making the hint fade out after it has been on screen enough time.
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadeHintHolder()
+    private IEnumerator FadeHintHolder()
     {
         while (panel.alpha > 0)
         {

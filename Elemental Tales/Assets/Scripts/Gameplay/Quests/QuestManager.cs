@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 1.0.0
  *    @version 1.0.0
- *    
+ *
  *    Manages the quests panel on the HUD, and stores active quests.
  */
 
@@ -26,10 +25,16 @@ public class QuestManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if(quests.Count == 0)
+        DisplayQuest();
+    }
+
+    private void DisplayQuest()
+    {
+        if (quests.Count == 0)
         {
             animator.SetBool("isOpen", false);
-        } else
+        }
+        else
         {
             animator.SetBool("isOpen", true);
             quest1Title.text = quests[0].getTitle();

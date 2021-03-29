@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 1.2.2
- *    
+ *
  *    This script drives behaviour for interactible NPCs placed in the gameworld, specifically allowing the player to interact on keypress. Appended to also allow this to be called
  *    independently from the player, for scripted moments and conversations.
  */
-
 
 public class NPCBehaviourTemp : MonoBehaviour
 {
@@ -24,16 +21,16 @@ public class NPCBehaviourTemp : MonoBehaviour
 
     public bool isNPC = true;
 
-    bool playerInArea = false;
+    private bool playerInArea = false;
     public bool hasTalked = false;
 
-    TMP_Text hintText;
-    GameObject hintHolder;
-    CanvasGroup panel;
-    Image hintImage;
-    bool isDisplayingHint;
+    private TMP_Text hintText;
+    private GameObject hintHolder;
+    private CanvasGroup panel;
+    private Image hintImage;
+    private bool isDisplayingHint;
 
-    GameObject player;
+    private GameObject player;
 
     public bool isTalking;
 
@@ -59,13 +56,19 @@ public class NPCBehaviourTemp : MonoBehaviour
         if (!isNPC)
             return;
 
+        CheckForPlayerInteraction();
+    }
+
+    private void CheckForPlayerInteraction()
+    {
         if (Input.GetButtonDown("Interact") && playerInArea && !hasTalked && !isTalking)
         {
             isTalking = true;
             dialogueTrigger.TriggerDialogue();
             hasTalked = true;
             print("Is speaking for the first time");
-        } else if (Input.GetButtonDown("Interact") && playerInArea && hasTalked && !isTalking)
+        }
+        else if (Input.GetButtonDown("Interact") && playerInArea && hasTalked && !isTalking)
         {
             isTalking = true;
             dialogueTriggerHasTalked.TriggerDialogue();
@@ -86,7 +89,7 @@ public class NPCBehaviourTemp : MonoBehaviour
         {
             playerInArea = true;
             player = collision.gameObject;
-            if(!isDisplayingHint)
+            if (!isDisplayingHint)
             {
                 GameObject.Find("Game Manager").GetComponent<GameMaster>().hintSound.Play(0);
                 StartCoroutine(WaitHideHint());
@@ -114,7 +117,7 @@ public class NPCBehaviourTemp : MonoBehaviour
     /// Coroutine displaying the hint to the player.
     /// </summary>
     /// <returns></returns>
-    IEnumerator WaitHideHint()
+    private IEnumerator WaitHideHint()
     {
         hintHolder.SetActive(true);
         StartCoroutine("JumpInHintHolder");
@@ -127,7 +130,7 @@ public class NPCBehaviourTemp : MonoBehaviour
     /// Coroutine making the hint jump into place.
     /// </summary>
     /// <returns></returns>
-    IEnumerator JumpInHintHolder()
+    private IEnumerator JumpInHintHolder()
     {
         hintImage.transform.localScale = new Vector3(5, 5, 5);
 
@@ -143,7 +146,7 @@ public class NPCBehaviourTemp : MonoBehaviour
     /// Coroutine making the hint fade out after it has been on screen enough time.
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadeHintHolder()
+    private IEnumerator FadeHintHolder()
     {
         while (panel.alpha > 0)
         {

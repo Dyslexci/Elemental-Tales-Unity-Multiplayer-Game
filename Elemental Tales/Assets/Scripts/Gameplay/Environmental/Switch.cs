@@ -1,41 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Security.Cryptography.X509Certificates;
+﻿using Photon.Pun;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using Photon.Pun;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 2.0.2
- *    
+ *
  *    Manages players interacting with physical switch objects in the world.
  */
 
 public class Switch : CheckPresentController
 {
-    GameMaster gameMaster;
-    UIHintController hintController;
+    private GameMaster gameMaster;
+    private UIHintController hintController;
 
-    [SerializeField] Sprite crankDown;
-    [SerializeField] Sprite crankUp;
-    [SerializeField] Transform pos;
-    [SerializeField] float radius = 1.5f;
+    [SerializeField] private Sprite crankDown;
+    [SerializeField] private Sprite crankUp;
+    [SerializeField] private Transform pos;
+    [SerializeField] private float radius = 1.5f;
     [SerializeField] private LayerMask layer;
     private bool isOn = false;
     public bool pressedSuccessfully = false;
     private bool playerPresent = false;
-    bool otherPlayerPresent;
+    private bool otherPlayerPresent;
     private bool playerWasPresent;
 
     /// <summary>
     /// Initialises switch values.
     /// </summary>
-    void Start()
-    { 
+    private void Start()
+    {
         gameObject.GetComponent<SpriteRenderer>().sprite = crankDown;
         gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
         hintController = GameObject.Find("Game Manager").GetComponent<UIHintController>();
@@ -46,7 +40,7 @@ public class Switch : CheckPresentController
     /// </summary>
     private void FixedUpdate()
     {
-        if(pressedSuccessfully)
+        if (pressedSuccessfully)
         {
             gameObject.GetComponent<SpriteRenderer>().sprite = crankUp;
             return;
@@ -54,16 +48,20 @@ public class Switch : CheckPresentController
         playerWasPresent = playerPresent;
         playerPresent = false;
         otherPlayerPresent = false;
-
         CheckPresentCircle();
+        CheckForPlayerInteraction();
+    }
 
+    private void CheckForPlayerInteraction()
+    {
         if (playerPresent && Input.GetButton("Interact"))
         {
             if (isOn == true)
                 return;
             photonView.RPC("setLeverOn", RpcTarget.AllBuffered);
             gameMaster.switchPull.Play(0);
-        } else if(playerPresent && !otherPlayerPresent)
+        }
+        else if (playerPresent && !otherPlayerPresent)
         {
             if (isOn == false)
                 return;
@@ -132,7 +130,8 @@ public class Switch : CheckPresentController
     /// <summary>
     /// Sends an RPC to other player triggering the lever to its on state.
     /// </summary>
-    [PunRPC] private void setLeverOn()
+    [PunRPC]
+    private void setLeverOn()
     {
         gameObject.GetComponent<SpriteRenderer>().sprite = crankUp;
         isOn = true;
@@ -141,7 +140,8 @@ public class Switch : CheckPresentController
     /// <summary>
     /// Sends an RPC to the other player triggering the lever to its off state.
     /// </summary>
-    [PunRPC] private void setLeverOff()
+    [PunRPC]
+    private void setLeverOff()
     {
         gameObject.GetComponent<SpriteRenderer>().sprite = crankDown;
         isOn = false;

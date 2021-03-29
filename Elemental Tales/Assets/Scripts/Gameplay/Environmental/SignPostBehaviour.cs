@@ -1,20 +1,19 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 2.1.0
  *    @version 1.0.3
- *    
+ *
  *    Displays signpost text in the world while the player is nearby.
  */
+
 public class SignPostBehaviour : CheckPresentController
 {
     public CanvasGroup signs;
-    [SerializeField] Transform pos;
-    [SerializeField] float radius = 1.5f;
+    [SerializeField] private Transform pos;
+    [SerializeField] private float radius = 1.5f;
     [SerializeField] private LayerMask layer;
 
     private bool playerPresent = false;
@@ -36,13 +35,18 @@ public class SignPostBehaviour : CheckPresentController
         playerWasPresent = playerPresent;
         playerPresent = CheckPresentCircle(pos, radius, layer);
 
+        FadeSignpostFromPlayerPresence();
+    }
+
+    private void FadeSignpostFromPlayerPresence()
+    {
         if (playerPresent && !playerWasPresent)
         {
             StopAllCoroutines();
             StartCoroutine(FadeInSigns());
         }
 
-        if(!playerPresent && playerWasPresent)
+        if (!playerPresent && playerWasPresent)
         {
             StopAllCoroutines();
             StartCoroutine(FadeOutSigns());
@@ -53,7 +57,7 @@ public class SignPostBehaviour : CheckPresentController
     /// Fades in the signs
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadeInSigns()
+    private IEnumerator FadeInSigns()
     {
         GameObject.Find("Game Manager").GetComponent<GameMaster>().signpostEnterRange.Play(0);
         while (signs.alpha < 1)
@@ -67,7 +71,7 @@ public class SignPostBehaviour : CheckPresentController
     /// Fades out the signs
     /// </summary>
     /// <returns></returns>
-    IEnumerator FadeOutSigns()
+    private IEnumerator FadeOutSigns()
     {
         GameObject.Find("Game Manager").GetComponent<GameMaster>().signpostExitRange.Play(0);
         while (signs.alpha > 0)

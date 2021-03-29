@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 1.2.1
- *    
+ *
  *    This script controls dialogue behaviour for the entire scene, implementing various different dialogue scripts.
  */
 
@@ -47,7 +46,6 @@ public class DialogueManager : MonoBehaviour
         {
             DisplayNextSentence();
         }
-
     }
 
     /// <summary>
@@ -68,7 +66,7 @@ public class DialogueManager : MonoBehaviour
         openDialogueBox.Play(0);
         nameText.text = dialogue.name;
         sentences.Clear();
-        foreach(string sentence in dialogue.sentences)
+        foreach (string sentence in dialogue.sentences)
         {
             sentences.Enqueue(sentence);
         }
@@ -80,7 +78,7 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     public void DisplayNextSentence()
     {
-        if(sentences.Count == 0)
+        if (sentences.Count == 0)
         {
             EndDialogue();
             return;
@@ -95,16 +93,17 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     /// <param name="sentence"></param>
     /// <returns></returns>
-    private IEnumerator TypeSentence (string sentence)
+    private IEnumerator TypeSentence(string sentence)
     {
         dialogueText.text = "";
-        foreach(char letter in sentence.ToCharArray())
+        foreach (char letter in sentence.ToCharArray())
         {
-            if(letter.Equals('%'))
+            if (letter.Equals('%'))
             {
                 dialogueText.text += "<color=#ffeb04>";
                 continue;
-            } else if(letter.Equals('$'))
+            }
+            else if (letter.Equals('$'))
             {
                 dialogueText.text += "<color=#ffffff>";
                 continue;
@@ -124,7 +123,7 @@ public class DialogueManager : MonoBehaviour
         NPCObject.isTalking = false;
         NPCObject.hasTalked = true;
         inDialogue = false;
-        if(newQuest.getQuestable())
+        if (newQuest.getQuestable())
         {
             acceptQuest();
         }

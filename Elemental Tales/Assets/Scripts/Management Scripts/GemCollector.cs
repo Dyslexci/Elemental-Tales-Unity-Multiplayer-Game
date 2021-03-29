@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
 using UnityEngine;
 
-using Photon.Pun;
-
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 1.0.0
  *    @version 1.2.2
- *    
+ *
  *    Adds collectible to both players and deletes the associated collectible object when player object collides.
  */
 
@@ -40,7 +37,8 @@ public class GemCollector : MonoBehaviourPun
     /// <summary>
     /// Sends an RPC to delete the collectible and add a collectible to the counter for both players.
     /// </summary>
-    [PunRPC] private void deleteGem()
+    [PunRPC]
+    private void deleteGem()
     {
         Debug.Log("PUN: deleteGem() has been called via the RPC.");
         GameObject.Find("Game Manager").GetComponent<GameMaster>().collectGem1Sound.Play(0);

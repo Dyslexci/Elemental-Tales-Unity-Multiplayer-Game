@@ -1,27 +1,25 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+﻿using Photon.Pun;
+using System;
 using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-using Photon.Pun;
-
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 1.0.0
  *    @version 2.1.1
- *    
+ *
  *    Displays post-game information and allows the players to continue or quit.
  */
+
 public class EndScreenManager : MonoBehaviourPunCallbacks
 {
     public TMP_Text stageText;
     public TMP_Text deathText;
     public TMP_Text bestTimeText;
     public GameObject NewBestTimeText;
-    TimeSpan timePlaying;
+    private TimeSpan timePlaying;
     public Button nextButton;
 
     private void Awake()
@@ -35,11 +33,11 @@ public class EndScreenManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if(PhotonNetwork.PlayerList.Length != 2)
+        if (PhotonNetwork.PlayerList.Length != 2)
             nextButton.interactable = false;
     }
 
-    void InitialiseEndScreen()
+    private void InitialiseEndScreen()
     {
         if (GlobalVariableManager.PreviousStage == 0)
         {
@@ -83,7 +81,7 @@ public class EndScreenManager : MonoBehaviourPunCallbacks
         }
     }
 
-    void DisplayBestTime()
+    private void DisplayBestTime()
     {
         NewBestTimeText.SetActive(true);
     }
@@ -101,7 +99,6 @@ public class EndScreenManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void exitGame()
     {
-
         if (PhotonNetwork.IsConnectedAndReady)
         {
             PhotonNetwork.LeaveRoom();

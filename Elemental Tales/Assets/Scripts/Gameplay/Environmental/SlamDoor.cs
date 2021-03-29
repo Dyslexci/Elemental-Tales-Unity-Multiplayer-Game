@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
+using System.Collections;
 using UnityEngine;
-using Photon.Pun;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 2.2.1
  *    @version 1.2.0
- *    
+ *
  *    Setup to disable the gameobject when called by the pound ability
  */
 
@@ -26,7 +25,8 @@ public class SlamDoor : MonoBehaviourPun
     /// <summary>
     /// Disables the gameobject for all players
     /// </summary>
-    [PunRPC] private void DestroyDoorSlam()
+    [PunRPC]
+    private void DestroyDoorSlam()
     {
         StartCoroutine(HandleDestroyedDoor());
     }
@@ -35,10 +35,10 @@ public class SlamDoor : MonoBehaviourPun
     /// Plays the sound and destroys the door.
     /// </summary>
     /// <returns></returns>
-    IEnumerator HandleDestroyedDoor()
+    private IEnumerator HandleDestroyedDoor()
     {
         destroySound.Play(0);
-        while(destroySound.isPlaying)
+        while (destroySound.isPlaying)
         {
             yield return new WaitForFixedUpdate();
         }

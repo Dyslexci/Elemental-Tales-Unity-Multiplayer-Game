@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
 using UnityEngine;
 
-using Photon.Pun;
-
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 2.3.0
  *    @version 1.0.1
- *    
+ *
  *    Adds permanent health to the player.
  */
 
@@ -39,7 +36,8 @@ public class HealthUpgrader : MonoBehaviourPun
     /// <summary>
     /// Sends an RPC to delete the health object and add a permanent health to both players.
     /// </summary>
-    [PunRPC] private void DeleteHealthUpgrade()
+    [PunRPC]
+    private void DeleteHealthUpgrade()
     {
         Debug.Log("PUN: deleteGem() has been called via the RPC.");
         GameObject.Find("Game Manager").GetComponent<GameMaster>().healthCollector.Play(0);

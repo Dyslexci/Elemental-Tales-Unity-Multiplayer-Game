@@ -1,17 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using Photon.Pun;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 1.1.0
  *    @version 1.0.1
- *    
+ *
  *    Contains methods for buttons to display various elements in the pause screen.
  */
+
 public class PauseMenuManager : MonoBehaviour
 {
     public CanvasGroup skillPopUp;
@@ -19,7 +19,7 @@ public class PauseMenuManager : MonoBehaviour
     public TMP_Text skillTitle;
     public Button restartButton;
 
-    bool popUpOpen;
+    private bool popUpOpen;
 
     private void Update()
     {
@@ -60,14 +60,14 @@ public class PauseMenuManager : MonoBehaviour
         StartCoroutine(RemovePopUp());
     }
 
-    IEnumerator DisplayPopUp()
+    private IEnumerator DisplayPopUp()
     {
         popUpOpen = true;
         yield return new WaitForFixedUpdate();
         skillPopUp.gameObject.SetActive(true);
     }
 
-    IEnumerator RemovePopUp()
+    private IEnumerator RemovePopUp()
     {
         popUpOpen = false;
         yield return new WaitForFixedUpdate();

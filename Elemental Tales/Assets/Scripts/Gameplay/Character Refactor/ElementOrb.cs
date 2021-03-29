@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 0.0.0
  *    @version 1.0.1
- *    
+ *
  *    This script controls the visual element orb on the HUD.
  */
 
@@ -15,7 +13,7 @@ using UnityEngine.UI;
 public class ElementOrb : MonoBehaviour
 {
     private string currentElement;
-    Image elementOrb;
+    private Image elementOrb;
 
     [SerializeField] private Sprite EarthOrb;
     [SerializeField] private Sprite WaterOrb;

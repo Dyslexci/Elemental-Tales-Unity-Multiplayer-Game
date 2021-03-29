@@ -1,16 +1,15 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-/** 
+/**
  *    @author Matthew Ahearn
  *    @since 2.3.0
  *    @version 1.0.2
- *    
+ *
  *    Checks for player first-time variables, removes items from the checklist on completion, and adds those variables to the playerprefs file to ensure the player is never reminded again.
  */
+
 public class InputTutorialManager : MonoBehaviour
 {
     public Image tutorial1Image;
@@ -21,24 +20,24 @@ public class InputTutorialManager : MonoBehaviour
     public CanvasGroup tutorial2Panel;
     public CanvasGroup tutorial3Panel;
     public CanvasGroup tutorial4Panel;
-    GameMaster gameMaster;
+    private GameMaster gameMaster;
 
-    void Start()
+    private void Start()
     {
         gameMaster = GameObject.Find("Game Manager").GetComponent<GameMaster>();
-        if(PlayerPrefs.HasKey("hasWalked"))
+        if (PlayerPrefs.HasKey("hasWalked"))
         {
             tutorial1Panel.gameObject.SetActive(false);
         }
-        if(PlayerPrefs.HasKey("hasJumped"))
+        if (PlayerPrefs.HasKey("hasJumped"))
         {
             tutorial2Panel.gameObject.SetActive(false);
         }
-        if(PlayerPrefs.HasKey("hasDoubleJumped"))
+        if (PlayerPrefs.HasKey("hasDoubleJumped"))
         {
             tutorial3Panel.gameObject.SetActive(false);
         }
-        if(PlayerPrefs.HasKey("hasWallJumped"))
+        if (PlayerPrefs.HasKey("hasWallJumped"))
         {
             tutorial4Panel.gameObject.SetActive(false);
         }
@@ -46,38 +45,43 @@ public class InputTutorialManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(gameMaster.hasWalked)
+        CheckTutorialStatus();
+    }
+
+    private void CheckTutorialStatus()
+    {
+        if (gameMaster.hasWalked)
         {
             StartCoroutine(FadeOutWalkTut());
         }
-        if(gameMaster.hasJumped)
+        if (gameMaster.hasJumped)
         {
             StartCoroutine(FadeOutJumpTut());
         }
-        if(gameMaster.hasDoubledJumped)
+        if (gameMaster.hasDoubledJumped)
         {
             StartCoroutine(FadeOutDoubleJumpTut());
         }
-        if(gameMaster.hasWallClimbed)
+        if (gameMaster.hasWallClimbed)
         {
             StartCoroutine(FadeOutWallClimbTut());
         }
     }
 
-    IEnumerator FadeOutWalkTut()
+    private IEnumerator FadeOutWalkTut()
     {
         PlayerPrefs.SetInt("hasWalked", 1);
         tutorial1Image.color = new Color(0.4601174f, 1, 0.25f);
         yield return new WaitForSeconds(.8f);
 
-        while(tutorial1Panel.alpha > 0)
+        while (tutorial1Panel.alpha > 0)
         {
             yield return new WaitForFixedUpdate();
             tutorial1Panel.alpha -= .05f;
         }
     }
 
-    IEnumerator FadeOutJumpTut()
+    private IEnumerator FadeOutJumpTut()
     {
         PlayerPrefs.SetInt("hasJumped", 1);
         tutorial2Image.color = new Color(0.4601174f, 1, 0.25f);
@@ -90,7 +94,7 @@ public class InputTutorialManager : MonoBehaviour
         }
     }
 
-    IEnumerator FadeOutDoubleJumpTut()
+    private IEnumerator FadeOutDoubleJumpTut()
     {
         PlayerPrefs.SetInt("hasDoubleJumped", 1);
         tutorial3Image.color = new Color(0.4601174f, 1, 0.25f);
@@ -103,7 +107,7 @@ public class InputTutorialManager : MonoBehaviour
         }
     }
 
-    IEnumerator FadeOutWallClimbTut()
+    private IEnumerator FadeOutWallClimbTut()
     {
         PlayerPrefs.SetInt("hasWallJumped", 1);
         tutorial4Image.color = new Color(0.4601174f, 1, 0.25f);

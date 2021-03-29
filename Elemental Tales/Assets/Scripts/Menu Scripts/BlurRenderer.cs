@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /**
  *    @author Matthew Ahearn
@@ -18,7 +16,7 @@ public class BlurRenderer : MonoBehaviour
     /// <summary>
     /// Sets the texture of the panel behind the UI to be a blurry version of the camera output.
     /// </summary>
-    void Start()
+    private void Start()
     {
         if (blurCamera.targetTexture != null)
             blurCamera.targetTexture.Release();
